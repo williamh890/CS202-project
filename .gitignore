@@ -1,4 +1,9 @@
-*.cpb
+*.cbp
+
 *.depend
+
 *.dll
+
 *.exe
+
+*.o
