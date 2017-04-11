@@ -19,5 +19,9 @@ Enemy::Enemy(Vector2<float> starting_pos,
 {
     this->setPosition(starting_pos);
     this->setFillColor(Color(255, 76, 240));
+
 }
 
+bool Enemy::checkIntersect(const BulletShape &b) {
+    return (this->getGlobalBounds().intersects(b.getGlobalBounds()));
+}

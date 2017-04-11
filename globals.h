@@ -28,9 +28,9 @@ const int PLAYER_X_SPEED = 5;
 const int PLAYER_Y_SPEED = 5;
 const int SHIP_RADIUS = 20;
 
-const int BULLET_LEN = 10;
+const int BULLET_LEN = 20;
 const int BULLET_WIDTH = 2;
-const int BULLET_SPEED = 25;
+const int BULLET_SPEED = 20;
 const int FIRE_RATE = 10;   //Smaller number is faster fire rate
 
 const int STAR_SPAWN_RATE = 1; //Larger means less stars

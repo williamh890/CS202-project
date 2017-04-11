@@ -18,6 +18,9 @@ using sf::Keyboard;
 using sf::CircleShape;
 #include <vector>
 using std::vector;
+#include <iostream>
+using std::cout;
+using std::endl;
 
 
 //Set up for random real number generator for stars
@@ -145,22 +148,22 @@ void World::updateShip(){
     static int shotCounter = 0;
 
     //LEFT ARROW TO MOVE LEFT
-    if(Keyboard::isKeyPressed(Keyboard::Left)){
+    if(Keyboard::isKeyPressed(Keyboard::Left) || (Keyboard::isKeyPressed((Keyboard::A)))){
         if(shipOnBound()[1] != LEFT)
             playerShip.move(-PLAYER_X_SPEED, 0);
     }
     //RIGHT ARROW TO MOVE RIGHT
-    if(Keyboard::isKeyPressed(Keyboard::Right)){
+    if(Keyboard::isKeyPressed(Keyboard::Right) || (Keyboard::isKeyPressed((Keyboard::D)))){
         if(shipOnBound()[0] != RIGHT)
             playerShip.move(PLAYER_X_SPEED, 0);
     }
     //UP ARROW TO MOVE UP
-    if(Keyboard::isKeyPressed(Keyboard::Up)){
+    if(Keyboard::isKeyPressed(Keyboard::Up) || (Keyboard::isKeyPressed((Keyboard::W)))){
         if(shipOnBound()[2] != UPPER)
             playerShip.move(0, -PLAYER_Y_SPEED);
     }
     //DOWN ARROW TO MOVE DOWN
-    if(Keyboard::isKeyPressed(Keyboard::Down)){
+    if(Keyboard::isKeyPressed(Keyboard::Down) || (Keyboard::isKeyPressed((Keyboard::S)))){
         if(shipOnBound()[3] != LOWER)
             playerShip.move(0, PLAYER_Y_SPEED);
     }
@@ -192,18 +195,27 @@ void World::makeInitEnemies(){
 
 void World::updateEnemies(){
     //Look through all the enemies
-    for(auto & e : enemies){
-        Vector2<float> pos = e.getPosition();
+    for(int i = 0; i < enemies.size();i++){
+        Vector2<float> pos = enemies[i].getPosition();
         //Right side of the screen
         if(pos.x > WIDTH - 2*ENEMY_WIDTH){
-            e.direction.x  *= -1;
+            enemies[i].direction.x  *= -1;
         }
         //Left side of the screen
         if(pos.x < ENEMY_WIDTH){
-            e.direction.x *= -1;
+            enemies[i].direction.x *= -1;
         }
-
-        e.setPosition(pos + e.direction);
+        for (int j =0; j < bullets.size();j++) {
+            if (enemies[i].checkIntersect(bullets[j])) {
+                cout << "Hit an enemy" << endl;
+                bullets.erase(bullets.begin()+j);
+                enemies[i].hp--;
+                if (enemies[i].hp <= 0) {
+                    enemies.erase(enemies.begin()+i);
+                }
+            }
+        }
+        //e.setPosition(pos + e.direction);
     }
 
 }
