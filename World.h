@@ -6,6 +6,7 @@
 #define WORLD_H
 
 #include "globals.h"
+#include "entities/Enemy.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -13,11 +14,6 @@
 
 class World{
     private:
-        /* Easily change shapes later if needed */
-        typedef sf::RectangleShape StarShape;
-        typedef sf::RectangleShape BulletShape;
-        typedef sf::RectangleShape EnemyShape;
-        typedef sf::CircleShape ShipShape;
 
         /* Player Ship Object */
         ShipShape playerShip;
@@ -25,7 +21,7 @@ class World{
         /* Main Containers for game entities*/
         std::vector<BulletShape> bullets;
         std::vector<StarShape> stars;
-        std::vector<EnemyShape> enemies;
+        std::vector<Enemy> enemies;
 
         /* Utility Functions for bullets */
         void makeBullet(float bulletX, float bulletY);
@@ -41,6 +37,9 @@ class World{
         void updateShip();
         std::vector<bounds> shipOnBound();
 
+        void makeInitEnemies();
+        void updateEnemies();
+
     public:
         World();
 
@@ -55,6 +54,7 @@ class World{
         static std::random_device r;
         static std::mt19937 rng;
         static std::uniform_real_distribution<float> starDist;
+        static std::uniform_int_distribution<int> randomInt;
 };
 
 

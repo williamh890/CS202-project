@@ -7,6 +7,7 @@
 
 #include "globals.h"
 #include "World.h"
+#include "entities/Enemy.h"
 
 #include <SFML/Graphics.hpp>
 using sf::RenderWindow;
@@ -23,6 +24,7 @@ using std::vector;
 std::random_device World::r;
 std::mt19937 World::rng = std::mt19937(r());
 std::uniform_real_distribution<float> World::starDist(0,WIDTH);
+std::uniform_int_distribution<int> World::randomInt(-1000, 1000);
 
 //Make the screen
 RenderWindow World::screen(VideoMode(WIDTH, HEIGHT), "ASTEROIDS");
@@ -32,6 +34,8 @@ RenderWindow World::screen(VideoMode(WIDTH, HEIGHT), "ASTEROIDS");
 void World::makeStar(float startingHeight){
     Vector2<float> starSize(STAR_HEIGHT, STAR_WIDTH);
     StarShape newStar(starSize);
+
+    newStar.setFillColor(Color(255,255,255,150));
     //Makes a new star with a random position along with of screen
     float starX = starDist(rng);
     newStar.setPosition(starX, startingHeight);
@@ -52,19 +56,11 @@ void World::populateInitialStars(){
 //Move the stars down the screen and delete if off
 //Also makes stars according to the spawn rate
 void World::updateStars(){
-//    static int starCounter = 0;
-//    //Make a new star periodically,
-//    //ntf: make star gen semi random
-//    if(!(starCounter % STAR_SPAWN_RATE)){
-//        //Makes a star at the top of the screen
-//        makeStar(0);
-//    }
-//    starCounter++;
-
     //Move all the stars down
     for(int i = stars.size() - 1; i >= 0; --i){
         stars[i].move(0, BACKGROUND_SPEED);
-        //Remove the star if its off the screen
+        //Move the star to the top with a random width
+        //if they reach the bottom
         if(stars[i].getPosition().y > HEIGHT + STAR_HEIGHT){
             stars[i].setPosition(starDist(rng), 0);
         }
@@ -183,30 +179,66 @@ void World::updateShip(){
 }
 //////////////////////////END SHIP FUNCTIONS/////////////////////////
 
+////////////////////////ENEMY FUNCTIONS/////////////////////////////
+void World::makeInitEnemies(){
+    for(int h = 5; h < HEIGHT / 2; h += ENEMY_HEIGHT + 5){
+        Vector2<float> starting_pos(starDist(rng), h);
+
+        Vector2<float> starting_dir = (randomInt(rng) % 2) ? Vector2<float>(-1,0) : Vector2<float>(1,0);
+
+        enemies.push_back(Enemy(starting_pos, starting_dir, 5,5));
+    }
+}
+
+void World::updateEnemies(){
+    //Look through all the enemies
+    for(auto & e : enemies){
+        Vector2<float> pos = e.getPosition();
+        //Right side of the screen
+        if(pos.x > WIDTH - 2*ENEMY_WIDTH){
+            e.direction.x  *= -1;
+        }
+        //Left side of the screen
+        if(pos.x < ENEMY_WIDTH){
+            e.direction.x *= -1;
+        }
+
+        e.setPosition(pos + e.direction);
+    }
+
+}
+
+
+////////////////////////END ENEMY FUNCTIONS/////////////////////////
 //CTOR
 World::World() : playerShip(CircleShape(SHIP_RADIUS, 3)){
 
     shipSettings();
     populateInitialStars();
-
+    makeInitEnemies();
     screen.setFramerateLimit(FRAMERATE);
 }
-
+//UPdate all the entities in the game world
 void World::update(){
     updateShip();
     updateStars();
     updateBullets();
-
+    updateEnemies();
 }
+
 //Draws all the entities to the sfml window
 void World::draw(){
     // !!!NTF: Find a way to just loop through all the entities and draw them
     //         instead of having separate loops
-    for(const auto & b : bullets){
-        screen.draw(b);
-    }
     for(const auto & s : stars){
         screen.draw(s);
     }
+    for(const auto & b : bullets){
+        screen.draw(b);
+    }
+    for(const auto & e : enemies){
+        screen.draw(e);
+    }
+
     screen.draw(playerShip);
 }
