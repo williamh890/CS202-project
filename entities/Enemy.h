@@ -16,6 +16,7 @@ struct Enemy : public EnemyShape{
 
     Enemy(Vector2<float> starting_pos, Vector2<float> starting_dir, int hp, int damage);
     Vector2<float> direction;
+
     int hp;
     int damage;
 
