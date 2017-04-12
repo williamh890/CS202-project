@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 using sf::Vector2;
+using sf::Color;
 
 Bullet::Bullet(float bulletX, float bulletY) : BulletShape(Vector2<float>(BULLET_WIDTH,BULLET_LEN)){
     Color BULLET_COLOR{255, 0, 0};

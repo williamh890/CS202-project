@@ -12,7 +12,7 @@
 #include <vector>
 #include <random>
 
-class World{
+class World : public sf::RenderWindow{
     private:
 
         /* Player Ship Object */
@@ -43,12 +43,9 @@ class World{
     public:
         World();
 
-        /* SFML Window */
-        static sf::RenderWindow screen;
-
-        void draw();
+        void show();
         void update();
-        void display();
+
 
         /* Random Real Generators */
         static std::random_device r;

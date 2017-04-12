@@ -29,9 +29,6 @@ std::mt19937 World::rng = std::mt19937(r());
 std::uniform_real_distribution<float> World::starDist(0,WIDTH);
 std::uniform_int_distribution<int> World::randomInt(-1000, 1000);
 
-//Make the screen
-RenderWindow World::screen(VideoMode(WIDTH, HEIGHT), "ASTEROIDS");
-
 ///////////////////////////STAR FUNCTIONS/////////////////////////////////
 
 void World::makeStar(float startingHeight){
@@ -173,7 +170,7 @@ void World::updateShip(){
         if(shotCounter % FIRE_RATE == 0){
             //Gets the x/y position
             float bulletX = playerShip.getPosition().x + SHIP_RADIUS;
-            float bulletY = playerShip.getPosition().y - SHIP_RADIUS;
+            float bulletY = playerShip.getPosition().y;
             //Makes a bullet at that x,y position
             makeBullet(bulletX, bulletY);
         }
@@ -195,7 +192,7 @@ void World::makeInitEnemies(){
 
 void World::updateEnemies(){
     //Look through all the enemies
-    for(int i = 0; i < enemies.size();i++){
+    for(int i = enemies.size() - 1; i >= 0; --i){
         Vector2<float> pos = enemies[i].getPosition();
         //Right side of the screen
         if(pos.x > WIDTH - 2*ENEMY_WIDTH){
@@ -205,9 +202,9 @@ void World::updateEnemies(){
         if(pos.x < ENEMY_WIDTH){
             enemies[i].direction.x *= -1;
         }
-        for (int j =0; j < bullets.size();j++) {
+        for (int j = bullets.size() - 1; j >= 0; --j) {
             if (enemies[i].checkIntersect(bullets[j])) {
-                cout << "Hit an enemy" << endl;
+
                 bullets.erase(bullets.begin()+j);
                 enemies[i].hp--;
                 if (enemies[i].hp <= 0) {
@@ -215,7 +212,7 @@ void World::updateEnemies(){
                 }
             }
         }
-        //e.setPosition(pos + e.direction);
+        enemies[i].setPosition(pos + enemies[i].direction);
     }
 
 }
@@ -223,12 +220,14 @@ void World::updateEnemies(){
 
 ////////////////////////END ENEMY FUNCTIONS/////////////////////////
 //CTOR
-World::World() : playerShip(CircleShape(SHIP_RADIUS, 3)){
+World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS"),
+                 playerShip(CircleShape(SHIP_RADIUS, 3))
+{
 
     shipSettings();
     populateInitialStars();
     makeInitEnemies();
-    screen.setFramerateLimit(FRAMERATE);
+    this->setFramerateLimit(FRAMERATE);
 }
 //UPdate all the entities in the game world
 void World::update(){
@@ -239,18 +238,18 @@ void World::update(){
 }
 
 //Draws all the entities to the sfml window
-void World::draw(){
+void World::show(){
     // !!!NTF: Find a way to just loop through all the entities and draw them
     //         instead of having separate loops
     for(const auto & s : stars){
-        screen.draw(s);
+        this->draw(s);
     }
     for(const auto & b : bullets){
-        screen.draw(b);
+        this->draw(b);
     }
     for(const auto & e : enemies){
-        screen.draw(e);
+        this->draw(e);
     }
 
-    screen.draw(playerShip);
+    this->draw(playerShip);
 }

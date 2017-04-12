@@ -12,10 +12,11 @@ using sf::Color;
 //Ctor
 Enemy::Enemy(Vector2<float> starting_pos,
              Vector2<float> starting_dir,
-             int health, int d) : EnemyShape(Vector2<float>(ENEMY_HEIGHT,ENEMY_WIDTH)),
-                                  direction(starting_dir),
-                                  hp(health),
-                                  damage(d)
+             int health,
+             int d) :  EnemyShape(Vector2<float>(ENEMY_HEIGHT,ENEMY_WIDTH)),
+                       direction(starting_dir),
+                       hp(health),
+                       damage(d)
 {
     this->setPosition(starting_pos);
     this->setFillColor(Color(255, 76, 240));
