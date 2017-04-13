@@ -1,10 +1,10 @@
-//asteroids.cpp
+// main.cpp
 //CS 202 Final Proj
 //Auth: William Horn
 //Rough draft for game framework
 
-#include "globals.h"
-#include "World.h"
+#include "constants.h"
+#include "world.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Event;

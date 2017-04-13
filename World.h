@@ -5,8 +5,8 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "globals.h"
-#include "entities/Enemy.h"
+#include "constants.h"
+#include "enemy.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>

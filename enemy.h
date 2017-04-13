@@ -1,4 +1,4 @@
-//Enemy.h
+// enemy.h
 //Auth: William Horn
 //4.20.2017
 //Class header to represent base enemy
@@ -6,7 +6,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "../globals.h"
+#include "constants.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Vector2;

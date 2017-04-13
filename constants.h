@@ -1,4 +1,4 @@
-//game_constants.h
+// constants.h
 //CS 202 Proj
 //Auth: William Horn
 //4.7.2017
@@ -9,8 +9,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#ifndef GAME_CONSTANTS_H_INCLUDED
-#define GAME_CONSTANTS_H_INCLUDED
+#ifndef CONSTANTS_H_INCLUDED
+#define CONSTANTS_H_INCLUDED
 
 /* Easily change shapes later if needed */
 typedef sf::RectangleShape StarShape;
@@ -43,4 +43,4 @@ const int ENEMY_WIDTH = 15;
 //For bound checking
 enum bounds {RIGHT, LEFT, UPPER, LOWER,EMPTY};
 
-#endif // GAME_CONSTANTS_H_INCLUDED
+#endif // CONSTANTS_H_INCLUDED

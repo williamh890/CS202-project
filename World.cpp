@@ -5,9 +5,9 @@
 
 //Ctor for  world class
 
-#include "globals.h"
-#include "World.h"
-#include "entities/Enemy.h"
+#include "constants.h"
+#include "world.h"
+#include "enemy.h"
 
 #include <SFML/Graphics.hpp>
 using sf::RenderWindow;
