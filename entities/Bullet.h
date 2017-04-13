@@ -1,3 +1,7 @@
+//Bullet.h
+//Auth: William Horn
+//4.12.2017
+//Header for Bullet class
 
 #ifndef BULLET_H
 #define BULLET_H

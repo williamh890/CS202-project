@@ -3,7 +3,7 @@
 //4.10.2017
 //Definitions for Enemy class
 
-#include "Enemy.h"
+#include "../Enemy.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Vector2;

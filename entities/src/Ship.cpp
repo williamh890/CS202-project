@@ -3,8 +3,8 @@
 //4.12.2017
 //Definitions for ship class
 
-#include "../globals.h"
-#include "Ship.h"
+#include "../../globals.h"
+#include "../Ship.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Color;

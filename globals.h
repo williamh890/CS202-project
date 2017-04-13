@@ -12,6 +12,8 @@
 #ifndef GAME_CONSTANTS_H_INCLUDED
 #define GAME_CONSTANTS_H_INCLUDED
 
+
+
 /* Easily change shapes later if needed */
 typedef sf::RectangleShape StarShape;
 typedef sf::RectangleShape BulletShape;
@@ -40,6 +42,9 @@ const int STAR_WIDTH = 2;
 
 const int ENEMY_HEIGHT = 30;
 const int ENEMY_WIDTH = 20;
+
+const double PI = 3.14159265358979323846;  /* pi */
+
 
 //For bound checking
 enum bounds {RIGHT, LEFT, UPPER, LOWER,EMPTY};

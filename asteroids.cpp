@@ -5,16 +5,16 @@
 
 #include "globals.h"
 #include "World.h"
-#include <cmath>
-using std::cos;
-using std::sin;
+#include "entities/Asteroid.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Event;
 using sf::Color;
 
-int main()
-{
+int main(){
+    Asteroid a(30);
+
+    a.setPosition(WIDTH / 2, HEIGHT / 2);
 
     World world;
     //Runs for as long as the window is open
@@ -36,6 +36,7 @@ int main()
         world.clear(Color::Black);
         world.update();
         world.show();
+        world.draw(a);
         world.display();
     }//END WINDOW LOOP//
 
