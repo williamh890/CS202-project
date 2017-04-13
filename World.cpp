@@ -8,8 +8,9 @@
 #include "globals.h"
 #include "World.h"
 #include "entities/Enemy.h"
-
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Font.hpp>
 using sf::RenderWindow;
 using sf::VideoMode;
 using sf::Color;
@@ -241,4 +242,14 @@ void World::draw(){
     }
 
     screen.draw(playerShip);
+}
+int World::gameOver(){
+    sf::Font font;
+    if(!font.loadFromFile("MScomicSans.ttf")){
+        return -1;
+        }
+     sf::Text gO(gameOverText,font);
+     gO.setCharacterSize(30);
+
+    return 0;
 }

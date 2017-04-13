@@ -9,8 +9,11 @@
 #include "entities/Enemy.h"
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include <vector>
 #include <random>
+#include <SFML/Graphics/Text.hpp>
+using std::string;
 
 class World{
     private:
@@ -39,6 +42,7 @@ class World{
 
         void makeInitEnemies();
         void updateEnemies();
+        string gameOverText="--GAME\nOVER--";
 
     public:
         World();
@@ -49,6 +53,8 @@ class World{
         void draw();
         void update();
         void display();
+        int gameOver();
+
 
         /* Random Real Generators */
         static std::random_device r;
