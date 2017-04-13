@@ -8,6 +8,7 @@
 #include "globals.h"
 #include "World.h"
 #include "entities/Enemy.h"
+#include "entities/Photon.h"
 
 #include <SFML/Graphics.hpp>
 using sf::RenderWindow;

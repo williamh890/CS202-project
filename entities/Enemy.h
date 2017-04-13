@@ -7,6 +7,7 @@
 #define ENEMY_H
 
 #include "../globals.h"
+#include "Bullet.h"
 
 #include <SFML/Graphics.hpp>
 using sf::FloatRect;
@@ -20,7 +21,7 @@ struct Enemy : public EnemyShape{
     int hp;
     int damage;
 
-    bool checkIntersect(const BulletShape &b);
+    bool checkIntersect(const Bullet &b);
 
 };
 

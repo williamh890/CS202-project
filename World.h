@@ -9,6 +9,7 @@
 #include "entities/Enemy.h"
 #include "entities/Bullet.h"
 #include "entities/Ship.h"
+#include "entities/Photon.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>

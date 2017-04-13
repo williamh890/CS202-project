@@ -2,6 +2,9 @@
 //Auth: William Horn
 //4.12.2017
 //Definitions for Asteroid class
+#ifndef PHOTON_H
+#define PHOTON_H
+
 
 #include <SFML/Graphics.hpp>
 using sf::Drawable;
@@ -10,12 +13,13 @@ using sf::RenderStates;
 using sf::Transformable;
 using sf::VertexArray;
 using sf::Vertex;
+using sf::FloatRect;
 
-class Asteroid : public Drawable, public Transformable{
+class Photon : public Drawable, public Transformable{
 
     public:
-        Asteroid(unsigned int numVertices);
-
+        Photon(unsigned int numVertices = PHOTON_EDGES);
+        FloatRect getGlobalBounds();
     private:
         virtual void draw(RenderTarget & target, RenderStates states) const{
             // apply the entity's transform -- combine it with the one that was passed by the caller
@@ -28,5 +32,8 @@ class Asteroid : public Drawable, public Transformable{
         }
 
         VertexArray vertices;
-
+        FloatRect globalBounds;
 };
+
+
+#endif // PHOTON_H

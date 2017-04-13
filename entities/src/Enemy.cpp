@@ -23,6 +23,6 @@ Enemy::Enemy(Vector2<float> starting_pos,
 
 }
 
-bool Enemy::checkIntersect(const BulletShape &b) {
+bool Enemy::checkIntersect(const Bullet &b) {
     return (this->getGlobalBounds().intersects(b.getGlobalBounds()));
 }

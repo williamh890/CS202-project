@@ -36,6 +36,9 @@ const int BULLET_WIDTH = 2;
 const int BULLET_SPEED = 20;
 const int FIRE_RATE = 10;   //Smaller number is faster fire rate
 
+const int PHOTON_RADIUS = 12;
+const int PHOTON_EDGES = 15;
+
 const int STAR_SPAWN_RATE = 1; //Larger means less stars
 const int STAR_HEIGHT = 2;
 const int STAR_WIDTH = 2;

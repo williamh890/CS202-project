@@ -5,17 +5,15 @@
 
 #include "globals.h"
 #include "World.h"
-#include "entities/Asteroid.h"
+#include "entities/Photon.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Event;
 using sf::Color;
 
 int main(){
-    Asteroid a(30);
 
-    a.setPosition(WIDTH / 2, HEIGHT / 2);
-
+    while(true){
     World world;
     //Runs for as long as the window is open
     while(world.isOpen()){
@@ -36,9 +34,9 @@ int main(){
         world.clear(Color::Black);
         world.update();
         world.show();
-        world.draw(a);
         world.display();
+        break;
     }//END WINDOW LOOP//
-
+    }
     return 0;
 }
