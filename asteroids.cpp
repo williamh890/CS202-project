@@ -5,6 +5,9 @@
 
 #include "globals.h"
 #include "World.h"
+#include <cmath>
+using std::cos;
+using std::sin;
 
 #include <SFML/Graphics.hpp>
 using sf::Event;
@@ -12,6 +15,7 @@ using sf::Color;
 
 int main()
 {
+
     World world;
     //Runs for as long as the window is open
     while(world.isOpen()){

@@ -6,5 +6,7 @@
 
 struct Bullet : public BulletShape{
     Bullet(float x, float y);
+
+    int damage;
 };
 #endif // BULLET_H

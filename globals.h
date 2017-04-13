@@ -28,6 +28,7 @@ const int PLAYER_X_SPEED = 5;
 const int PLAYER_Y_SPEED = 5;
 const int SHIP_RADIUS = 20;
 
+const int BULLET_DAMAGE = 1;
 const int BULLET_LEN = 20;
 const int BULLET_WIDTH = 2;
 const int BULLET_SPEED = 20;
@@ -37,8 +38,8 @@ const int STAR_SPAWN_RATE = 1; //Larger means less stars
 const int STAR_HEIGHT = 2;
 const int STAR_WIDTH = 2;
 
-const int ENEMY_HEIGHT = 20;
-const int ENEMY_WIDTH = 15;
+const int ENEMY_HEIGHT = 30;
+const int ENEMY_WIDTH = 20;
 
 //For bound checking
 enum bounds {RIGHT, LEFT, UPPER, LOWER,EMPTY};

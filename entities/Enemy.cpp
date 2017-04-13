@@ -19,7 +19,7 @@ Enemy::Enemy(Vector2<float> starting_pos,
                        damage(d)
 {
     this->setPosition(starting_pos);
-    this->setFillColor(Color(255, 76, 240));
+    this->setFillColor(Color(0, 196, 58));
 
 }
 

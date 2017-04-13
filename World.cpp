@@ -28,6 +28,7 @@ std::random_device World::r;
 std::mt19937 World::rng = std::mt19937(r());
 std::uniform_real_distribution<float> World::starDist(0,WIDTH);
 std::uniform_int_distribution<int> World::randomInt(-1000, 1000);
+std::uniform_int_distribution<int> World::starBrightness(100, 255);
 
 ///////////////////////////STAR FUNCTIONS/////////////////////////////////
 
@@ -35,7 +36,7 @@ void World::makeStar(float startingHeight){
     Vector2<float> starSize(STAR_HEIGHT, STAR_WIDTH);
     StarShape newStar(starSize);
 
-    newStar.setFillColor(Color(255,255,255,150));
+    newStar.setFillColor(Color(255,255,255,starBrightness(rng)));
     //Makes a new star with a random position along with of screen
     float starX = starDist(rng);
     newStar.setPosition(starX, startingHeight);
@@ -46,7 +47,7 @@ void World::makeStar(float startingHeight){
 void World::populateInitialStars(){
     for(int h = 0; h < HEIGHT; ++h){
         //This is finicky
-        if(!(h % (STAR_SPAWN_RATE*8))){
+        if(!(h % (STAR_SPAWN_RATE*7))){
             makeStar(h);
         }
     }
@@ -70,13 +71,8 @@ void World::updateStars(){
 
 //////////////////////////BULLET FUNCTIONS//////////////////////////////
 void World::makeBullet(float bulletX, float bulletY){
-    Color BULLET_COLOR{255, 0, 0};
-
-    BulletShape newBullet(Vector2<float>(BULLET_WIDTH,BULLET_LEN));
-    //Makes the bullets at the ships position
-
-    newBullet.setPosition(bulletX, bulletY);
-    newBullet.setFillColor(BULLET_COLOR);
+    //Make a new bullet
+    Bullet newBullet(bulletX, bulletY);
     //Adds the bullet to the list of bullets
     bullets.push_back(newBullet);
 }
@@ -100,18 +96,7 @@ void World::updateBullets(){
 
 //Sets all the shape/color settings for the ship model
 void World::shipSettings(){
-    int outline = 2;
 
-    playerShip.setRadius(SHIP_RADIUS);
-    playerShip.setOutlineThickness(outline);
-
-    Color outlineColor{183, 183, 183};
-    Color fillColor{42, 197, 224};
-
-    playerShip.setFillColor(fillColor);
-    playerShip.setOutlineColor(outlineColor);
-
-    playerShip.setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
 }
 
 //Returns if ship is bounded on the left or the right of the screen
@@ -192,27 +177,47 @@ void World::makeInitEnemies(){
 
 void World::updateEnemies(){
     //Look through all the enemies
-    for(int i = enemies.size() - 1; i >= 0; --i){
-        Vector2<float> pos = enemies[i].getPosition();
+    for(int e = enemies.size() - 1; e >= 0; --e){
+        //Gets the position of the enemy
+        Vector2<float> pos = enemies[e].getPosition();
+
         //Right side of the screen
         if(pos.x > WIDTH - 2*ENEMY_WIDTH){
-            enemies[i].direction.x  *= -1;
+            enemies[e].direction.x  *= -1;
         }
         //Left side of the screen
         if(pos.x < ENEMY_WIDTH){
-            enemies[i].direction.x *= -1;
+            enemies[e].direction.x *= -1;
         }
-        for (int j = bullets.size() - 1; j >= 0; --j) {
-            if (enemies[i].checkIntersect(bullets[j])) {
+        bool doesEnemyExist = true;
+        //Look through all the bullets
+        for (int b = bullets.size() - 1; b >= 0; --b) {
+            //If an enemy and a bullet intersect
+            if (enemies[e].checkIntersect(bullets[b])) {
+                //Do damage to the enemy
+                enemies[e].hp -= bullets[b].damage;
 
-                bullets.erase(bullets.begin()+j);
-                enemies[i].hp--;
-                if (enemies[i].hp <= 0) {
-                    enemies.erase(enemies.begin()+i);
+                Color currColor = enemies[e].getFillColor();
+
+                currColor.r += 50*bullets[b].damage;
+                currColor.g -= 20*bullets[b].damage;
+
+                enemies[e].setFillColor(currColor);
+                //Remove the bullet
+                bullets.erase(bullets.begin()+b);
+                //Check if enemy is dead
+                if (enemies[e].hp <= 0) {
+                    //Delete the enemy
+                    enemies.erase(enemies.begin()+e);
+                    doesEnemyExist = false;
+                    break;
                 }
             }
         }
-        enemies[i].setPosition(pos + enemies[i].direction);
+        //Don't move the wrong enemy
+        if(!doesEnemyExist) continue;
+        //Move the enemy
+        enemies[e].setPosition(pos + enemies[e].direction);
     }
 
 }
@@ -220,10 +225,8 @@ void World::updateEnemies(){
 
 ////////////////////////END ENEMY FUNCTIONS/////////////////////////
 //CTOR
-World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS"),
-                 playerShip(CircleShape(SHIP_RADIUS, 3))
+World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS")
 {
-
     shipSettings();
     populateInitialStars();
     makeInitEnemies();

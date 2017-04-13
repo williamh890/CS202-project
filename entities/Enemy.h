@@ -21,6 +21,7 @@ struct Enemy : public EnemyShape{
     int damage;
 
     bool checkIntersect(const BulletShape &b);
+
 };
 
 

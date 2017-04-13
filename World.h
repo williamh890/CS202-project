@@ -7,6 +7,8 @@
 
 #include "globals.h"
 #include "entities/Enemy.h"
+#include "entities/Bullet.h"
+#include "entities/Ship.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -16,10 +18,10 @@ class World : public sf::RenderWindow{
     private:
 
         /* Player Ship Object */
-        ShipShape playerShip;
+        Ship playerShip;
 
         /* Main Containers for game entities*/
-        std::vector<BulletShape> bullets;
+        std::vector<Bullet> bullets;
         std::vector<StarShape> stars;
         std::vector<Enemy> enemies;
 
@@ -51,6 +53,7 @@ class World : public sf::RenderWindow{
         static std::random_device r;
         static std::mt19937 rng;
         static std::uniform_real_distribution<float> starDist;
+        static std::uniform_int_distribution<int> starBrightness;
         static std::uniform_int_distribution<int> randomInt;
 };
 
