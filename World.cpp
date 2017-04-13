@@ -170,6 +170,7 @@ void World::updateShip(){
             if (playerShip.checkIntersect(enemies[e])) {
                 //minus a single life per collision
                 playerShip.amountOfLives--;
+                playerShip.setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
                 if (playerShip.amountOfLives <= 0) {
                     playerShip.playerIsDead=true;
                     break;
