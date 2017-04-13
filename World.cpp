@@ -23,7 +23,7 @@ using std::vector;
 //Set up for random real number generator for stars
 std::random_device World::r;
 std::mt19937 World::rng = std::mt19937(r());
-std::uniform_real_distribution<float> World::starDist(0,WIDTH);
+std::uniform_real_distribution<float> World::starDist(0.0,(float)WIDTH);
 std::uniform_int_distribution<int> World::randomInt(-1000, 1000);
 
 //Make the screen
@@ -32,7 +32,7 @@ RenderWindow World::screen(VideoMode(WIDTH, HEIGHT), "ASTEROIDS");
 ///////////////////////////STAR FUNCTIONS/////////////////////////////////
 
 void World::makeStar(float startingHeight){
-    Vector2<float> starSize(STAR_HEIGHT, STAR_WIDTH);
+    Vector2<float> starSize((float)STAR_HEIGHT, (float)STAR_WIDTH);
     StarShape newStar(starSize);
 
     newStar.setFillColor(Color(255,255,255,150));
@@ -47,7 +47,7 @@ void World::populateInitialStars(){
     for(int h = 0; h < HEIGHT; ++h){
         //This is finicky
         if(!(h % (STAR_SPAWN_RATE*8))){
-            makeStar(h);
+            makeStar((float)h);
         }
     }
 
@@ -58,7 +58,7 @@ void World::populateInitialStars(){
 void World::updateStars(){
     //Move all the stars down
     for(int i = stars.size() - 1; i >= 0; --i){
-        stars[i].move(0, BACKGROUND_SPEED);
+        stars[i].move(0.0, (float)BACKGROUND_SPEED);
         //Move the star to the top with a random width
         //if they reach the bottom
         if(stars[i].getPosition().y > HEIGHT + STAR_HEIGHT){
@@ -72,7 +72,7 @@ void World::updateStars(){
 void World::makeBullet(float bulletX, float bulletY){
     Color BULLET_COLOR{255, 0, 0};
 
-    BulletShape newBullet(Vector2<float>(BULLET_WIDTH,BULLET_LEN));
+    BulletShape newBullet(Vector2<float>((float)BULLET_WIDTH,(float)BULLET_LEN));
     //Makes the bullets at the ships position
 
     newBullet.setPosition(bulletX, bulletY);
@@ -100,9 +100,9 @@ void World::updateBullets(){
 
 //Sets all the shape/color settings for the ship model
 void World::shipSettings(){
-    int outline = 2;
+    float outline = 2.0;
 
-    playerShip.setRadius(SHIP_RADIUS);
+    playerShip.setRadius((float)SHIP_RADIUS);
     playerShip.setOutlineThickness(outline);
 
     Color outlineColor{183, 183, 183};
@@ -152,7 +152,7 @@ void World::updateShip(){
     //RIGHT ARROW TO MOVE RIGHT
     if(Keyboard::isKeyPressed(Keyboard::Right)){
         if(shipOnBound()[0] != RIGHT)
-            playerShip.move(PLAYER_X_SPEED, 0);
+            playerShip.move((float)PLAYER_X_SPEED, 0.0);
     }
     //UP ARROW TO MOVE UP
     if(Keyboard::isKeyPressed(Keyboard::Up)){
@@ -162,7 +162,7 @@ void World::updateShip(){
     //DOWN ARROW TO MOVE DOWN
     if(Keyboard::isKeyPressed(Keyboard::Down)){
         if(shipOnBound()[3] != LOWER)
-            playerShip.move(0, PLAYER_Y_SPEED);
+            playerShip.move(0.0, (float)PLAYER_Y_SPEED);
     }
 
     //SPACE TO FIRE BULLET
@@ -182,7 +182,7 @@ void World::updateShip(){
 ////////////////////////ENEMY FUNCTIONS/////////////////////////////
 void World::makeInitEnemies(){
     for(int h = 5; h < HEIGHT / 2; h += ENEMY_HEIGHT + 5){
-        Vector2<float> starting_pos(starDist(rng), h);
+        Vector2<float> starting_pos(starDist(rng), (float)h);
 
         Vector2<float> starting_dir = (randomInt(rng) % 2) ? Vector2<float>(-1,0) : Vector2<float>(1,0);
 
@@ -211,7 +211,7 @@ void World::updateEnemies(){
 
 ////////////////////////END ENEMY FUNCTIONS/////////////////////////
 //CTOR
-World::World() : playerShip(CircleShape(SHIP_RADIUS, 3)){
+World::World() : playerShip(CircleShape((float)SHIP_RADIUS, 3)){
 
     shipSettings();
     populateInitialStars();
