@@ -42,12 +42,13 @@ class World : public sf::RenderWindow{
         void makeInitEnemies();
         void updateEnemies();
 
+
     public:
         World();
 
         void show();
         void update();
-
+        Ship getPlayerShip();
 
         /* Random Real Generators */
         static std::random_device r;

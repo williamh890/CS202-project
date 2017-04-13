@@ -99,6 +99,10 @@ void World::shipSettings(){
 
 }
 
+Ship World::getPlayerShip() {
+    return playerShip;
+}
+
 //Returns if ship is bounded on the left or the right of the screen
 vector<bounds> World::shipOnBound(){
     Vector2<float> pos = playerShip.getPosition();
@@ -161,6 +165,17 @@ void World::updateShip(){
         }
         shotCounter++;
     }
+     for (int e = enemies.size() - 1; e >= 0; --e) {
+            //If the player and an enemy intersect
+            if (playerShip.checkIntersect(enemies[e])) {
+                //minus a single life per collision
+                playerShip.amountOfLives--;
+                if (playerShip.amountOfLives <= 0) {
+                    playerShip.playerIsDead=true;
+                    break;
+                }
+            }
+        }
 }
 //////////////////////////END SHIP FUNCTIONS/////////////////////////
 
@@ -253,6 +268,8 @@ void World::show(){
     for(const auto & e : enemies){
         this->draw(e);
     }
+    if (!playerShip.playerIsDead) {
+        this->draw(playerShip);
+    }
 
-    this->draw(playerShip);
 }
