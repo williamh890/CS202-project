@@ -50,7 +50,6 @@ class World {
         static sf::RenderWindow screen;
 		void draw();
         void update();
-		void display();
 
         // Random Real Generators
         static std::random_device ranDev;
