@@ -163,29 +163,29 @@ void World::updateShip()
     // For controlling fire rate
     static int shotCounter = 0;
 
-	// Right arrow to move right
-	if (Keyboard::isKeyPressed(Keyboard::Right))
+	// Right arrow or D to move right
+	if (Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::D))
 	{
 		if (shipOnBound()[0] != RIGHT)
 			playerShip.move((float)PLAYER_X_SPEED, 0.0);
 	}
 
-    // Left arrow to move left
-    if(Keyboard::isKeyPressed(Keyboard::Left))
+    // Left arrow or A to move left
+    if(Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::A))
 	{
         if(shipOnBound()[1] != LEFT)
             playerShip.move(-PLAYER_X_SPEED, 0);
     }
 
-	// Up arrow to move up
-    if(Keyboard::isKeyPressed(Keyboard::Up))
+	// Up arrow or W key to move up
+    if(Keyboard::isKeyPressed(Keyboard::Up) || Keyboard::isKeyPressed(Keyboard::W))
 	{
         if(shipOnBound()[2] != UPPER)
             playerShip.move(0, -PLAYER_Y_SPEED);
     }
 
-    // Down arrow to move down
-    if(Keyboard::isKeyPressed(Keyboard::Down))
+    // Down arrow or D key to move down
+    if(Keyboard::isKeyPressed(Keyboard::Down) || Keyboard::isKeyPressed(Keyboard::S))
 	{
         if(shipOnBound()[3] != LOWER)
             playerShip.move(0.0, (float)PLAYER_Y_SPEED);
