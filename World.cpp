@@ -22,6 +22,9 @@ using std::vector;
 #include <iostream>
 using std::cout;
 using std::endl;
+#include <cmath>
+using std::sin;
+using std::floor;
 
 
 //Set up for random real number generator for stars
@@ -71,9 +74,9 @@ void World::updateStars(){
 ///////////////////////////END STAR FUNCTIONS///////////////////////////
 
 //////////////////////////BULLET FUNCTIONS//////////////////////////////
-void World::makeBullet(float bulletX, float bulletY){
+void World::makeBullet(int source, float bulletX, float bulletY, Vector2<float> dir){
     //Make a new bullet
-    Bullet newBullet(bulletX, bulletY);
+    Bullet newBullet(source, bulletX, bulletY, dir);
     //Adds the bullet to the list of bullets
     bullets.push_back(newBullet);
 }
@@ -87,18 +90,24 @@ void World::updateBullets(){
             bullets.erase(bullets.begin() + i);
         }
         else{
-            bullets[i].move(0, -BULLET_SPEED);
+            bullets[i].move(bullets[i].direction.x, bullets[i].direction.y);
+        }
+    }
+}
+
+void World::updatePhotons(){
+    for(int i = photons.size() - 1; i >= 0; --i){
+        if(photons[i].getPosition().x < 0){
+            photons.erase(photons.begin() + i);
+        }
+        else{
+            photons[i].movePhoton(0, -PHOTON_SPEED);
         }
     }
 }
 //////////////////////END BULLET FUNCTIONS//////////////////////////////
 
 //////////////////////SHIP FUNCTIONS///////////////////////////////////
-
-//Sets all the shape/color settings for the ship model
-void World::shipSettings(){
-
-}
 
 //Returns if ship is bounded on the left or the right of the screen
 vector<bounds> World::shipOnBound(){
@@ -128,7 +137,8 @@ vector<bounds> World::shipOnBound(){
 //          this being a direct move it would just apply a force
 void World::updateShip(){
     //for controlling fire rate
-    static int shotCounter = 0;
+    static int shotCounter = FIRE_RATE;
+    static int photonShotCounter = PHOTON_FIRERATE;
 
     //LEFT ARROW TO MOVE LEFT
     if(Keyboard::isKeyPressed(Keyboard::Left) || (Keyboard::isKeyPressed((Keyboard::A)))){
@@ -153,14 +163,34 @@ void World::updateShip(){
 
     //SPACE TO FIRE BULLET
     if(Keyboard::isKeyPressed(Keyboard::Space)){
-        if(shotCounter % FIRE_RATE == 0){
+        if(shotCounter >= FIRE_RATE){
             //Gets the x/y position
             float bulletX = playerShip.getPosition().x + SHIP_RADIUS;
             float bulletY = playerShip.getPosition().y;
             //Makes a bullet at that x,y position
-            makeBullet(bulletX, bulletY);
+            makeBullet(PLAYER, bulletX, bulletY, Vector2<float>(0, -(float)BULLET_SPEED));
+            shotCounter = 0;
         }
+    }
+    if(Keyboard::isKeyPressed(Keyboard::LShift)){
+        if(photonShotCounter >= PHOTON_FIRERATE){
+            //Gets the x/y position
+            float bulletX = playerShip.getPosition().x + SHIP_RADIUS;
+            float bulletY = playerShip.getPosition().y;
+            //Makes a bullet at that x,y position
+            playerShip.photonCannon(photons);
+
+            photonShotCounter = 0;
+        }
+
+    }
+
+    if(shotCounter <= FIRE_RATE){
         shotCounter++;
+    }
+
+    if(photonShotCounter <= PHOTON_FIRERATE){
+        photonShotCounter++;
     }
 }
 //////////////////////////END SHIP FUNCTIONS/////////////////////////
@@ -172,7 +202,7 @@ void World::makeInitEnemies(){
 
         Vector2<float> starting_dir = (randomInt(rng) % 2) ? Vector2<float>(-1,0) : Vector2<float>(1,0);
 
-        enemies.push_back(Enemy(starting_pos, starting_dir, 5,5));
+        enemies.push_back(Enemy(starting_pos, starting_dir, 5, 5));
     }
 }
 
@@ -181,6 +211,12 @@ void World::updateEnemies(){
     for(int e = enemies.size() - 1; e >= 0; --e){
         //Gets the position of the enemy
         Vector2<float> pos = enemies[e].getPosition();
+
+        //Have enemies periodically shoot
+        if(randomInt(rng) % 200 == 0){
+            //Make a bullet shooting down
+            makeBullet(ENEMY, pos.x, pos.y, Vector2<float>(0, ENEMY_BULLET_SPEED));
+        }
 
         //Right side of the screen
         if(pos.x > WIDTH - 2*ENEMY_WIDTH){
@@ -194,7 +230,7 @@ void World::updateEnemies(){
         //Look through all the bullets
         for (int b = bullets.size() - 1; b >= 0; --b) {
             //If an enemy and a bullet intersect
-            if (enemies[e].checkIntersect(bullets[b])) {
+            if (enemies[e].checkIntersect(bullets[b]) && bullets[b].source == PLAYER) {
                 //Do damage to the enemy
                 enemies[e].hp -= bullets[b].damage;
 
@@ -215,6 +251,28 @@ void World::updateEnemies(){
                 }
             }
         }
+        // !!!NTF: THIS IS BAAAADDD...
+        for (int p = photons.size() - 1; p >= 0; --p) {
+            //If an enemy and a bullet intersect
+            if (enemies[e].getGlobalBounds().intersects(photons[p].hitBox.getGlobalBounds()) ) {
+                //Do damage to the enemy
+                enemies[e].hp -= photons[p].damage;
+
+                Color currColor = enemies[e].getFillColor();
+
+                enemies[e].setFillColor(currColor);
+                //Remove the bullet
+                photons.erase(photons.begin()+p);
+                //Check if enemy is dead
+                if (enemies[e].hp <= 0) {
+                    //Delete the enemy
+                    enemies.erase(enemies.begin()+e);
+                    doesEnemyExist = false;
+                    break;
+                }
+            }
+        }
+
         //Don't move the wrong enemy
         if(!doesEnemyExist) continue;
         //Move the enemy
@@ -228,7 +286,6 @@ void World::updateEnemies(){
 //CTOR
 World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS")
 {
-    shipSettings();
     populateInitialStars();
     makeInitEnemies();
     this->setFramerateLimit(FRAMERATE);
@@ -238,6 +295,7 @@ void World::update(){
     updateShip();
     updateStars();
     updateBullets();
+    updatePhotons();
     updateEnemies();
 }
 
@@ -250,6 +308,10 @@ void World::show(){
     }
     for(const auto & b : bullets){
         this->draw(b);
+    }
+    for(const auto & p : photons){
+        this->draw(p);
+        //this->draw(p.hitBox);
     }
     for(const auto & e : enemies){
         this->draw(e);

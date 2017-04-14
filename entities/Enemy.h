@@ -20,7 +20,7 @@ struct Enemy : public EnemyShape{
 
     int hp;
     int damage;
-
+    int sourceID;
     bool checkIntersect(const Bullet &b);
 
 };

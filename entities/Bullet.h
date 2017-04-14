@@ -8,9 +8,14 @@
 
 #include "../globals.h"
 
-struct Bullet : public BulletShape{
-    Bullet(float x, float y);
+#include <SFML/Graphics.hpp>
+using sf::Vector2;
 
+struct Bullet : public BulletShape{
+    Bullet(int source, float x, float y, Vector2<float> dir);
+
+    int source;
     int damage;
+    Vector2<float> direction;
 };
 #endif // BULLET_H

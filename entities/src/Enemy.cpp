@@ -16,7 +16,8 @@ Enemy::Enemy(Vector2<float> starting_pos,
              int d) :  EnemyShape(Vector2<float>(ENEMY_HEIGHT,ENEMY_WIDTH)),
                        direction(starting_dir),
                        hp(health),
-                       damage(d)
+                       damage(d),
+                       sourceID(ENEMY)
 {
     this->setPosition(starting_pos);
     this->setFillColor(Color(0, 196, 58));
