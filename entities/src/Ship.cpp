@@ -8,8 +8,10 @@
 
 #include <SFML/Graphics.hpp>
 using sf::Color;
+#include <vector>
+using std::vector;
 
-Ship::Ship() : ShipShape(SHIP_RADIUS, 3){
+Ship::Ship() : ShipShape(SHIP_RADIUS, 3), sourceID(PLAYER){
     int outline = 2;
 
     this->setRadius(SHIP_RADIUS);
@@ -29,4 +31,14 @@ Ship::Ship() : ShipShape(SHIP_RADIUS, 3){
 
 bool Ship::checkIntersect(const EnemyShape &e) {
     return (this->getGlobalBounds().intersects(e.getGlobalBounds()));
+}
+
+void Ship::photonCannon(vector<Photon> & photons){
+    Photon newPhoton{PHOTON_RADIUS};
+
+    float X = getPosition().x + .7*SHIP_RADIUS;
+    float Y = getPosition().y - .7*SHIP_RADIUS;
+
+    newPhoton.setPhotonPosition(X, Y);
+    photons.push_back(newPhoton);
 }

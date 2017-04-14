@@ -5,7 +5,6 @@
 #ifndef PHOTON_H
 #define PHOTON_H
 
-
 #include <SFML/Graphics.hpp>
 using sf::Drawable;
 using sf::RenderTarget;
@@ -14,12 +13,17 @@ using sf::Transformable;
 using sf::VertexArray;
 using sf::Vertex;
 using sf::FloatRect;
+using sf::CircleShape;
 
 class Photon : public Drawable, public Transformable{
 
     public:
-        Photon(unsigned int numVertices = PHOTON_EDGES);
+        Photon(float radius, unsigned int numVertices = PHOTON_EDGES);
+
+        void setPhotonPosition(float x, float y);
+        void movePhoton(float delX, float delY);
         FloatRect getGlobalBounds();
+
     private:
         virtual void draw(RenderTarget & target, RenderStates states) const{
             // apply the entity's transform -- combine it with the one that was passed by the caller
@@ -30,9 +34,14 @@ class Photon : public Drawable, public Transformable{
             // draw the vertex array
             target.draw(vertices, states);
         }
+        public:
 
         VertexArray vertices;
+        CircleShape hitBox;
         FloatRect globalBounds;
+        int damage;
+        float frequency;
+        float moveCounter;
 };
 
 

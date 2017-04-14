@@ -23,11 +23,14 @@ class World : public sf::RenderWindow{
 
         /* Main Containers for game entities*/
         std::vector<Bullet> bullets;
+        std::vector<Photon> photons;
         std::vector<StarShape> stars;
         std::vector<Enemy> enemies;
 
+        void updatePhotons();
+
         /* Utility Functions for bullets */
-        void makeBullet(float bulletX, float bulletY);
+        void makeBullet(int source, float bulletX, float bulletY, Vector2<float> dir);
         void updateBullets();
 
         /* Utility Functions for Stars */
@@ -36,7 +39,6 @@ class World : public sf::RenderWindow{
         void updateStars();
 
         /* Utility Functions for player ship */
-        void shipSettings();
         void updateShip();
         std::vector<bounds> shipOnBound();
 
