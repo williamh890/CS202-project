@@ -12,6 +12,10 @@ struct Ship : public ShipShape{
     Ship();
 
     int weaponDamage;
+    int amountOfLives;
+    bool playerIsDead;
+    bool isTouchingEnemy;
+    bool checkIntersect(const EnemyShape &e);
 };
 
 #endif // SHIP_H

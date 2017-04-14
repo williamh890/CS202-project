@@ -22,4 +22,11 @@ Ship::Ship() : ShipShape(SHIP_RADIUS, 3){
     this->setOutlineColor(outlineColor);
 
     this->setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
+    amountOfLives = 5;
+    playerIsDead = false;
+    isTouchingEnemy = false;
+}
+
+bool Ship::checkIntersect(const EnemyShape &e) {
+    return (this->getGlobalBounds().intersects(e.getGlobalBounds()));
 }
