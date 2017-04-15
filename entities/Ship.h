@@ -6,7 +6,7 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-#include "../globals.h"
+#include "../constants.h"
 #include "Photon.h"
 
 #include <vector>

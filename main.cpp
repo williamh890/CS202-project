@@ -3,7 +3,7 @@
 //Auth: William Horn
 //Rough draft for game framework
 
-#include "globals.h"
+#include "constants.h"
 #include "World.h"
 #include "entities/Photon.h"
 

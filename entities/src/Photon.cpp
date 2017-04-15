@@ -3,7 +3,7 @@
 //4.12.2017
 //Definitions for Asteroid class
 
-#include "../../globals.h"
+#include "../../constants.h"
 #include "../Photon.h"
 
 #include <SFML/Graphics.hpp>

@@ -9,13 +9,12 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "globals.h"
+#include "constants.h"
 #include "entities/Enemy.h"
 #include "entities/Bullet.h"
 #include "entities/Ship.h"
 #include "entities/Photon.h"
 
->>>>>>> customShapes
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <random>
@@ -37,7 +36,6 @@ class World : public sf::RenderWindow{
 
         /* Utility Functions for bullets */
         void makeBullet(int source, float bulletX, float bulletY, Vector2<float> dir);
->>>>>>> customShapes
         void updateBullets();
 
         // Utility functions for stars
@@ -46,7 +44,7 @@ class World : public sf::RenderWindow{
         void updateStars();
 
         /* Utility Functions for player ship */
->>>>>>> customShapes
+
         void updateShip();
         std::vector<bounds> shipOnBound();
 
@@ -60,7 +58,6 @@ class World : public sf::RenderWindow{
         void show();
         void update();
         Ship getPlayerShip();
->>>>>>> customShapes
 
         // Random Real Generators
         static std::random_device ranDev;

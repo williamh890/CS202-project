@@ -6,7 +6,7 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include "../globals.h"
+#include "../constants.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Vector2;
