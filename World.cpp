@@ -11,6 +11,10 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <iostream>
+using std::cout;
+using std::endl;
 using sf::RenderWindow;
 using sf::VideoMode;
 using sf::Color;
@@ -245,11 +249,16 @@ void World::draw(){
 }
 int World::gameOver(){
     sf::Font font;
-    if(!font.loadFromFile("MScomicSans.ttf")){
+    if(!font.loadFromFile("coure.fon")){
+            cout<<"Can't find text file"<<endl;
         return -1;
+        }else{
+     //   font.loadFromFile("MScomicSans.ttf");
         }
-     sf::Text gO(gameOverText,font);
-     gO.setCharacterSize(30);
+     sf::Text gO(gameOverText,font,30);
+     gO.setColor(sf::Color(158,22,22));
+    screen.draw(gO);
+
 
     return 0;
 }
