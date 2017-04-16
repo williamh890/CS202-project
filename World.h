@@ -14,16 +14,17 @@
 #include "entities/Bullet.h"
 #include "entities/Photon.h"
 #include "entities/Ship.h"
+#include "entities/interface.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <random>
 
-
 class World : public sf::RenderWindow{
     public:
 
         /* Player Ship Object */
+        Interface interface;
         Ship playerShip;
 
         /* Main Containers for game entities*/

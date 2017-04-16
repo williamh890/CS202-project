@@ -13,6 +13,7 @@
 #include "entities/Ship.h"
 #include "entities/Enemy.h"
 #include "entities/Photon.h"
+#include "entities/interface.h"
 
 #include <SFML/Graphics.hpp>
 using sf::RenderWindow;
@@ -250,6 +251,7 @@ void World::updateEnemies(){
 
 // Constructor
 World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS"),
+                 interface(Interface()),
                  playerShip(Ship())
 {
     populateInitialStars();
