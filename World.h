@@ -12,8 +12,8 @@
 #include "constants.h"
 #include "entities/Enemy.h"
 #include "entities/Bullet.h"
-#include "entities/Ship.h"
 #include "entities/Photon.h"
+#include "entities/Ship.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -21,7 +21,7 @@
 
 
 class World : public sf::RenderWindow{
-    private:
+    public:
 
         /* Player Ship Object */
         Ship playerShip;
@@ -33,10 +33,12 @@ class World : public sf::RenderWindow{
         std::vector<Enemy> enemies;
 
         void updatePhotons();
+        void addPhoton(Photon p);
 
         /* Utility Functions for bullets */
-        void makeBullet(int source, float bulletX, float bulletY, Vector2<float> dir);
+
         void updateBullets();
+        void addBullet(Bullet b);
 
         // Utility functions for stars
         void makeStar(float startingHeight);
@@ -46,11 +48,10 @@ class World : public sf::RenderWindow{
         /* Utility Functions for player ship */
 
         void updateShip();
-        std::vector<bounds> shipOnBound();
+        std::vector<bounds> onBound(const Ship & playerShip);
 
         void makeInitEnemies();
         void updateEnemies();
-
 
     public:
         World();

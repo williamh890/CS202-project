@@ -8,21 +8,46 @@
 
 #include "../constants.h"
 #include "Photon.h"
+#include "Bullet.h"
 
 #include <vector>
 
+class World;
+
 struct Ship : public ShipShape{
+    //constructor
     Ship();
 
-    void photonCannon(std::vector<Photon> & photons);
-    int weaponDamage;
+    /* weapons */
+    //Creates a photon at the ships position
+    Photon photonCannon();
+    //Creates a bullet at the ships position
+    Bullet laser();
 
+    /* reload values */ // !!!NTF: Put these in some sort of struct
+                        //         Along with the weapon functions
+    int laserReloadTime;
+    int laserReloadSpeed;
+    int laserReloadCounter;
+    int photonReloadTime;
+    int photonReloadSpeed;
+    int photonReloadCounter;
+
+    /* health */
     int amountOfLives;
     bool playerIsDead;
     bool isTouchingEnemy;
+    //Checks if an enemy collides with the ship
     bool checkIntersect(const EnemyShape &e);
 
+    //To id the bullets
     int sourceID;
+
+    //Respond to keyboard inputs, controls movement and weapons
+    //Modifies the world
+    void update(World & world);
+
+
 
 };
 

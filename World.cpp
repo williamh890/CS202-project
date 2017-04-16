@@ -10,6 +10,7 @@
 
 #include "constants.h"
 #include "World.h"
+#include "entities/Ship.h"
 #include "entities/Enemy.h"
 #include "entities/Photon.h"
 
@@ -83,13 +84,6 @@ void World::updateStars()
 ///////////////////////////END STAR FUNCTIONS///////////////////////////
 
 //////////////////////////BULLET FUNCTIONS//////////////////////////////
-void World::makeBullet(int source, float bulletX, float bulletY, Vector2<float> dir){
-    //Make a new bullet
-    Bullet newBullet(source, bulletX, bulletY, dir);
-    //Adds the bullet to the list of bullets
-    bullets.push_back(newBullet);
-}
-
 // Moves bullets up the screen and deletes them if they fall off
 void World::updateBullets()
 {
@@ -132,7 +126,7 @@ Ship World::getPlayerShip() {
 }
 
 // Returns if ship is bounded by the edges of the game window
-vector<bounds> World::shipOnBound(){
+vector<bounds> World::onBound(const Ship & playerShip) {
     Vector2<float> pos = playerShip.getPosition();
     vector <bounds> playerScope ={EMPTY,EMPTY,EMPTY,EMPTY};
 
@@ -155,80 +149,7 @@ vector<bounds> World::shipOnBound(){
     return playerScope;
 }
 
-// Moves the ship with input from the keyboard and checks if a bullet has been fired
-//  !!!NTF: Add acceleration to the movement so instead of
-//          this being a direct move it would just apply a force
-void World::updateShip(){
-    //for controlling fire rate
-    static int shotCounter = FIRE_RATE;
-    static int photonShotCounter = PHOTON_FIRERATE;
 
-    //LEFT ARROW TO MOVE LEFT
-    if(Keyboard::isKeyPressed(Keyboard::Left) || (Keyboard::isKeyPressed((Keyboard::A)))){
-        if(shipOnBound()[1] != LEFT)
-            playerShip.move(-PLAYER_X_SPEED, 0);
-    }
-    //RIGHT ARROW TO MOVE RIGHT
-    if(Keyboard::isKeyPressed(Keyboard::Right) || (Keyboard::isKeyPressed((Keyboard::D)))){
-        if(shipOnBound()[0] != RIGHT)
-            playerShip.move(PLAYER_X_SPEED, 0);
-    }
-    //UP ARROW TO MOVE UP
-    if(Keyboard::isKeyPressed(Keyboard::Up) || (Keyboard::isKeyPressed((Keyboard::W)))){
-        if(shipOnBound()[2] != UPPER)
-            playerShip.move(0, -PLAYER_Y_SPEED);
-    }
-    //DOWN ARROW TO MOVE DOWN
-    if(Keyboard::isKeyPressed(Keyboard::Down) || (Keyboard::isKeyPressed((Keyboard::S)))){
-        if(shipOnBound()[3] != LOWER)
-            playerShip.move(0.0, (float)PLAYER_Y_SPEED);
-    }
-
-    //SPACE TO FIRE BULLET
-    if(Keyboard::isKeyPressed(Keyboard::Space)){
-        if(shotCounter >= FIRE_RATE){
-            //Gets the x/y position
-            float bulletX = playerShip.getPosition().x + SHIP_RADIUS;
-            float bulletY = playerShip.getPosition().y;
-            //Makes a bullet at that x,y position
-            makeBullet(PLAYER, bulletX, bulletY, Vector2<float>(0, -(float)BULLET_SPEED));
-            shotCounter = 0;
-
-        }
-    }
-    if(Keyboard::isKeyPressed(Keyboard::LShift)){
-        if(photonShotCounter >= PHOTON_FIRERATE){
-            //Gets the x/y position
-
-            //Makes a bullet at that x,y position
-            playerShip.photonCannon(photons);
-
-            photonShotCounter = 0;
-        }
-
-    }
-
-    if(shotCounter <= FIRE_RATE){
-        shotCounter++;
-    }
-
-     for (int e = enemies.size() - 1; e >= 0; --e) {
-            //If the player and an enemy intersect
-            if (playerShip.checkIntersect(enemies[e])) {
-                //minus a single life per collision
-                playerShip.amountOfLives--;
-                playerShip.setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
-                if (playerShip.amountOfLives <= 0) {
-                    playerShip.playerIsDead=true;
-                    break;
-                }
-            }
-        }
-
-    if(photonShotCounter <= PHOTON_FIRERATE){
-        photonShotCounter++;
-    }
-}
 //////////////////////////END SHIP FUNCTIONS/////////////////////////
 
 ////////////////////////ENEMY FUNCTIONS/////////////////////////////
@@ -252,7 +173,7 @@ void World::updateEnemies(){
         //Have enemies periodically shoot
         if(randomInt(rng) % 200 == 0){
             //Make a bullet shooting down
-            makeBullet(ENEMY, pos.x, pos.y, Vector2<float>(0, ENEMY_BULLET_SPEED));
+            bullets.push_back(Bullet(ENEMY, pos.x, pos.y, Vector2<float>(0, ENEMY_BULLET_SPEED)));
         }
 
         //Right side of the screen
@@ -339,7 +260,7 @@ World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS"),
 // Updates all the entities in the game world
 void World::update()
 {
-    updateShip();
+    playerShip.update(*this);
     updateStars();
     updateBullets();
     updatePhotons();
