@@ -14,8 +14,8 @@ Bullet::Bullet(int source,
                float bulletY,
                Vector2f dir,
                Color col) : BulletShape(Vector2f(BULLET_WIDTH,BULLET_SPEED)),
-                            damage(BULLET_DAMAGE),
                             source(source),
+                            damage(BULLET_DAMAGE),
                             direction(dir)
 {
     setPosition(bulletX, bulletY);

@@ -35,8 +35,11 @@ using std::floor;
 std::random_device World::ranDev;
 std::mt19937 World::rng = std::mt19937(ranDev());
 std::uniform_real_distribution<float> World::starDist(0.0,(float)WIDTH);
+std::uniform_real_distribution<float> World::enemyStartingVel(-10.,10.);
+std::uniform_real_distribution<float> World::optimalPlayerDist(100, 501);
 std::uniform_int_distribution<int> World::randomInt(-1000, 1000);
 std::uniform_int_distribution<int> World::starBrightness(100, 255);
+
 
 ///////////////////////////STAR FUNCTIONS/////////////////////////////////
 // Creates a new star

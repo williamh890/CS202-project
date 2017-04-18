@@ -12,28 +12,91 @@ using sf::Color;
 
 //Ctor
 Enemy::Enemy(Vector2f starting_pos,
-             Vector2f starting_dir,
+             Vector2f starting_vel,
              int health,
              int d) :  EnemyShape(Vector2f(ENEMY_HEIGHT,ENEMY_WIDTH)),
-                       vel(starting_dir),
+                       vel(starting_vel),
                        accel(Vector2f(0,0)),
                        hp(health),
                        damage(d),
                        sourceID(ENEMY)
 {
-    this->setPosition(starting_pos);
-    this->setFillColor(Color(0, 196, 58));
+    Vector2f rngStartingDir(World::enemyStartingVel(World::rng), World::enemyStartingVel(World::rng));
+    vel = rngStartingDir;
+
+    setPosition(starting_pos);
+    setFillColor(Color(0, 196, 58));
+    setOutlineColor(Color(119, 119, 119));
+    setOutlineThickness(2);
+
+    enemyDetectionRadius = ENEMY_HEIGHT + ENEMY_WIDTH / 2;
+    desiredPlayerDist = World::optimalPlayerDist(World::rng);
 }
 
 bool Enemy::checkIntersect(const Bullet &b) {
     return (this->getGlobalBounds().intersects(b.getGlobalBounds()));
 }
 
-Vector2f Enemy::separate(const vector<Enemy> & enemies){
-    return Vector2f(0,0);
+Vector2f Enemy::separate(const vector<Enemy> & enemies) {
+    Vector2f steer{0,0};
+
+    //Find the center of the current enemy
+    Vector2f currEnemyPos = getPosition();
+    currEnemyPos.x += ENEMY_WIDTH / 2;
+    currEnemyPos.y += ENEMY_HEIGHT / 2;
+
+    //Look through all the enemies
+    for(int e = 0; e < enemies.size(); ++e) {
+        Vector2f pos = enemies[e].getPosition();
+        //Find the center of the enemy
+        pos.x += ENEMY_WIDTH / 2;
+        pos.y += ENEMY_HEIGHT / 2;
+
+        float dist = sqrt(pow(currEnemyPos.x - pos.x, 2) + pow(currEnemyPos.y - pos.y, 2));
+        //check if the enemy can see the other enemy
+        if(dist < enemyDetectionRadius) {
+            Vector2f desired = currEnemyPos - pos;
+            steer = desired - vel;
+            //Make the force a repulsion force
+            steer.x *= 1;
+            steer.y *= 1;
+        }
+    }
+
+    return steer;
 }
 
-Vector2f Enemy::seek(){
+Vector2f Enemy::seek(const Ship & playerShip) {
+    //Find the center of the enemy
+    Vector2f enemyCenter = getPosition();
+    //Find the center
+    enemyCenter.x += ENEMY_WIDTH / 2;
+    enemyCenter.y += ENEMY_HEIGHT / 2;
+
+    //Find the center of the player
+    Vector2f playerCenter = playerShip.getPosition();
+    playerCenter.x += SHIP_RADIUS / 2;
+    playerCenter.y += SHIP_RADIUS / 2;
+
+    float dist = sqrt(pow(enemyCenter.x - playerCenter.x, 2) + pow(enemyCenter.y - playerCenter.y, 2));
+
+    Vector2f desired =  playerCenter - enemyCenter;
+
+    if(dist > desiredPlayerDist){
+        desired.x *= 1;
+        desired.y *= 1;
+    }
+    if(dist < desiredPlayerDist) {
+        desired.x *= -1;
+        desired.y *= -1;
+    }
+
+    Vector2f seek = desired - vel;
+
+    return seek;
+}
+
+Vector2f Enemy::flee() {
     return Vector2f(0,0);
 }
 
@@ -55,6 +118,47 @@ void Enemy::update(World & world){
         if(pos.x < ENEMY_WIDTH){
             vel.x *= -1;
         }
+
+        if(pos.y >= HEIGHT - 2 * ENEMY_HEIGHT){
+            vel.y *= -1;
+        }
+
+        if(pos.y < 0){
+            vel.y *= -1;
+        }
+
+        Vector2f enemySeparation = separate(world.enemies);
+        Vector2f playerSeek = seek(world.playerShip);
+
+        //Add weights to the separation force for balance
+        enemySeparation.x *= ENEMY_SEPARATION_FORCE;
+        enemySeparation.y *= ENEMY_SEPARATION_FORCE;
+
+        playerSeek.x *= ENEMY_SEEK_FORCE;
+        playerSeek.y *= ENEMY_SEEK_FORCE;
+
+        //Add the separation force to the total acceleration
+        accel += enemySeparation;
+        accel += playerSeek;
+
+        //Add the total acceleration to the velocity
+        vel += accel;
+
+        float velocityMag = sqrt(vel.y * vel.y + vel.x * vel.x);
+        //Going faster then the max speed
+        if(velocityMag >= ENEMY_MAX_SPEED) {
+            //Normalize
+            vel.x /= velocityMag;
+            vel.y /= velocityMag;
+
+            //Scale to the max speed
+            vel.x *= ENEMY_MAX_SPEED;
+            vel.y *= ENEMY_MAX_SPEED;
+        }
+
+        //Zero out the acceleration
+        accel.x *= 0;
+        accel.y *= 0;
 
         //Move the enemy
         move(vel);
