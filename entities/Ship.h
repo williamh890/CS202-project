@@ -12,11 +12,16 @@
 
 #include <vector>
 
+#include <SFML/Graphics.hpp>
+
 class World;
 
 struct Ship : public ShipShape{
     //constructor
     Ship();
+
+    sf::Vector2f vel;
+    sf::Vector2f accel;
 
     /* weapons */
     //Creates a photon at the ships position
