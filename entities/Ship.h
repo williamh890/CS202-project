@@ -52,8 +52,6 @@ struct Ship : public ShipShape{
     //Modifies the world
     void update(World & world);
 
-
-
 };
 
 #endif // SHIP_H

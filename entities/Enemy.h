@@ -8,21 +8,36 @@
 
 #include "../constants.h"
 #include "Bullet.h"
+#include "Enemy.h"
 
 #include <SFML/Graphics.hpp>
 using sf::FloatRect;
-using sf::Vector2;
+using sf::Vector2f;
+#include <vector>
+using std::vector;
+
+class World;
 
 struct Enemy : public EnemyShape{
 
-    Enemy(Vector2<float> starting_pos, Vector2<float> starting_dir, int hp, int damage);
-    Vector2<float> direction;
+    Enemy(Vector2f starting_pos, Vector2f starting_dir, int hp, int damage);
+
+    Vector2f vel;
+    Vector2f accel;
+    float maxSpeed;
+    float enemyDetectionRadius;
+    //Push away from other enemies
+    Vector2f separate(const vector<Enemy> & enemies);
+    //Pull in the direction of the player
+    Vector2f seek();
 
     int hp;
     int damage;
     int sourceID;
+
     bool checkIntersect(const Bullet &b);
 
+    void update(World & world);
 };
 
 

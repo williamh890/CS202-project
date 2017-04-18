@@ -3,7 +3,6 @@
 //4.12.2017
 //Definitions for ship class
 
-#include "../../constants.h"
 #include "../Ship.h"
 #include "../../World.h"
 
@@ -147,10 +146,6 @@ void Ship::update(World & world){
     //Move the players ship
     move(vel);
 
-
-
-
-
     /////////////////weapons and enemies////////////////
 
     //if the reload counter is full and the button is pressed
@@ -189,4 +184,31 @@ void Ship::update(World & world){
             }
         }
     }
+    //Check if an enemy bullet hits the player
+    //  !!!NTF: Separate out the player bullets and
+    //          the enemy bullets into separate arrays
+    for(int b = world.bullets.size() - 1; b >= 0; --b) {
+        //If the bullet is an enemy bullet
+        if(world.bullets[b].source == ENEMY) {
+            //If the bullets hits
+            if(checkIntersect(world.bullets[b])) {
+                //Remove a life
+                amountOfLives--;
+                setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
+                //If yr dead...
+                if (amountOfLives <= 0) {
+                    playerIsDead=true;
+                    break;
+                }
+                world.bullets.erase(world.bullets.begin() + b);
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
