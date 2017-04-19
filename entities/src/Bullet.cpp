@@ -20,8 +20,5 @@ Bullet::Bullet(int source,
 {
     setPosition(bulletX, bulletY);
     setFillColor(col);
-    if(source == ENEMY) {
-        setOutlineColor(Color(255,255,255,200));
-        setOutlineThickness(1);
-    }
+
 }

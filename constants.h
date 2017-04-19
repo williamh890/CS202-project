@@ -53,9 +53,9 @@ const int STAR_WIDTH = 2;
 const int ENEMY_HEIGHT = 30;
 const int ENEMY_WIDTH = 20;
 const float ENEMY_BULLET_SPEED = 5;
-const float ENEMY_SEPARATION_FORCE = .05;
-const float ENEMY_SEEK_FORCE = .0005;
-const float ENEMY_MAX_SPEED = 3;
+const float ENEMY_MAX_SPEED = 2.7;
+const int DODGE_TIME = 100;
+
 
 enum ID {PLAYER, ENEMY};
 //For bound checking

@@ -9,6 +9,14 @@
 #include <SFML/Graphics.hpp>
 using sf::Vector2f;
 using sf::Color;
+#include <random>
+
+std::random_device Enemy::ranDev;
+std::mt19937 Enemy::rng = std::mt19937(ranDev());
+
+std::uniform_real_distribution<float> Enemy::rngTargetWidth(ENEMY_WIDTH, WIDTH - ENEMY_WIDTH);
+std::uniform_real_distribution<float> Enemy::rngTargetHeight(ENEMY_WIDTH, (float)HEIGHT * (3./5.));
+std::uniform_int_distribution<int> Enemy::randomInt(-2000000, 2000000);
 
 //Ctor
 Enemy::Enemy(Vector2f starting_pos,
@@ -30,11 +38,47 @@ Enemy::Enemy(Vector2f starting_pos,
     setOutlineThickness(2);
 
     enemyDetectionRadius = ENEMY_HEIGHT + ENEMY_WIDTH / 2;
+    //Make bullet detection larger then enemy detection
+    bulletDetectionRadius = enemyDetectionRadius * 2;
     desiredPlayerDist = World::optimalPlayerDist(World::rng);
+
+    dodgeReloadTime = DODGE_TIME;
+    dodgeRecharge = dodgeReloadTime + 1;
+
+    target = Vector2f(rngTargetWidth(rng), rngTargetHeight(rng));
+    targetSwitchChance = 50;
 }
 
 bool Enemy::checkIntersect(const Bullet &b) {
     return (this->getGlobalBounds().intersects(b.getGlobalBounds()));
+}
+
+static float distance(const Vector2f & a, const Vector2f & b) {
+    return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+}
+
+static void scalarMul(Vector2f & vec, float scalar) {
+    vec.x *= scalar;
+    vec.y *= scalar;
+}
+
+static void scalarDiv(Vector2f & vec, float scalar) {
+    vec.x /= scalar;
+    vec.y /= scalar;
+}
+
+static void makeCenter(Vector2f & pos, float xOff, float yOff) {
+    pos.x += xOff;
+    pos.y += yOff;
+}
+
+static void normalize(Vector2f & vec) {
+    scalarDiv(vec, sqrt(vec.y * vec.y + vec.x * vec.x));
+}
+
+static void setMag(Vector2f & vec, float newMag) {
+    normalize(vec);
+    scalarMul(vec, newMag);
 }
 
 Vector2f Enemy::separate(const vector<Enemy> & enemies) {
@@ -42,53 +86,69 @@ Vector2f Enemy::separate(const vector<Enemy> & enemies) {
 
     //Find the center of the current enemy
     Vector2f currEnemyPos = getPosition();
-    currEnemyPos.x += ENEMY_WIDTH / 2;
-    currEnemyPos.y += ENEMY_HEIGHT / 2;
+    makeCenter(currEnemyPos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
     //Look through all the enemies
     for(int e = 0; e < enemies.size(); ++e) {
         Vector2f pos = enemies[e].getPosition();
         //Find the center of the enemy
-        pos.x += ENEMY_WIDTH / 2;
-        pos.y += ENEMY_HEIGHT / 2;
+        makeCenter(pos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
-        float dist = sqrt(pow(currEnemyPos.x - pos.x, 2) + pow(currEnemyPos.y - pos.y, 2));
+        float dist = distance(currEnemyPos, pos);
         //check if the enemy can see the other enemy
         if(dist < enemyDetectionRadius) {
             Vector2f desired = currEnemyPos - pos;
-            steer = desired - vel;
+            steer += desired - vel;
             //Make the force a repulsion force
-            steer.x *= 1;
-            steer.y *= 1;
         }
     }
 
     return steer;
 }
 
+Vector2f Enemy::dodge(const vector<Bullet> & bullets) {
+    Vector2f boostForce{0,0};
+
+    //look through all the bullets
+    Vector2f enemyPos = getPosition();
+    makeCenter(enemyPos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
+
+    for(int i = 0; i < (int)bullets.size(); ++i) {
+        //if the bullet is a player bullet
+        if(bullets[i].source == PLAYER) {
+            //Find the center of that bullet
+            Vector2f bulletPos = bullets[i].getPosition();
+            makeCenter(bulletPos, BULLET_WIDTH, BULLET_SPEED);
+            //find the distance between the bullet and the enemy
+            float dist = distance(bulletPos, enemyPos);
+            //Sees the bullet
+            if(dist < bulletDetectionRadius) {
+                //Boost left or right randomly
+                boostForce = (World::randomInt(World::rng) % 2) ? Vector2f(-10, 0) : Vector2f(10, 0);
+                break;
+            }
+        }
+    }
+
+    return boostForce;
+}
+
 Vector2f Enemy::seek(const Ship & playerShip) {
     //Find the center of the enemy
     Vector2f enemyCenter = getPosition();
     //Find the center
-    enemyCenter.x += ENEMY_WIDTH / 2;
-    enemyCenter.y += ENEMY_HEIGHT / 2;
+    makeCenter(enemyCenter, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
     //Find the center of the player
     Vector2f playerCenter = playerShip.getPosition();
-    playerCenter.x += SHIP_RADIUS / 2;
-    playerCenter.y += SHIP_RADIUS / 2;
+    makeCenter(playerCenter, SHIP_RADIUS / 2, SHIP_RADIUS / 2);
 
-    float dist = sqrt(pow(enemyCenter.x - playerCenter.x, 2) + pow(enemyCenter.y - playerCenter.y, 2));
+    float dist = distance(enemyCenter, playerCenter);
 
     Vector2f desired =  playerCenter - enemyCenter;
 
-    if(dist > desiredPlayerDist){
-        desired.x *= 1;
-        desired.y *= 1;
-    }
     if(dist < desiredPlayerDist) {
-        desired.x *= -1;
-        desired.y *= -1;
+        scalarMul(desired, -1);
     }
 
     Vector2f seek = desired - vel;
@@ -96,12 +156,25 @@ Vector2f Enemy::seek(const Ship & playerShip) {
     return seek;
 }
 
+Vector2f Enemy::seekTarget() {
+    //Find the center of the enemy
+    Vector2f enemyCenter = getPosition();
+    //Find the center
+    makeCenter(enemyCenter, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
+
+    Vector2f desired =  target - enemyCenter;
+    Vector2f seek = desired - vel;
+
+    return seek;
+
+}
+
 Vector2f Enemy::flee() {
     return Vector2f(0,0);
 }
 
 void Enemy::update(World & world){
-    //Gets the position of the enemy
+    //Gets the position of the enemyif(hasDodgeForce)
         Vector2f pos = getPosition();
 
         //Have enemies periodically shoot
@@ -109,56 +182,64 @@ void Enemy::update(World & world){
             //Make a bullet shooting down
             world.bullets.push_back(Bullet(ENEMY, pos.x, pos.y, Vector2f(0, ENEMY_BULLET_SPEED), Color{247, 168, 255}));
         }
-
-        //Right side of the screen
-        if(pos.x > WIDTH - 2*ENEMY_WIDTH){
-            vel.x  *= -1;
-        }
-        //Left side of the screen
-        if(pos.x < ENEMY_WIDTH){
-            vel.x *= -1;
+        //Randomly assign new target
+        if(!(randomInt(rng) % targetSwitchChance)) {
+            target = Vector2f(rngTargetWidth(rng), rngTargetHeight(rng));
         }
 
-        if(pos.y >= HEIGHT - 2 * ENEMY_HEIGHT){
-            vel.y *= -1;
-        }
+        //  !!!NTF: Bullet dodge doesnt work right
+        /*
+        Vector2f bulletDodge{0,0};
+        bool hasDodgeForce = false;
 
-        if(pos.y < 0){
-            vel.y *= -1;
+        //Dodge is ready to execute
+        if(dodgeRecharge >= dodgeReloadTime) {
+            bulletDodge = dodge(world.bullets);
+            //If there is force applied
+            if(bulletDodge.x == 0 && bulletDodge.y == 0) {
+               dodgeRecharge = 0;
+               hasDodgeForce = true;
+            }
         }
+        if(dodgeRecharge <= dodgeReloadTime)
+            ++dodgeRecharge;
+        if(hasDodgeForce) {
+            setMag(bulletDodge, 1);
+            accel += bulletDodge;
+        }
+        */
 
         Vector2f enemySeparation = separate(world.enemies);
-        Vector2f playerSeek = seek(world.playerShip);
+        Vector2f targetSteer = seekTarget();
 
         //Add weights to the separation force for balance
-        enemySeparation.x *= ENEMY_SEPARATION_FORCE;
-        enemySeparation.y *= ENEMY_SEPARATION_FORCE;
 
-        playerSeek.x *= ENEMY_SEEK_FORCE;
-        playerSeek.y *= ENEMY_SEEK_FORCE;
+        setMag(enemySeparation, .15);
+        setMag(targetSteer, .2);
 
         //Add the separation force to the total acceleration
+
         accel += enemySeparation;
-        accel += playerSeek;
+        accel += targetSteer;
 
         //Add the total acceleration to the velocity
         vel += accel;
+
+        //Dampening of the velocity
+        scalarMul(vel, .99);
 
         float velocityMag = sqrt(vel.y * vel.y + vel.x * vel.x);
         //Going faster then the max speed
         if(velocityMag >= ENEMY_MAX_SPEED) {
             //Normalize
-            vel.x /= velocityMag;
-            vel.y /= velocityMag;
+            normalize(vel);
 
             //Scale to the max speed
-            vel.x *= ENEMY_MAX_SPEED;
-            vel.y *= ENEMY_MAX_SPEED;
+            scalarMul(vel, ENEMY_MAX_SPEED);
         }
 
         //Zero out the acceleration
-        accel.x *= 0;
-        accel.y *= 0;
+        scalarMul(accel, 0);
 
         //Move the enemy
         move(vel);
