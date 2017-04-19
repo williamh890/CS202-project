@@ -22,7 +22,7 @@ struct Ship : public ShipShape{
 
     sf::Vector2f vel;
     sf::Vector2f accel;
-
+    sf::Texture shipTexture;
     /* weapons */
     //Creates a photon at the ships position
     Photon photonCannon();

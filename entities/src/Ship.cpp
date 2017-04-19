@@ -11,9 +11,12 @@ using sf::Color;
 using sf::Keyboard;
 using sf::Vector2;
 using sf::Vector2f;
+using sf::Font;
 
 #include <vector>
 using std::vector;
+
+#include "../Loader.h"
 
 Ship::Ship() : ShipShape(SHIP_RADIUS, 3),
                vel(Vector2f(0.0, 0.0)),
@@ -31,8 +34,12 @@ Ship::Ship() : ShipShape(SHIP_RADIUS, 3),
     this->setRadius(SHIP_RADIUS);
     this->setOutlineThickness(outline);
 
+    load_texture(this->shipTexture,"resources\\sprites\\f-15.png");
+    this->setTexture(&shipTexture);
     Color outlineColor{183, 183, 183};
     Color fillColor{42, 197, 224};
+
+
 
     this->setFillColor(fillColor);
     this->setOutlineColor(outlineColor);

@@ -37,7 +37,7 @@ std::random_device World::ranDev;
 std::mt19937 World::rng = std::mt19937(ranDev());
 std::uniform_real_distribution<float> World::starDist(0.0,(float)WIDTH);
 std::uniform_real_distribution<float> World::enemyStartingVel(-10.,10.);
-std::uniform_real_distribution<float> World::optimalPlayerDist(HEIGHT / 2, HEIGHT - 100);
+std::uniform_real_distribution<float> World::optimalPlayerDist(100, 501);
 std::uniform_int_distribution<int> World::randomInt(-1000, 1000);
 std::uniform_int_distribution<int> World::starBrightness(100, 255);
 
@@ -188,6 +188,15 @@ World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS"),
     populateInitialStars();
     makeInitEnemies();
     this->setFramerateLimit(FRAMERATE);
+    load_font(shipFont,"resources/fonts/times.ttf");
+    text.setFont(shipFont);
+    text.setString("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbb");
+    text.setCharacterSize(24);
+    text.setStyle(sf::Text::Bold);
+    text.setPosition(10,10);
+
+    text.setColor(sf::Color::Cyan);
+
 }
 
 // Updates all the entities in the game world
@@ -220,4 +229,7 @@ void World::show(){
     if (!playerShip.playerIsDead) {
         this->draw(playerShip);
     }
+
+    this->draw(text);
+
 }

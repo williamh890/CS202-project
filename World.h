@@ -25,6 +25,7 @@ class World : public sf::RenderWindow{
         /* Player Ship Object */
         Ship playerShip;
 
+
         /* Main Containers for game entities*/
         std::vector<Bullet> bullets;
         std::vector<Photon> photons;
