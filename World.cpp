@@ -247,16 +247,6 @@ void World::updateEnemies(){
 }
 ////////////////////////END ENEMY FUNCTIONS/////////////////////////
 
-
-// Constructor
-World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS"),
-                 playerShip(Ship())
-{
-    populateInitialStars();
-    makeInitEnemies();
-    this->setFramerateLimit(FRAMERATE);
-}
-
 // Updates all the entities in the game world
 void World::update()
 {
@@ -267,7 +257,7 @@ void World::update()
     updateEnemies();
 }
 
-//Draws all the entities to the sfml window
+//Draws all the entities to the SFML window
 void World::show(){
     // !!!NTF: Find a way to just loop through all the entities and draw them
     //         instead of having separate loops
@@ -288,4 +278,29 @@ void World::show(){
         this->draw(playerShip);
     }
 
+}
+
+int World::Run((sf::RenderWindow &gameScreen){
+    while(true){
+        Event event;
+        ///////Event loop/////////
+
+        populateInitialStars();
+        makeInitEnemies();
+
+        while(gameScreen.pollEvent(event)){
+            //Act appropriately for different events
+
+            if(event.type == sf::Event::Closed)
+                return -1;
+            else if(event.type == sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                return 0;
+        }////END EVENT LOOP////
+        /* clear/draw/display cycle */
+        //Clear needs to be called before stuff can be drawn
+        gameScreen.clear(Color::Black);
+        world.update();
+        gameScreen.show();
+        gameScreen.display();
+    }
 }

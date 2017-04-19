@@ -14,14 +14,17 @@
 #include "entities/Bullet.h"
 #include "entities/Photon.h"
 #include "entities/Ship.h"
+#include "Screens.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <random>
 
 
-class World : public sf::RenderWindow{
+class World : public Screens{
     public:
+        //inherit Screens
+        virtual int Run(sf::RenderWindow &) override;
 
         /* Player Ship Object */
         Ship playerShip;
@@ -54,7 +57,6 @@ class World : public sf::RenderWindow{
         void updateEnemies();
 
     public:
-        World();
 
         void show();
         void update();
