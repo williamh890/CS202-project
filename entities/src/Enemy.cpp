@@ -89,7 +89,7 @@ Vector2f Enemy::separate(const vector<Enemy> & enemies) {
     makeCenter(currEnemyPos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
     //Look through all the enemies
-    for(int e = 0; e < enemies.size(); ++e) {
+    for(int e = 0; e < (int)enemies.size(); ++e) {
         Vector2f pos = enemies[e].getPosition();
         //Find the center of the enemy
         makeCenter(pos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
@@ -142,8 +142,6 @@ Vector2f Enemy::seek(const Ship & playerShip) {
     //Find the center of the player
     Vector2f playerCenter = playerShip.getPosition();
     makeCenter(playerCenter, SHIP_RADIUS / 2, SHIP_RADIUS / 2);
-
-    float dist = distance(enemyCenter, playerCenter);
 
     Vector2f desired =  playerCenter - enemyCenter;
 
