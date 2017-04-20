@@ -6,7 +6,7 @@
 #define PHOTON_H
 
 #include <SFML/Graphics.hpp>
-#include "../constants.h"
+#include "constants.h"
 using sf::Drawable;
 using sf::RenderTarget;
 using sf::RenderStates;

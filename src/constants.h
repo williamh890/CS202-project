@@ -16,8 +16,8 @@
 /* Easily change shapes later if needed */
 typedef sf::RectangleShape StarShape;
 typedef sf::RectangleShape BulletShape;
-typedef sf::RectangleShape EnemyShape;
-typedef sf::CircleShape ShipShape;
+typedef sf::Sprite EnemyShape;
+typedef sf::Sprite ShipShape;
 
 const double PI = 3.14159265358979323846;  /* pi */
 

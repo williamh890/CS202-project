@@ -3,8 +3,9 @@
 //4.10.2017
 //Definitions for Enemy class
 
-#include "../Enemy.h"
-#include "../../World.h"
+#include "Enemy.h"
+#include "World.h"
+#include "Loader.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Vector2f;
@@ -22,7 +23,7 @@ std::uniform_int_distribution<int> Enemy::randomInt(-2000000, 2000000);
 Enemy::Enemy(Vector2f starting_pos,
              Vector2f starting_vel,
              int health,
-             int d) :  EnemyShape(Vector2f(ENEMY_HEIGHT,ENEMY_WIDTH)),
+             int d) :  EnemyShape(),
                        vel(starting_vel),
                        accel(Vector2f(0,0)),
                        hp(health),
@@ -32,10 +33,10 @@ Enemy::Enemy(Vector2f starting_pos,
     Vector2f rngStartingDir(World::enemyStartingVel(World::rng), World::enemyStartingVel(World::rng));
     vel = rngStartingDir;
 
+    load_texture(enemyTexture ,"resources/sprites/eyeball.png");
+    setTexture(enemyTexture);
+    setScale(.15,.15);
     setPosition(starting_pos);
-    setFillColor(Color(0, 196, 58));
-    setOutlineColor(Color(119, 119, 119));
-    setOutlineThickness(2);
 
     enemyDetectionRadius = ENEMY_HEIGHT + ENEMY_WIDTH / 2;
     //Make bullet detection larger then enemy detection
@@ -50,7 +51,7 @@ Enemy::Enemy(Vector2f starting_pos,
 }
 
 bool Enemy::checkIntersect(const Bullet &b) {
-    return (this->getGlobalBounds().intersects(b.getGlobalBounds()));
+    return (getGlobalBounds().intersects(b.getGlobalBounds()));
 }
 
 static float distance(const Vector2f & a, const Vector2f & b) {
@@ -81,7 +82,7 @@ static void setMag(Vector2f & vec, float newMag) {
     scalarMul(vec, newMag);
 }
 
-Vector2f Enemy::separate(const vector<Enemy> & enemies) {
+Vector2f Enemy::separate(const vector<Enemy*> & enemies) {
     Vector2f steer{0,0};
 
     //Find the center of the current enemy
@@ -90,7 +91,7 @@ Vector2f Enemy::separate(const vector<Enemy> & enemies) {
 
     //Look through all the enemies
     for(int e = 0; e < enemies.size(); ++e) {
-        Vector2f pos = enemies[e].getPosition();
+        Vector2f pos = enemies[e]->getPosition();
         //Find the center of the enemy
         makeCenter(pos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
@@ -106,7 +107,7 @@ Vector2f Enemy::separate(const vector<Enemy> & enemies) {
     return steer;
 }
 
-Vector2f Enemy::dodge(const vector<Bullet> & bullets) {
+Vector2f Enemy::dodge(const vector<Bullet*> & bullets) {
     Vector2f boostForce{0,0};
 
     //look through all the bullets
@@ -115,9 +116,9 @@ Vector2f Enemy::dodge(const vector<Bullet> & bullets) {
 
     for(int i = 0; i < (int)bullets.size(); ++i) {
         //if the bullet is a player bullet
-        if(bullets[i].source == PLAYER) {
+        if(bullets[i]->source == PLAYER) {
             //Find the center of that bullet
-            Vector2f bulletPos = bullets[i].getPosition();
+            Vector2f bulletPos = bullets[i]->getPosition();
             makeCenter(bulletPos, BULLET_WIDTH, BULLET_SPEED);
             //find the distance between the bullet and the enemy
             float dist = distance(bulletPos, enemyPos);
@@ -180,7 +181,7 @@ void Enemy::update(World & world){
         //Have enemies periodically shoot
         if(World::randomInt(World::rng) % 200 == 0){
             //Make a bullet shooting down
-            world.bullets.push_back(Bullet(ENEMY, pos.x, pos.y, Vector2f(0, ENEMY_BULLET_SPEED), Color{247, 168, 255}));
+            world.bullets.push_back(new Bullet(ENEMY, pos.x, pos.y, Vector2f(0, ENEMY_BULLET_SPEED), Color{247, 168, 255}));
         }
         //Randomly assign new target
         if(!(randomInt(rng) % targetSwitchChance)) {
@@ -247,17 +248,13 @@ void Enemy::update(World & world){
         //Look through all the bullets
         for (int b = world.bullets.size() - 1; b >= 0; --b) {
             //If an enemy and a bullet intersect
-            if (checkIntersect(world.bullets[b]) && world.bullets[b].source == PLAYER) {
+            if (checkIntersect(*world.bullets[b]) && world.bullets[b]->source == PLAYER) {
                 //Do damage to the enemy
-                hp -= world.bullets[b].damage;
+                hp -= world.bullets[b]->damage;
 
-                Color currColor = getFillColor();
 
-                currColor.r += 50*world.bullets[b].damage;
-                currColor.g -= 20*world.bullets[b].damage;
-
-                setFillColor(currColor);
                 //Remove the bullet
+                delete world.bullets[b];
                 world.bullets.erase(world.bullets.begin()+b);
                 //Check if the enemy is dead
                 if(hp <= 0) return;
@@ -267,14 +264,15 @@ void Enemy::update(World & world){
         // !!!NTF: THIS IS BAAAADDD...
         for (int p = world.photons.size() - 1; p >= 0; --p) {
             //If an enemy and a bullet intersect
-            if (getGlobalBounds().intersects(world.photons[p].hitBox.getGlobalBounds()) ) {
+            if (getGlobalBounds().intersects(world.photons[p]->hitBox.getGlobalBounds()) ) {
                 //Do damage to the enemy
-                hp -= world.photons[p].damage;
+                hp -= world.photons[p]->damage;
 
-                Color currColor = getFillColor();
 
-                setFillColor(currColor);
+
+
                 //Remove the bullet
+                delete world.photons[p];
                 world.photons.erase(world.photons.begin()+p);
                 //Check if enemy is dead
                 if(hp <= 0) return;

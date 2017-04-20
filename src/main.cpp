@@ -5,7 +5,7 @@
 
 #include "constants.h"
 #include "World.h"
-#include "entities/Photon.h"
+#include "Photon.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Event;

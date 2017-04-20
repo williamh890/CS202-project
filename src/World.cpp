@@ -10,10 +10,10 @@
 
 #include "constants.h"
 #include "World.h"
-#include "entities/Ship.h"
-#include "entities/Enemy.h"
-#include "entities/Photon.h"
-#include "entities/Loader.h"
+#include "Ship.h"
+#include "Enemy.h"
+#include "Photon.h"
+#include "Loader.h"
 
 #include <SFML/Graphics.hpp>
 using sf::RenderWindow;
@@ -48,14 +48,14 @@ void World::makeStar(float startingHeight)
 {
 	// Sets star size, shape, and color
 	Vector2<float> starSize((float)STAR_HEIGHT, (float)STAR_WIDTH);
-    StarShape newStar(starSize);
+    StarShape* newStar= new StarShape(starSize);
 
     // Makes a new star with a random position along width of screen
-    newStar.setFillColor(Color(255,255,255,starBrightness(rng)));
+    newStar->setFillColor(Color(255,255,255,starBrightness(rng)));
     //Makes a new star with a random position along with of screen
 
     float starX = starDist(rng);
-    newStar.setPosition(starX, startingHeight);
+    newStar->setPosition(starX, startingHeight);
 	stars.push_back(newStar);
 }
 
@@ -77,11 +77,11 @@ void World::updateStars()
     // Move all the stars down
     for(int i = stars.size() - 1; i >= 0; --i)
 	{
-        stars[i].move(0.0, (float)BACKGROUND_SPEED);
+        stars[i]->move(0.0, (float)BACKGROUND_SPEED);
         // Move stars to the top with a random width if they reaches the bottom
-        if(stars[i].getPosition().y > HEIGHT + STAR_HEIGHT)
+        if(stars[i]->getPosition().y > HEIGHT + STAR_HEIGHT)
 		{
-            stars[i].setPosition(starDist(rng), 0);
+            stars[i]->setPosition(starDist(rng), 0);
         }
     }
 }
@@ -95,29 +95,31 @@ void World::updateBullets()
     for(int i = bullets.size() - 1; i >= 0; --i)
 	{
         // Checks if the bullet is off the screen
-        if(bullets[i].getPosition().x < 0)
+        if(bullets[i]->getPosition().x < 0)
 		{
             // Removes the bullet if so
+            delete bullets[i];
             bullets.erase(bullets.begin() + i);
         }
 
         // Moves bullets up if not off the screen
         else{
-            bullets[i].move(bullets[i].direction.x, bullets[i].direction.y);
+            bullets[i]->move(bullets[i]->direction.x, bullets[i]->direction.y);
         }
     }
 }
 
 void World::updatePhotons(){
     for(int i = photons.size() - 1; i >= 0; --i){
-        if(photons[i].getPosition().x < 0){
+        if(photons[i]->getPosition().x < 0){
+            delete photons[i];
             photons.erase(photons.begin() + i);
         }
         else{
-            photons[i].moveCounter += PHOTON_FREQUENCY;
-            float xDiff = 3*sin(photons[i].moveCounter);
+            photons[i]->moveCounter += PHOTON_FREQUENCY;
+            float xDiff = 3*sin(photons[i]->moveCounter);
             float yDiff = -PHOTON_SPEED;
-            photons[i].movePhoton(xDiff, yDiff);
+            photons[i]->movePhoton(xDiff, yDiff);
         }
     }
 }
@@ -164,15 +166,16 @@ void World::makeInitEnemies(){
 
         Vector2<float> starting_dir = (randomInt(rng) % 2) ? Vector2<float>(-1,0) : Vector2<float>(1,0);
 
-        enemies.push_back(Enemy(starting_pos, starting_dir, 5, 5));
+        enemies.push_back(new Enemy(starting_pos, starting_dir, 5, 5));
     }
 }
 
 void World::updateEnemies(){
     //Look through all the enemies
     for(int e = enemies.size() - 1; e >= 0; --e){
-        enemies[e].update(*this);
-        if (enemies[e].hp <= 0) {
+        enemies[e]->update(*this);
+        if (enemies[e]->hp <= 0) {
+            delete enemies[e];
             enemies.erase(enemies.begin()+e);
         }
     }
@@ -205,19 +208,20 @@ void World::show(){
     // !!!NTF: Find a way to just loop through all the entities and draw them
     //         instead of having separate loops
     for(const auto & s : stars){
-        this->draw(s);
+        draw(*s);
     }
     for(const auto & b : bullets){
-        this->draw(b);
+        draw(*b);
     }
     for(const auto & p : photons){
-        this->draw(p);
+        draw(*p);
         //this->draw(p.hitBox);
     }
     for(const auto & e : enemies){
-        this->draw(e);
+        draw(*e);
     }
     if (!playerShip.playerIsDead) {
-        this->draw(playerShip);
+        draw(playerShip);
     }
+
 }

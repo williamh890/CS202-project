@@ -6,7 +6,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "../constants.h"
+#include "constants.h"
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Ship.h"
@@ -27,18 +27,19 @@ struct Enemy : public EnemyShape{
     Vector2f vel;
     Vector2f accel;
     float maxSpeed;
+    sf::Texture enemyTexture;
 
     float enemyDetectionRadius;
     float bulletDetectionRadius;
     float desiredPlayerDist;
 
     //Used to periodically dodge bullets
-    Vector2f dodge(const vector<Bullet> & bullets);
+    Vector2f dodge(const vector<Bullet*> & bullets);
     int dodgeRecharge;
     int dodgeReloadTime;
 
     //Push away from other enemies
-    Vector2f separate(const vector<Enemy> & enemies);
+    Vector2f separate(const vector<Enemy*> & enemies);
     //Pull in the direction of the player
     Vector2f seek(const Ship & playerShip);
     //Seek a random target

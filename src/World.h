@@ -10,10 +10,10 @@
 #define WORLD_H
 
 #include "constants.h"
-#include "entities/Enemy.h"
-#include "entities/Bullet.h"
-#include "entities/Photon.h"
-#include "entities/Ship.h"
+#include "Enemy.h"
+#include "Bullet.h"
+#include "Photon.h"
+#include "Ship.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -27,10 +27,10 @@ class World : public sf::RenderWindow{
 
 
         /* Main Containers for game entities*/
-        std::vector<Bullet> bullets;
-        std::vector<Photon> photons;
-        std::vector<StarShape> stars;
-        std::vector<Enemy> enemies;
+        std::vector<Bullet*> bullets;
+        std::vector<Photon*> photons;
+        std::vector<StarShape*> stars;
+        std::vector<Enemy*> enemies;
 
         void updatePhotons();
         void addPhoton(Photon p);

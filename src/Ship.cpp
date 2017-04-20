@@ -3,22 +3,21 @@
 //4.12.2017
 //Definitions for ship class
 
-#include "../Ship.h"
-#include "../../World.h"
+#include "Ship.h"
+#include "World.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Color;
 using sf::Keyboard;
 using sf::Vector2;
 using sf::Vector2f;
-using sf::Font;
 
 #include <vector>
 using std::vector;
 
-#include "../Loader.h"
+#include "Loader.h"
 
-Ship::Ship() : ShipShape(SHIP_RADIUS, 3),
+Ship::Ship() : ShipShape(),
                vel(Vector2f(0.0, 0.0)),
                accel(Vector2f(0.0, 0.0)),
                laserReloadTime(DEFAULT_BULLET_FIRERATE),
@@ -28,51 +27,47 @@ Ship::Ship() : ShipShape(SHIP_RADIUS, 3),
                photonReloadSpeed(1),
                photonReloadCounter(0),
                sourceID(PLAYER)
+
 {
     int outline = 2;
 
-    this->setRadius(SHIP_RADIUS);
-    this->setOutlineThickness(outline);
 
-    load_texture(this->shipTexture,"resources\\sprites\\f-15.png");
-    this->setTexture(&shipTexture);
-    Color outlineColor{183, 183, 183};
-    Color fillColor{42, 197, 224};
-
-
-
-    this->setFillColor(fillColor);
-    this->setOutlineColor(outlineColor);
-
-    this->setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
+    load_texture(shipTexture,"resources/sprites/f-15.png");
+    setTexture(shipTexture);
+    setScale(.15,.15);
+    setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
     amountOfLives = 5;
     playerIsDead = false;
     isTouchingEnemy = false;
 }
 
-bool Ship::checkIntersect(const EnemyShape &e) {
-    return (this->getGlobalBounds().intersects(e.getGlobalBounds()));
+bool Ship::checkIntersect(const sf::Shape &e) {
+    return (getGlobalBounds().intersects(e.getGlobalBounds()));
 }
 
-Bullet Ship::laser(){
+bool Ship::checkIntersect(const sf::Sprite &e) {
+    return (getGlobalBounds().intersects(e.getGlobalBounds()));
+}
+
+Bullet* Ship::laser(){
     //Gets the x/y position
     float bulletX = this->getPosition().x + SHIP_RADIUS;
     float bulletY = this->getPosition().y;
     Vector2<float> dir(0, -(float)BULLET_SPEED);
 
-    Bullet newBullet(PLAYER, bulletX, bulletY, dir);
+    Bullet* newBullet = new Bullet(PLAYER, bulletX, bulletY, dir);
 
     laserReloadCounter = 0;
     return newBullet;
 }
 
-Photon Ship::photonCannon(){
-    Photon newPhoton{PHOTON_RADIUS};
+Photon* Ship::photonCannon(){
+    Photon* newPhoton = new Photon{PHOTON_RADIUS};
 
     float X = getPosition().x + .7*SHIP_RADIUS;
     float Y = getPosition().y - .7*SHIP_RADIUS;
 
-    newPhoton.setPhotonPosition(X, Y);
+    newPhoton->setPhotonPosition(X, Y);
 
     photonReloadCounter = 0;
     return newPhoton;
@@ -181,7 +176,7 @@ void Ship::update(World & world){
     // !!!NTF: Maybe add some damage to the enemies as well
     for (int e = world.enemies.size() - 1; e >= 0; --e) {
         //If the player and an enemy intersect
-        if (checkIntersect(world.enemies[e])) {
+        if (checkIntersect(*world.enemies[e])) {
             //minus a single life per collision
             amountOfLives--;
             setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
@@ -196,9 +191,9 @@ void Ship::update(World & world){
     //          the enemy bullets into separate arrays
     for(int b = world.bullets.size() - 1; b >= 0; --b) {
         //If the bullet is an enemy bullet
-        if(world.bullets[b].source == ENEMY) {
+        if(world.bullets[b]->source == ENEMY) {
             //If the bullets hits
-            if(checkIntersect(world.bullets[b])) {
+            if(checkIntersect(*world.bullets[b])) {
                 //Remove a life
                 amountOfLives--;
                 setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
@@ -207,6 +202,7 @@ void Ship::update(World & world){
                     playerIsDead=true;
                     break;
                 }
+                delete world.bullets[b];
                 world.bullets.erase(world.bullets.begin() + b);
             }
         }
