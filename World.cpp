@@ -252,11 +252,9 @@ int World::gameOver(){
     if(!font.loadFromFile("coure.fon")){
             cout<<"Can't find text file"<<endl;
         return -1;
-        }else{
-     //   font.loadFromFile("MScomicSans.ttf");
         }
      sf::Text gO(gameOverText,font,30);
-     gO.setColor(sf::Color(158,22,22));
+     gO.setColor(sf::Color::Red);
     screen.draw(gO);
 
 
