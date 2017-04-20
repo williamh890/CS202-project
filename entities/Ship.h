@@ -45,6 +45,7 @@ struct Ship : public ShipShape{
     //Checks if an enemy collides with the ship
     bool checkIntersect(const EnemyShape &e);
 
+    int bleed;
     //To id the bullets
     int sourceID;
 

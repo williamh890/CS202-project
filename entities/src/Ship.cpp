@@ -41,6 +41,7 @@ Ship::Ship() : ShipShape(SHIP_RADIUS, 3),
     amountOfLives = 5;
     playerIsDead = false;
     isTouchingEnemy = false;
+    bleed = 0;
 }
 
 bool Ship::checkIntersect(const EnemyShape &e) {
@@ -143,9 +144,6 @@ void Ship::update(World & world){
         }
     }
 
-    //Move the players ship
-    move(vel);
-
     /////////////////weapons and enemies////////////////
 
     //if the reload counter is full and the button is pressed
@@ -170,6 +168,9 @@ void Ship::update(World & world){
         photonReloadCounter += photonReloadSpeed;
     }
 
+    if(bleed <= 0) setFillColor(Color{42, 197, 224});
+    else --bleed;
+
     //Check  if collied with an enemy
     // !!!NTF: Maybe add some damage to the enemies as well
     for (int e = world.enemies.size() - 1; e >= 0; --e) {
@@ -177,7 +178,28 @@ void Ship::update(World & world){
         if (checkIntersect(world.enemies[e])) {
             //minus a single life per collision
             amountOfLives--;
-            setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
+
+            //Find the center of the enemy
+            Vector2f enemyPos = world.enemies[e].getPosition();
+            enemyPos.x += ENEMY_WIDTH / 2;
+            enemyPos.y += ENEMY_HEIGHT / 2;
+
+            //Find the center of the ship
+            Vector2f shipCenter = getPosition();
+            shipCenter.x += SHIP_RADIUS;
+            shipCenter.y += SHIP_RADIUS;
+
+            Vector2f collisionForce = shipCenter - enemyPos;
+
+            collisionForce.x *= .5;
+            collisionForce.y *= .5;
+
+            vel += collisionForce;
+
+            //Flash red if hit by an enemy
+            setFillColor(Color{244, 66, 66, 200});
+            bleed = 10;
+
             if (amountOfLives <= 0) {
                 playerIsDead=true;
                 break;
@@ -194,16 +216,24 @@ void Ship::update(World & world){
             if(checkIntersect(world.bullets[b])) {
                 //Remove a life
                 amountOfLives--;
-                setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
+
+                vel += Vector2f(0, 5);
+                setFillColor(Color{244, 66, 66, 200});
+                bleed = 5;
+
+                world.bullets.erase(world.bullets.begin() + b);
                 //If yr dead...
                 if (amountOfLives <= 0) {
                     playerIsDead=true;
                     break;
                 }
-                world.bullets.erase(world.bullets.begin() + b);
+
             }
         }
     }
+
+    //Move the players ship
+    move(vel);
 }
 
 

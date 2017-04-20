@@ -172,12 +172,13 @@ void Enemy::update(World & world){
         Vector2f pos = getPosition();
 
         //Have enemies periodically shoot
-        if(World::randomInt(World::rng) % 200 == 0){
+        if(World::randomInt(World::rng) % 300 == 0){
             //Make a bullet shooting down
             world.bullets.push_back(Bullet(ENEMY, pos.x, pos.y, Vector2f(0, ENEMY_BULLET_SPEED), Color{247, 168, 255}));
         }
         //Randomly assign new target
         if(!(randomInt(rng) % targetSwitchChance)) {
+            //world.playerShip.getPosition().x
             target = Vector2f(rngTargetWidth(rng), rngTargetHeight(rng));
         }
 
@@ -205,7 +206,7 @@ void Enemy::update(World & world){
 
         Vector2f bulletDodge = dodge(world.bullets);
         if(bulletDodge.x != 0 && bulletDodge.y != 0)
-            setMag(bulletDodge,1);
+            setMag(bulletDodge,.5);
         accel += bulletDodge;
 
 
