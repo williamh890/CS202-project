@@ -39,7 +39,7 @@ Enemy::Enemy(Vector2f starting_pos,
 
     enemyDetectionRadius = ENEMY_HEIGHT + ENEMY_WIDTH / 2;
     //Make bullet detection larger then enemy detection
-    bulletDetectionRadius = enemyDetectionRadius * 2;
+    bulletDetectionRadius = enemyDetectionRadius;
     desiredPlayerDist = World::optimalPlayerDist(World::rng);
 
     dodgeReloadTime = DODGE_TIME;
@@ -123,8 +123,8 @@ Vector2f Enemy::dodge(const vector<Bullet> & bullets) {
             float dist = distance(bulletPos, enemyPos);
             //Sees the bullet
             if(dist < bulletDetectionRadius) {
-                //Boost left or right randomly
-                boostForce = (World::randomInt(World::rng) % 2) ? Vector2f(-10, 0) : Vector2f(10, 0);
+                //Boost left or right based on where the bullet is respectively
+                boostForce = (enemyPos.x > bulletPos.x) ? Vector2f(10, 0) : Vector2f(-10, 0);
                 break;
             }
         }
@@ -146,10 +146,6 @@ Vector2f Enemy::seek(const Ship & playerShip) {
     float dist = distance(enemyCenter, playerCenter);
 
     Vector2f desired =  playerCenter - enemyCenter;
-
-    if(dist < desiredPlayerDist) {
-        scalarMul(desired, -1);
-    }
 
     Vector2f seek = desired - vel;
 
@@ -194,7 +190,7 @@ void Enemy::update(World & world){
 
         //Dodge is ready to execute
         if(dodgeRecharge >= dodgeReloadTime) {
-            bulletDodge = dodge(world.bullets);
+
             //If there is force applied
             if(bulletDodge.x == 0 && bulletDodge.y == 0) {
                dodgeRecharge = 0;
@@ -204,18 +200,24 @@ void Enemy::update(World & world){
         if(dodgeRecharge <= dodgeReloadTime)
             ++dodgeRecharge;
         if(hasDodgeForce) {
-            setMag(bulletDodge, 1);
-            accel += bulletDodge;
+
+
         }
         */
+
+        Vector2f bulletDodge = dodge(world.bullets);
+        if(bulletDodge.x != 0 && bulletDodge.y != 0)
+            setMag(bulletDodge,1);
+        accel += bulletDodge;
+
 
         Vector2f enemySeparation = separate(world.enemies);
         Vector2f targetSteer = seekTarget();
 
         //Add weights to the separation force for balance
 
-        setMag(enemySeparation, .15);
-        setMag(targetSteer, .2);
+        setMag(enemySeparation, .13);
+        setMag(targetSteer, .15);
 
         //Add the separation force to the total acceleration
 
