@@ -36,7 +36,7 @@ const float MAX_SPEED = 6;
 const int BULLET_DAMAGE = 1;
 const int BULLET_LEN = 15;
 const int BULLET_WIDTH = 3;
-const int BULLET_SPEED = 15;
+const int BULLET_SPEED = 23;
 const int DEFAULT_BULLET_FIRERATE = 20;   //Smaller number is faster fire rate
 
 const int PHOTON_RADIUS = 30;

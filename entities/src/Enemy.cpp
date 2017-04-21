@@ -42,8 +42,8 @@ Enemy::Enemy(Vector2f starting_pos,
     bulletDetectionRadius = enemyDetectionRadius;
     desiredPlayerDist = World::optimalPlayerDist(World::rng);
 
-    dodgeReloadTime = DODGE_TIME;
-    dodgeRecharge = dodgeReloadTime + 1;
+    dodgeChargeTime = DODGE_TIME;
+    dodgeCounter = 0;
 
     target = Vector2f(rngTargetWidth(rng), rngTargetHeight(rng));
     targetSwitchChance = 50;
@@ -106,7 +106,7 @@ Vector2f Enemy::separate(const vector<Enemy> & enemies) {
     return steer;
 }
 
-Vector2f Enemy::dodge(const vector<Bullet> & bullets) {
+Vector2f Enemy::dodge(const vector<Bullet> & bullets, bool & hasForce) {
     Vector2f boostForce{0,0};
 
     //look through all the bullets
@@ -124,7 +124,8 @@ Vector2f Enemy::dodge(const vector<Bullet> & bullets) {
             //Sees the bullet
             if(dist < bulletDetectionRadius) {
                 //Boost left or right based on where the bullet is respectively
-                boostForce = (enemyPos.x > bulletPos.x) ? Vector2f(10, 0) : Vector2f(-10, 0);
+                boostForce = (enemyPos.x > bulletPos.x) ? Vector2f(20, 0) : Vector2f(-20, 0);
+                hasForce = true;
                 break;
             }
         }
@@ -174,7 +175,10 @@ void Enemy::update(World & world){
         //Have enemies periodically shoot
         if(World::randomInt(World::rng) % 300 == 0){
             //Make a bullet shooting down
-            world.bullets.push_back(Bullet(ENEMY, pos.x, pos.y, Vector2f(0, ENEMY_BULLET_SPEED), Color{247, 168, 255}));
+            world.bullets.push_back(Bullet(ENEMY,
+                                           pos.x, pos.y,
+                                           Vector2f(0, ENEMY_BULLET_SPEED),
+                                           Color{247, 168, 255}));
         }
         //Randomly assign new target
         if(!(randomInt(rng) % targetSwitchChance)) {
@@ -183,31 +187,20 @@ void Enemy::update(World & world){
         }
 
         //  !!!NTF: Bullet dodge doesnt work right
-        /*
-        Vector2f bulletDodge{0,0};
-        bool hasDodgeForce = false;
 
-        //Dodge is ready to execute
-        if(dodgeRecharge >= dodgeReloadTime) {
+        //
+        if(dodgeCounter <= 0) {
+            bool hasForce = false;
+            Vector2f bulletDodge = dodge(world.bullets, hasForce);
 
-            //If there is force applied
-            if(bulletDodge.x == 0 && bulletDodge.y == 0) {
-               dodgeRecharge = 0;
-               hasDodgeForce = true;
+            if(hasForce) {
+                accel += bulletDodge;
+                dodgeCounter = dodgeChargeTime;
             }
         }
-        if(dodgeRecharge <= dodgeReloadTime)
-            ++dodgeRecharge;
-        if(hasDodgeForce) {
-
-
+        else{
+            dodgeCounter--;
         }
-        */
-
-        Vector2f bulletDodge = dodge(world.bullets);
-        if(bulletDodge.x != 0 && bulletDodge.y != 0)
-            setMag(bulletDodge,.5);
-        accel += bulletDodge;
 
 
         Vector2f enemySeparation = separate(world.enemies);

@@ -179,7 +179,6 @@ void World::updateEnemies(){
 }
 ////////////////////////END ENEMY FUNCTIONS/////////////////////////
 
-
 // Constructor
 World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS"),
                  playerShip(Ship())

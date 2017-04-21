@@ -99,23 +99,21 @@ void Ship::update(World & world){
     //Add the acceleration to the velocity
     vel += accel;
 
-    accel.x *= 0;
-    accel.y *= 0;
+    accel *= (float)0;
 
     //Slight drag to make things easier to control
-    vel.y *= SHIP_DRAG;
-    vel.x *= SHIP_DRAG;
+    vel *= (float)SHIP_DRAG;
 
     float velocityMag = sqrt(vel.y * vel.y + vel.x * vel.x);
     //Going faster then the max speed
     if(velocityMag >= MAX_SPEED) {
         //Normalize
-        vel.x /= velocityMag;
-        vel.y /= velocityMag;
+        vel /= (float)velocityMag;
+
 
         //Scale to the max speed
-        vel.x *= MAX_SPEED;
-        vel.y *= MAX_SPEED;
+        vel *= (float)MAX_SPEED;
+
     }
     //Check if the ship is on a bound
     if(world.onBound(*this)[0] == RIGHT) {
@@ -191,10 +189,13 @@ void Ship::update(World & world){
 
             Vector2f collisionForce = shipCenter - enemyPos;
 
-            collisionForce.x *= .5;
-            collisionForce.y *= .5;
+            collisionForce *= (float).5;
 
             vel += collisionForce;
+
+            //Apply an opposite force to the enemy
+            collisionForce *= (float)-1;
+            world.enemies[e].vel += collisionForce;
 
             //Flash red if hit by an enemy
             setFillColor(Color{244, 66, 66, 200});
