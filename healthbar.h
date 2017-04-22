@@ -6,6 +6,8 @@
 #pragma once
 class HealthBar{
 public:
+        HealthBar();
+      virtual  ~HealthBar();
     float getHealth();
     float damage(float damageDealt);
 protected:
@@ -17,6 +19,8 @@ protected:
 
 class ShipHealthBar : public HeallthBar{
 public:
+    ShipHealthBar();
+    virtual ~ShipHealthBar() ;
     void drawHealthBar();
     void updateHealthBar();
 };
