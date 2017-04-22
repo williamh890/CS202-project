@@ -63,7 +63,7 @@ void World::populateInitialStars(){
     for(int h = 0; h < HEIGHT; ++h){
         //This is finicky
         if(!(h % (STAR_SPAWN_RATE*7))){
-            makeStar(h);
+            makeStar((float)h);
 
         }
     }
@@ -159,7 +159,7 @@ vector<bounds> World::onBound(const Ship & playerShip) {
 // Creates first wave of enemies
 void World::makeInitEnemies(){
     for(int h = 5; h < HEIGHT / 2; h += ENEMY_HEIGHT + 5){
-        Vector2<float> starting_pos(starDist(rng), h);
+        Vector2<float> starting_pos(starDist(rng), (float)h);
 
         Vector2<float> starting_dir = (randomInt(rng) % 2) ? Vector2<float>(-1,0) : Vector2<float>(1,0);
 
@@ -181,7 +181,7 @@ void World::updateEnemies(){
 
 
 // Constructor
-World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS"),
+World::World() : RenderWindow(VideoMode((unsigned)WIDTH, (unsigned)HEIGHT), "ASTEROIDS"),
                  playerShip(Ship())
 {
     populateInitialStars();
