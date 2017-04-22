@@ -15,7 +15,7 @@ std::random_device Enemy::ranDev;
 std::mt19937 Enemy::rng = std::mt19937(ranDev());
 
 std::uniform_real_distribution<float> Enemy::rngTargetWidth(ENEMY_WIDTH, WIDTH - ENEMY_WIDTH);
-std::uniform_real_distribution<float> Enemy::rngTargetHeight(ENEMY_WIDTH, (float)HEIGHT * (3./5.));
+std::uniform_real_distribution<float> Enemy::rngTargetHeight(ENEMY_WIDTH, HEIGHT * (3./5.));
 std::uniform_int_distribution<int> Enemy::randomInt(-2000000, 2000000);
 
 //Ctor

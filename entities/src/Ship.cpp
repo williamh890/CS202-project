@@ -51,7 +51,7 @@ Bullet Ship::laser(){
     //Gets the x/y position
     float bulletX = this->getPosition().x + SHIP_RADIUS;
     float bulletY = this->getPosition().y;
-    Vector2<float> dir(0, -(float)BULLET_SPEED);
+    Vector2<float> dir(0, -BULLET_SPEED);
 
     Bullet newBullet(PLAYER, bulletX, bulletY, dir);
 
