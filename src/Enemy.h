@@ -41,7 +41,7 @@ struct Enemy : public EnemyShape{
     //Push away from other enemies
     Vector2f separate(const vector<Enemy*> & enemies);
     //Pull in the direction of the player
-    Vector2f seek(const Ship & playerShip);
+    Vector2f seek(const ShipShape & playerShip);
     //Seek a random target
     Vector2f seekTarget();
     Vector2f target;

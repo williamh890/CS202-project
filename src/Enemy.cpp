@@ -35,7 +35,7 @@ Enemy::Enemy(Vector2f starting_pos,
 
     load_texture(enemyTexture ,"resources/sprites/eyeball.png");
     setTexture(enemyTexture);
-    setScale(.15,.15);
+    setScale(.25,.25);
     setPosition(starting_pos);
 
     enemyDetectionRadius = ENEMY_HEIGHT + ENEMY_WIDTH / 2;
@@ -134,7 +134,7 @@ Vector2f Enemy::dodge(const vector<Bullet*> & bullets) {
     return boostForce;
 }
 
-Vector2f Enemy::seek(const Ship & playerShip) {
+Vector2f Enemy::seek(const ShipShape & playerShip) {
     //Find the center of the enemy
     Vector2f enemyCenter = getPosition();
     //Find the center

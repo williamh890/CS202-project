@@ -29,14 +29,13 @@ Ship::Ship() : ShipShape(),
                sourceID(PLAYER)
 
 {
-    int outline = 2;
 
 
     load_texture(shipTexture,"resources/sprites/f-15.png");
     setTexture(shipTexture);
     setScale(.15,.15);
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
-    amountOfLives = 5;
+    playerHealth =1.0;
     playerIsDead = false;
     isTouchingEnemy = false;
 }
@@ -178,9 +177,10 @@ void Ship::update(World & world){
         //If the player and an enemy intersect
         if (checkIntersect(*world.enemies[e])) {
             //minus a single life per collision
-            amountOfLives--;
+            playerHealth-=.1;
+
             setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
-            if (amountOfLives <= 0) {
+            if (playerHealth <= 0) {
                 playerIsDead=true;
                 break;
             }
@@ -195,10 +195,11 @@ void Ship::update(World & world){
             //If the bullets hits
             if(checkIntersect(*world.bullets[b])) {
                 //Remove a life
-                amountOfLives--;
+                playerHealth-=.1;
+
                 setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
                 //If yr dead...
-                if (amountOfLives <= 0) {
+                if (playerHealth <= 0) {
                     playerIsDead=true;
                     break;
                 }

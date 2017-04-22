@@ -16,8 +16,10 @@
 /* Easily change shapes later if needed */
 typedef sf::RectangleShape StarShape;
 typedef sf::RectangleShape BulletShape;
+typedef sf::RectangleShape HPBarShape;
 typedef sf::Sprite EnemyShape;
 typedef sf::Sprite ShipShape;
+
 
 const double PI = 3.14159265358979323846;  /* pi */
 
@@ -33,7 +35,7 @@ const int SHIP_RADIUS = 20;
 const float SHIP_DRAG = 0.93;
 const float MAX_SPEED = 6;
 
-const int BULLET_DAMAGE = 1;
+const float BULLET_DAMAGE = .1;
 const int BULLET_LEN = 15;
 const int BULLET_WIDTH = 3;
 const int BULLET_SPEED = 15;
