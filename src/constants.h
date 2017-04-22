@@ -57,6 +57,7 @@ const int ENEMY_WIDTH = 20;
 const float ENEMY_BULLET_SPEED = 5;
 const float ENEMY_MAX_SPEED = 2.7;
 const int DODGE_TIME = 100;
+const float DAMAGE_MODIFIER = 1.0;
 
 
 enum ID {PLAYER, ENEMY};
