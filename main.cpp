@@ -6,7 +6,6 @@
 #include "constants.h"
 #include "Screens.h"
 #include "Screen_0.h"
-#include "Screen_1.h"
 #include "World.h"
 #include "entities/Photon.h"
 
@@ -32,8 +31,8 @@ int main(){
     //Make screens
     MenuScreen ms;
     screens.push_back(&ms);
-    Screen_1 s1;
-    screens.push_back(&s1);
+    World gw;
+    screens.push_back(&gw);
 
     //main game loop
     while(screenSelect>=0){
