@@ -20,7 +20,7 @@ int main(){
     //vector of screens, holds all game screens
     std::vector<Screens*> screens;
     //manages which screen to run; -1 indicates close status
-    int screen=0;
+    int screenSelect=0;
 
     //create game window
     sf::RenderWindow App(sf::VideoMode(WIDTH, HEIGHT), "SPACE GAME");
@@ -30,14 +30,14 @@ int main(){
     App.setMouseCursorVisible(false);
 
     //Make screens
-    Screen_0 s0;
-    screens.push_back(&s0);
+    MenuScreen ms;
+    screens.push_back(&ms);
     Screen_1 s1;
     screens.push_back(&s1);
 
     //main game loop
-    while(screen>=0){
-        screen = screens[screen]->Run(App);
+    while(screenSelect>=0){
+        screenSelect = screens[screenSelect]->Run(App);
     }
     //return value set, should not happen
     return 0;

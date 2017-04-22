@@ -25,49 +25,48 @@ class World : public Screens{
     public:
         //inherit Screens
         virtual int Run(sf::RenderWindow &) override;
+}
 
-        /* Player Ship Object */
-        Ship playerShip;
 
-        /* Main Containers for game entities*/
-        std::vector<Bullet> bullets;
-        std::vector<Photon> photons;
-        std::vector<StarShape> stars;
-        std::vector<Enemy> enemies;
+/* Player Ship Object */
+Ship playerShip;
 
-        void updatePhotons();
-        void addPhoton(Photon p);
+/* Main Containers for game entities*/
+std::vector<Bullet> bullets;
+std::vector<Photon> photons;
+std::vector<StarShape> stars;
+std::vector<Enemy> enemies;
 
-        /* Utility Functions for bullets */
+void updatePhotons();
+void addPhoton(Photon p);
 
-        void updateBullets();
-        void addBullet(Bullet b);
+/* Utility Functions for bullets */
 
-        // Utility functions for stars
-        void makeStar(float startingHeight);
-        void populateInitialStars();
-        void updateStars();
+void updateBullets();
+void addBullet(Bullet b);
 
-        /* Utility Functions for player ship */
+// Utility functions for stars
+void makeStar(float startingHeight);
+void populateInitialStars();
+void updateStars();
 
-        void updateShip();
-        std::vector<bounds> onBound(const Ship & playerShip);
+/* Utility Functions for player ship */
 
-        void makeInitEnemies();
-        void updateEnemies();
+void updateShip();
+std::vector<bounds> onBound(const Ship & playerShip);
 
-    public:
+void makeInitEnemies();
+void updateEnemies();
 
-        void show();
-        void update();
-        Ship getPlayerShip();
+void show();
+void update();
+Ship getPlayerShip();
 
-        // Random Real Generators
-        static std::random_device ranDev;
-        static std::mt19937 rng;
-        static std::uniform_real_distribution<float> starDist;
-        static std::uniform_int_distribution<int> starBrightness;
-        static std::uniform_int_distribution<int> randomInt;
-};
+// Random Real Generators
+static std::random_device ranDev;
+static std::mt19937 rng;
+static std::uniform_real_distribution<float> starDist;
+static std::uniform_int_distribution<int> starBrightness;
+static std::uniform_int_distribution<int> randomInt;
 
 #endif // WORLD_H
