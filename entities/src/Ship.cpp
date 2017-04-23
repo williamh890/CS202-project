@@ -26,7 +26,7 @@ Ship::Ship() : ShipShape(SHIP_RADIUS, 3),
                photonReloadCounter(0),
                sourceID(PLAYER)
 {
-    int outline = 2;
+    float outline = 2.0F;
 
     this->setRadius(SHIP_RADIUS);
     this->setOutlineThickness(outline);
@@ -52,7 +52,7 @@ Bullet Ship::laser(){
     //Gets the x/y position
     float bulletX = this->getPosition().x + SHIP_RADIUS;
     float bulletY = this->getPosition().y;
-    Vector2<float> dir(0, -(float)BULLET_SPEED);
+    Vector2<float> dir(0, -BULLET_SPEED);
 
     Bullet newBullet(PLAYER, bulletX, bulletY, dir);
 
@@ -63,8 +63,8 @@ Bullet Ship::laser(){
 Photon Ship::photonCannon(){
     Photon newPhoton{PHOTON_RADIUS};
 
-    float X = getPosition().x + .7*SHIP_RADIUS;
-    float Y = getPosition().y - .7*SHIP_RADIUS;
+    float X = getPosition().x + 0.7F*SHIP_RADIUS;
+    float Y = getPosition().y - 0.7F*SHIP_RADIUS;
 
     newPhoton.setPhotonPosition(X, Y);
 
