@@ -23,7 +23,7 @@ void initialDraw(sf::RenderWindow &gameMenu, bool drawMenu){
     shape2.setRadius(50);
     shape2.setOrigin(shape2.getRadius(),shape2.getRadius());
     shape2.setPosition(250,500);
-    shape2.setFillColor(sf::Color::Green);
+    shape2.setFillColor(sf::Color::Red);
 
     gameMenu.clear();
     gameMenu.draw(shape);
@@ -34,7 +34,7 @@ void initialDraw(sf::RenderWindow &gameMenu, bool drawMenu){
 
 int MenuScreen::Run(sf::RenderWindow &gameMenu){
     sf::Event event;
-    int menuSelect;
+    int menuSelect=0;
 
     //checks if game flag is true; if it is, changes menu option to Continue game
     if(playing){
@@ -76,7 +76,7 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu){
             //update menu text colors based on selection
             if(menuSelect==0){
                 shape.setFillColor(sf::Color::Blue);
-                shape2.setFillColor(sf::Color::Green);
+                shape2.setFillColor(sf::Color::Red);
             }
             else if (menuSelect==1){
                 if(playing)
@@ -90,7 +90,7 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu){
                     shape.setFillColor(sf::Color::Cyan);
                 else
                     shape.setFillColor(sf::Color::Green);
-                shape2.setFillColor(sf::Color::Green);
+                shape2.setFillColor(sf::Color::Red);
             }
 
             //clears the screen
