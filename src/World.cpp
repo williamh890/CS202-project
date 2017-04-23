@@ -161,7 +161,7 @@ vector<bounds> World::onBound(const Ship & playerShip) {
 ////////////////////////ENEMY FUNCTIONS/////////////////////////////
 // Creates first wave of enemies
 void World::makeInitEnemies(){
-    for(int h = 5; h < HEIGHT / 2; h += ENEMY_HEIGHT + 5){
+    for(int h = 5; h < HEIGHT / 2; h += ENEMY_HEIGHT + 10){
         Vector2<float> starting_pos(starDist(rng), h);
 
         Vector2<float> starting_dir = (randomInt(rng) % 2) ? Vector2<float>(-1,0) : Vector2<float>(1,0);
@@ -183,14 +183,13 @@ void World::updateEnemies(){
 }
 ////////////////////////END ENEMY FUNCTIONS/////////////////////////
 
-
 // Constructor
-World::World() : RenderWindow(VideoMode(WIDTH, HEIGHT), "ASTEROIDS"),
+World::World() : Screens(),
                  playerShip(Ship())
 {
     populateInitialStars();
     makeInitEnemies();
-    this->setFramerateLimit(FRAMERATE);
+
 }
 
 // Updates all the entities in the game world
@@ -204,24 +203,44 @@ void World::update()
 }
 
 //Draws all the entities to the sfml window
-void World::show(){
+void World::show(sf::RenderWindow &gameScreen){
     // !!!NTF: Find a way to just loop through all the entities and draw them
     //         instead of having separate loops
     for(const auto & s : stars){
-        draw(*s);
+        gameScreen.draw(*s);
     }
     for(const auto & b : bullets){
-        draw(*b);
+       gameScreen.draw(*b);
     }
     for(const auto & p : photons){
-        draw(*p);
+        gameScreen.draw(*p);
         //this->draw(p.hitBox);
     }
     for(const auto & e : enemies){
-        draw(*e);
+        gameScreen.draw(*e);
     }
     if (!playerShip.playerIsDead) {
-        draw(playerShip);
+        gameScreen.draw(playerShip);
     }
+}
 
+int World::Run(sf::RenderWindow &gameScreen){
+    sf::Event event;
+
+    World::makeInitEnemies();
+    World::populateInitialStars();
+
+    while(true){
+        while(gameScreen.pollEvent(event)){
+            if(event.type == sf::Event::Closed) return -1;
+            if(event.type == sf::Event::KeyPressed){
+                if(event.key.code == sf::Keyboard::Escape) return 0;
+            }
+        }
+
+        gameScreen.clear();
+        World::update();
+        World::show(gameScreen);
+        gameScreen.display();
+    }
 }

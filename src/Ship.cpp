@@ -29,9 +29,6 @@ Ship::Ship() : ShipShape(),
                sourceID(PLAYER)
 
 {
-    int outline = 2;
-
-
     load_texture(shipTexture,"resources/sprites/f-15.png");
     setTexture(shipTexture);
     setScale(.15,.15);
@@ -39,6 +36,7 @@ Ship::Ship() : ShipShape(),
     amountOfLives = 5;
     playerIsDead = false;
     isTouchingEnemy = false;
+    bleed = 0;
 }
 
 bool Ship::checkIntersect(const sf::Shape &e) {
@@ -53,7 +51,7 @@ Bullet* Ship::laser(){
     //Gets the x/y position
     float bulletX = this->getPosition().x + SHIP_RADIUS;
     float bulletY = this->getPosition().y;
-    Vector2<float> dir(0, -(float)BULLET_SPEED);
+    Vector2<float> dir(0, -BULLET_SPEED);
 
     Bullet* newBullet = new Bullet(PLAYER, bulletX, bulletY, dir);
 
@@ -64,8 +62,8 @@ Bullet* Ship::laser(){
 Photon* Ship::photonCannon(){
     Photon* newPhoton = new Photon{PHOTON_RADIUS};
 
-    float X = getPosition().x + .7*SHIP_RADIUS;
-    float Y = getPosition().y - .7*SHIP_RADIUS;
+    float X = getPosition().x + 0.7F*SHIP_RADIUS;
+    float Y = getPosition().y - 0.7F*SHIP_RADIUS;
 
     newPhoton->setPhotonPosition(X, Y);
 
@@ -100,27 +98,25 @@ void Ship::update(World & world){
     //Add the acceleration to the velocity
     vel += accel;
 
-    accel.x *= 0;
-    accel.y *= 0;
+    accel *= (float)0;
 
     //Slight drag to make things easier to control
-    vel.y *= SHIP_DRAG;
-    vel.x *= SHIP_DRAG;
+    vel *= (float)SHIP_DRAG;
 
     float velocityMag = sqrt(vel.y * vel.y + vel.x * vel.x);
     //Going faster then the max speed
     if(velocityMag >= MAX_SPEED) {
         //Normalize
-        vel.x /= velocityMag;
-        vel.y /= velocityMag;
+        vel /= (float)velocityMag;
+
 
         //Scale to the max speed
-        vel.x *= MAX_SPEED;
-        vel.y *= MAX_SPEED;
+        vel *= (float)MAX_SPEED;
+
     }
     //Check if the ship is on a bound
     if(world.onBound(*this)[0] == RIGHT) {
-        //If the ship has a leftward(?) velocity
+        //If the ship has a rightward(?) velocity
         if(vel.x > 0) {
             vel.x = 0;
         }
@@ -133,20 +129,17 @@ void Ship::update(World & world){
     }
 
     if(world.onBound(*this)[2] == UPPER) {
-        //If the ship has a leftward(?) velocity
+        //If the ship has a upward velocity
         if(vel.y < 0) {
             vel.y = 0;
         }
     }
     if(world.onBound(*this)[3] == LOWER) {
-        //If the ship has a leftward(?) velocity
+        //If the ship has a downward velocity
         if(vel.y > 0) {
             vel.y = 0;
         }
     }
-
-    //Move the players ship
-    move(vel);
 
     /////////////////weapons and enemies////////////////
 
@@ -172,6 +165,9 @@ void Ship::update(World & world){
         photonReloadCounter += photonReloadSpeed;
     }
 
+    if(bleed <= 0) setColor(Color{255,255,255});
+    else --bleed;
+
     //Check  if collied with an enemy
     // !!!NTF: Maybe add some damage to the enemies as well
     for (int e = world.enemies.size() - 1; e >= 0; --e) {
@@ -179,7 +175,31 @@ void Ship::update(World & world){
         if (checkIntersect(*world.enemies[e])) {
             //minus a single life per collision
             amountOfLives--;
-            setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
+
+            //Find the center of the enemy
+            Vector2f enemyPos = world.enemies[e]->getPosition();
+            enemyPos.x += ENEMY_WIDTH / 2;
+            enemyPos.y += ENEMY_HEIGHT / 2;
+
+            //Find the center of the ship
+            Vector2f shipCenter = getPosition();
+            shipCenter.x += SHIP_RADIUS;
+            shipCenter.y += SHIP_RADIUS;
+
+            Vector2f collisionForce = shipCenter - enemyPos;
+
+            collisionForce *= (float).5;
+
+            vel += collisionForce;
+
+            //Apply an opposite force to the enemy
+            collisionForce *= (float)-1;
+            world.enemies[e]->vel += collisionForce;
+
+            //Flash red if hit by an enemy
+            setColor(Color{244, 66, 66, 200});
+            bleed = 10;
+
             if (amountOfLives <= 0) {
                 playerIsDead=true;
                 break;
@@ -196,22 +216,25 @@ void Ship::update(World & world){
             if(checkIntersect(*world.bullets[b])) {
                 //Remove a life
                 amountOfLives--;
-                setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
+
+                vel += Vector2f(0, 5);
+                setColor(Color{244, 66, 66, 200});
+                bleed = 5;
+
+                delete world.bullets[b];
+                world.bullets.erase(world.bullets.begin() + b);
+
                 //If yr dead...
                 if (amountOfLives <= 0) {
                     playerIsDead=true;
                     break;
                 }
-                delete world.bullets[b];
-                world.bullets.erase(world.bullets.begin() + b);
+
+
             }
         }
     }
+
+    //Move the players ship
+    move(vel);
 }
-
-
-
-
-
-
-

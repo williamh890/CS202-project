@@ -14,17 +14,16 @@
 #include "Bullet.h"
 #include "Photon.h"
 #include "Ship.h"
+#include "Screens.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <random>
 
-class World : public sf::RenderWindow{
+class World : public Screens {
     public:
-
         /* Player Ship Object */
         Ship playerShip;
-
 
         /* Main Containers for game entities*/
         std::vector<Bullet*> bullets;
@@ -53,12 +52,13 @@ class World : public sf::RenderWindow{
         void makeInitEnemies();
         void updateEnemies();
 
-    public:
         World();
 
-        void show();
+        void show(sf::RenderWindow &gameScreen);
         void update();
         Ship getPlayerShip();
+
+        int Run(sf::RenderWindow &gameScreen) override;
 
         // Random Real Generators
         static std::random_device ranDev;

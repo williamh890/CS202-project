@@ -34,9 +34,9 @@ struct Enemy : public EnemyShape{
     float desiredPlayerDist;
 
     //Used to periodically dodge bullets
-    Vector2f dodge(const vector<Bullet*> & bullets);
-    int dodgeRecharge;
-    int dodgeReloadTime;
+    Vector2f dodge(const vector<Bullet *> & bullets, bool & hasForce);
+    int dodgeChargeTime;
+    int dodgeCounter;
 
     //Push away from other enemies
     Vector2f separate(const vector<Enemy*> & enemies);
@@ -52,6 +52,8 @@ struct Enemy : public EnemyShape{
     int hp;
     int damage;
     int sourceID;
+
+    int bleed;
 
     bool checkIntersect(const Bullet &b);
     void update(World & world);
