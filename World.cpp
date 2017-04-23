@@ -179,7 +179,6 @@ void World::updateEnemies(){
 }
 ////////////////////////END ENEMY FUNCTIONS/////////////////////////
 
-
 // Updates all the entities in the game world
 void World::update()
 {
