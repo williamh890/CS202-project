@@ -201,6 +201,7 @@ void World::update()
     updateBullets();
     updatePhotons();
     updateEnemies();
+   // updateHealthBar(*this);
 }
 
 //Draws all the entities to the sfml window
