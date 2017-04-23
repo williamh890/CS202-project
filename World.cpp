@@ -34,7 +34,7 @@ using std::floor;
 // Setup for random real number generator for stars
 std::random_device World::ranDev;
 std::mt19937 World::rng = std::mt19937(ranDev());
-std::uniform_real_distribution<float> World::starDist(0.0,WIDTH);
+std::uniform_real_distribution<float> World::starDist(0.0,(float)WIDTH);
 std::uniform_real_distribution<float> World::enemyStartingVel(-10.,10.);
 std::uniform_real_distribution<float> World::optimalPlayerDist(HEIGHT / 2, HEIGHT - 100);
 std::uniform_int_distribution<int> World::randomInt(-1000, 1000);
@@ -46,7 +46,7 @@ std::uniform_int_distribution<int> World::starBrightness(100, 255);
 void World::makeStar(float startingHeight)
 {
 	// Sets star size, shape, and color
-	Vector2<float> starSize(STAR_HEIGHT, STAR_WIDTH);
+	Vector2<float> starSize((float)STAR_HEIGHT, (float)STAR_WIDTH);
     StarShape newStar(starSize);
 
     // Makes a new star with a random position along width of screen
@@ -63,7 +63,7 @@ void World::populateInitialStars(){
     for(int h = 0; h < HEIGHT; ++h){
         //This is finicky
         if(!(h % (STAR_SPAWN_RATE*7))){
-            makeStar((float)h);
+            makeStar(h);
 
         }
     }
@@ -76,7 +76,7 @@ void World::updateStars()
     // Move all the stars down
     for(int i = stars.size() - 1; i >= 0; --i)
 	{
-        stars[i].move(0.0, BACKGROUND_SPEED);
+        stars[i].move(0.0, (float)BACKGROUND_SPEED);
         // Move stars to the top with a random width if they reaches the bottom
         if(stars[i].getPosition().y > HEIGHT + STAR_HEIGHT)
 		{
@@ -159,7 +159,7 @@ vector<bounds> World::onBound(const Ship & playerShip) {
 // Creates first wave of enemies
 void World::makeInitEnemies(){
     for(int h = 5; h < HEIGHT / 2; h += ENEMY_HEIGHT + 5){
-        Vector2<float> starting_pos(starDist(rng), (float)h);
+        Vector2<float> starting_pos(starDist(rng), h);
 
         Vector2<float> starting_dir = (randomInt(rng) % 2) ? Vector2<float>(-1,0) : Vector2<float>(1,0);
 
@@ -180,15 +180,6 @@ void World::updateEnemies(){
 ////////////////////////END ENEMY FUNCTIONS/////////////////////////
 
 
-// Constructor
-World::World() : RenderWindow(VideoMode((unsigned)WIDTH, (unsigned)HEIGHT), "ASTEROIDS"),
-                 playerShip(Ship())
-{
-    populateInitialStars();
-    makeInitEnemies();
-    this->setFramerateLimit(FRAMERATE);
-}
-
 // Updates all the entities in the game world
 void World::update()
 {
@@ -200,24 +191,44 @@ void World::update()
 }
 
 //Draws all the entities to the sfml window
-void World::show(){
+void World::show(sf::RenderWindow &gameScreen){
     // !!!NTF: Find a way to just loop through all the entities and draw them
     //         instead of having separate loops
     for(const auto & s : stars){
-        this->draw(s);
+        gameScreen.draw(s);
     }
     for(const auto & b : bullets){
-        this->draw(b);
+        gameScreen.draw(b);
     }
     for(const auto & p : photons){
-        this->draw(p);
+        gameScreen.draw(p);
         //this->draw(p.hitBox);
     }
     for(const auto & e : enemies){
-        this->draw(e);
+        gameScreen.draw(e);
     }
     if (!playerShip.playerIsDead) {
-        this->draw(playerShip);
+        gameScreen.draw(playerShip);
     }
+}
 
+int World::Run(sf::RenderWindow &gameScreen){
+    sf::Event event;
+
+    World::makeInitEnemies();
+    World::populateInitialStars();
+
+    while(true){
+        while(gameScreen.pollEvent(event)){
+            if(event.type == sf::Event::Closed) return -1;
+            if(event.type == sf::Event::KeyPressed){
+                if(event.key.code == sf::Keyboard::Escape) return 0;
+            }
+        }
+
+        gameScreen.clear();
+        World::update();
+        World::show(gameScreen);
+        gameScreen.display();
+    }
 }
