@@ -3,8 +3,8 @@
 //4.12.2017
 //Definitions for Asteroid class
 
-#include "../../constants.h"
-#include "../Photon.h"
+#include "constants.h"
+#include "Photon.h"
 
 #include <SFML/Graphics.hpp>
 using sf::TriangleFan;

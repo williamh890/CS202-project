@@ -6,7 +6,7 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-#include "../constants.h"
+#include "constants.h"
 #include "Photon.h"
 #include "Bullet.h"
 
@@ -22,12 +22,13 @@ struct Ship : public ShipShape{
 
     sf::Vector2f vel;
     sf::Vector2f accel;
+    sf::Texture shipTexture;
 
     /* weapons */
     //Creates a photon at the ships position
-    Photon photonCannon();
+    Photon* photonCannon();
     //Creates a bullet at the ships position
-    Bullet laser();
+    Bullet* laser();
 
     /* reload values */ // !!!NTF: Put these in some sort of struct
                         //         Along with the weapon functions
@@ -43,7 +44,9 @@ struct Ship : public ShipShape{
     bool playerIsDead;
     bool isTouchingEnemy;
     //Checks if an enemy collides with the ship
-    bool checkIntersect(const EnemyShape &e);
+
+    bool checkIntersect(const sf::Shape &e);
+    bool checkIntersect(const sf::Sprite &e);
 
     int bleed;
     //To id the bullets

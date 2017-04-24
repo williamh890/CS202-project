@@ -16,8 +16,8 @@
 /* Easily change shapes later if needed */
 typedef sf::RectangleShape StarShape;
 typedef sf::RectangleShape BulletShape;
-typedef sf::RectangleShape EnemyShape;
-typedef sf::CircleShape ShipShape;
+typedef sf::Sprite EnemyShape;
+typedef sf::Sprite ShipShape;
 
 const float PI = 3.14159265358979323846F;  /* pi */
 
@@ -53,7 +53,7 @@ const float STAR_WIDTH = 2.0F;
 const int ENEMY_HEIGHT = 30;
 const int ENEMY_WIDTH = 20;
 const float ENEMY_BULLET_SPEED = 5.0F;
-const float ENEMY_MAX_SPEED = 3.5F;
+const float ENEMY_MAX_SPEED = 3.0F;
 const int DODGE_TIME = 100;
 
 

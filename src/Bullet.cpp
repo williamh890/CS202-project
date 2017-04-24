@@ -3,7 +3,7 @@
 //4.12.2017
 //Definitions for Bullet class
 
-#include "../Bullet.h"
+#include "Bullet.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Vector2f;
