@@ -14,6 +14,7 @@
 #include "Bullet.h"
 #include "Photon.h"
 #include "Ship.h"
+#include "healthbar.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -24,6 +25,7 @@ class World : public sf::RenderWindow{
 
         /* Player Ship Object */
         Ship playerShip;
+        HealthBar playerHealth;
 
 
         /* Main Containers for game entities*/

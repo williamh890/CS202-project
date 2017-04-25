@@ -10,6 +10,8 @@
 HealthBar::HealthBar(){
  _MaxHealth =100.00;
  _CurrentHealth=_MaxHealth;
+ drawHealthBar();
+
 
 }
 HealthBar::~HealthBar(){}

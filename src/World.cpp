@@ -14,6 +14,7 @@
 #include "Enemy.h"
 #include "Photon.h"
 #include "Loader.h"
+#include "healthbar.h"
 
 #include <SFML/Graphics.hpp>
 using sf::RenderWindow;
@@ -223,6 +224,7 @@ void World::show(){
     }
     if (!playerShip.playerIsDead) {
         draw(playerShip);
+        draw(playerHealth);
     }
 
 }
