@@ -23,7 +23,7 @@ const float PI = 3.14159265358979323846F;  /* pi */
 
 /* Game Constants */
 const float WIDTH = 500.0F;
-const int HEIGHT = 750;
+const float HEIGHT = 750.0F;
 const int FRAMERATE = 60;
 const float BACKGROUND_SPEED = 7.0F;
 
@@ -54,8 +54,20 @@ const int ENEMY_HEIGHT = 30;
 const int ENEMY_WIDTH = 20;
 const float ENEMY_BULLET_SPEED = 5.0F;
 const float ENEMY_MAX_SPEED = 3.0F;
-const int DODGE_TIME = 100;
 
+const float ENEMY_SEPARATE_FORCE = 0.155F;
+const float SEEKER_PLAYERSEEKER_FORCE = 0.3F;
+const float SEEKER_SPEED = 10.0F;
+
+const float WANDERER_TARGET_FORCE = 0.16F;
+const float WANDERER_MAXSPEED = 2.6F;
+const float WANDERER_TARGET_SWITCH = 120;
+const int DODGE_TIME = 50;
+
+const float FOLLOWER_BULLET_DODGE = 3.0F;
+const float FOLLOWER_MAXSPEED = 4.5F;
+const float FOLLOWER_TARGET_FORCE = .18F;
+const float FOLLOWER_TARGET_SWITCH = 40;
 
 enum ID {PLAYER, ENEMY};
 //For bound checking

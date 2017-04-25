@@ -33,7 +33,7 @@ Ship::Ship() : ShipShape(),
     setTexture(shipTexture);
     setScale(.15,.15);
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
-    amountOfLives = 5;
+    amountOfLives = 100;
     playerIsDead = false;
     isTouchingEnemy = false;
     inInvincibleFrame = false;

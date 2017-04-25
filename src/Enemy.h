@@ -12,42 +12,78 @@
 #include "Ship.h"
 
 #include <SFML/Graphics.hpp>
-using sf::FloatRect;
-using sf::Vector2f;
+
 #include <vector>
-using std::vector;
 #include <random>
+#include <string>
+#include <functional>
+
+struct Traits {
+    Traits(float playerSeek,
+           float targetSeek,
+           int switchChance,
+           float bulletDodge,
+           float speed,
+           bool gun,
+           float separate = ENEMY_SEPARATE_FORCE) : seekPlayerForce(playerSeek),
+                                                    seekTargetForce(targetSeek),
+                                                    targetSwitchChance(switchChance),
+                                                    bulletDodgeForce(bulletDodge),
+                                                    maxSpeed(speed),
+                                                    hasGun(gun),
+                                                    separateForce(separate){}
+
+    float seekPlayerForce;
+    float seekTargetForce;
+    int targetSwitchChance;
+    float bulletDodgeForce;
+
+    float  maxSpeed;
+    bool hasGun;
+    float separateForce;
+
+
+    //A variable function for setting the target
+    //2 possible types
+    //  -random x, random y
+    //  -player x, random y
+    std::function<Vector2f(const ShipShape & ship)> setTarget;
+};
 
 class World;
 
 struct Enemy : public EnemyShape{
 
-    Enemy(Vector2f starting_pos, Vector2f starting_vel, int hp, int damage);
+    Enemy(sf::Vector2f starting_pos,
+          sf::Vector2f starting_vel,
+          int hp, int damage,
+          Traits enemyTraits,
+          std::string textureFilePath = "resources/sprites/eyeball.png");
 
     Vector2f vel;
     Vector2f accel;
     float maxSpeed;
     sf::Texture enemyTexture;
 
-    float enemyDetectionRadius;
-    float bulletDetectionRadius;
-    float desiredPlayerDist;
+    Traits traits;
 
     //Used to periodically dodge bullets
-    Vector2f dodge(const vector<Bullet *> & bullets, bool & hasForce);
+    Vector2f dodge(const std::vector<Bullet *> & bullets, bool & hasForce);
     int dodgeChargeTime;
     int dodgeCounter;
 
     //Push away from other enemies
-    Vector2f separate(const vector<Enemy*> & enemies);
+    Vector2f separate(const std::vector<Enemy*> & enemies);
     //Pull in the direction of the player
-    Vector2f seek(const Ship & playerShip);
+    Vector2f seekPlayer(const Ship & playerShip);
     //Seek a random target
     Vector2f seekTarget();
     Vector2f target;
-    int targetSwitchChance;
-    //Run away from bullets
-    Vector2f flee();
+
+
+    float enemyDetectionRadius;
+    float bulletDetectionRadius;
+    float desiredPlayerDist;
 
     int hp;
     int damage;
@@ -63,7 +99,14 @@ struct Enemy : public EnemyShape{
 
     static std::uniform_real_distribution<float> rngTargetWidth;
     static std::uniform_real_distribution<float> rngTargetHeight;
+    static std::uniform_real_distribution<float> rngFollowerHeight;
     static std::uniform_int_distribution<int> randomInt;
 };
+
+//Factory function for making the different types of enemies
+Enemy * make_seeker();
+Enemy * make_wanderer();
+Enemy * make_follower();
+
 
 #endif // ENEMY_H
