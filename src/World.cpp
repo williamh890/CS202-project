@@ -161,9 +161,10 @@ vector<bounds> World::onBound(const Ship & playerShip) {
 ////////////////////////ENEMY FUNCTIONS/////////////////////////////
 // Creates first wave of enemies
 void World::makeInitEnemies(){
-    int numSeekers = 3;
-    int numWanderers = 3;
-    int numFollowers = 3;
+    static int numSeekers = 3;
+    static int numWanderers = 3;
+    static int numFollowers = 3;
+
 
     for(int i = 0; i < numSeekers; ++i){
         //Makes a seeker at a random width at the top of the screen
@@ -178,6 +179,9 @@ void World::makeInitEnemies(){
         //Makes a seeker at a random width at the top of the screen
         enemies.push_back(make_follower());
     }
+    numSeekers++;
+    numWanderers++;
+    numFollowers++;
 }
 
 void World::updateEnemies(){
@@ -190,6 +194,9 @@ void World::updateEnemies(){
             enemies.erase(enemies.begin()+e);
         }
     }
+    if (enemies.size() <= 0) {
+        makeInitEnemies();
+    }
 
 }
 ////////////////////////END ENEMY FUNCTIONS/////////////////////////
@@ -199,7 +206,6 @@ World::World() : Screens(),
                  playerShip(Ship())
 {
     populateInitialStars();
-    makeInitEnemies();
 }
 
 // Updates all the entities in the game world
