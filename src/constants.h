@@ -34,6 +34,7 @@ const float SHIP_RADIUS = 20.0F;
 const float SHIP_DRAG = 0.93F;
 const float MAX_SPEED = 6.0F;
 const float STARTING_HP = 25.0F;
+const float SWITCH_THRESHHOLD = 5.0F;
 
 const float HP_BAR_LEN = 160.0F;
 const float HP_BAR_WIDTH = 15.0F;

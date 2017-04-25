@@ -282,9 +282,10 @@ void Ship::update(World & world){
 
     //Move the players ship
     move(vel);
-        if(vel.x < -1)         setTextureRect(sf::IntRect(70,0,43,99));
-        else if (vel.x > 1)   setTextureRect(sf::IntRect(120,0,43,99));
-        else                setTextureRect(sf::IntRect(0,5,57,98));
+
+    if(vel.x < -SWITCH_THRESHHOLD)        setTextureRect(sf::IntRect(70,0,43,99));
+    else if (vel.x > SWITCH_THRESHHOLD)   setTextureRect(sf::IntRect(120,0,43,99));
+    else                setTextureRect(sf::IntRect(0,5,57,98));
 
     //Set the health bar correctly
     float percentHP = health / maxHP;
