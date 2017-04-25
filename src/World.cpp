@@ -189,7 +189,6 @@ World::World() : Screens(),
 {
     populateInitialStars();
     makeInitEnemies();
-
 }
 
 // Updates all the entities in the game world
@@ -221,6 +220,8 @@ void World::show(sf::RenderWindow &gameScreen){
     }
     if (!playerShip.playerIsDead) {
         gameScreen.draw(playerShip);
+        gameScreen.draw(playerShip.hpBar.currentHealthBar);
+        gameScreen.draw(playerShip.hpBar.maxHealthBar);
     }
 }
 

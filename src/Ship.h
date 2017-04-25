@@ -9,6 +9,7 @@
 #include "constants.h"
 #include "Photon.h"
 #include "Bullet.h"
+#include "healthbar.h"
 
 #include <vector>
 
@@ -40,9 +41,12 @@ struct Ship : public ShipShape{
     int photonReloadCounter;
 
     /* health */
-    int amountOfLives;
+    float health;
+    float maxHP;
     bool playerIsDead;
     bool isTouchingEnemy;
+
+    HealthBar hpBar;
     //Checks if an enemy collides with the ship
 
     bool checkIntersect(const sf::Shape &e);

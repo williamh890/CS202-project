@@ -18,6 +18,7 @@ typedef sf::RectangleShape StarShape;
 typedef sf::RectangleShape BulletShape;
 typedef sf::Sprite EnemyShape;
 typedef sf::Sprite ShipShape;
+typedef sf::RectangleShape HPBarShape;
 
 const float PI = 3.14159265358979323846F;  /* pi */
 
@@ -32,6 +33,11 @@ const float PLAYER_Y_ACCEL = 0.5F;
 const float SHIP_RADIUS = 20.0F;
 const float SHIP_DRAG = 0.93F;
 const float MAX_SPEED = 6.0F;
+const float STARTING_HP = 100.0F;
+
+const float HP_BAR_LEN = 160.0F;
+const float HP_BAR_WIDTH = 15.0F;
+const float HP_BAR_SCREEN_BUFFER = 10.0F;
 
 const int BULLET_DAMAGE = 1;
 const int BULLET_LEN = 15;
