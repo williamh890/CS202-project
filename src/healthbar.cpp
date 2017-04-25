@@ -9,11 +9,9 @@
 using sf::Vector2f;
 using sf::Color;
 
-HealthBar::HealthBar( float maxHP,
-                      float l,
+HealthBar::HealthBar( float l,
                       float w ) : maxHealthBar(HPBarShape(Vector2f(l,w))),
-                                  currentHealthBar(HPBarShape(Vector2f(l, w))),
-                                  _maxHealth(maxHP)
+                                  currentHealthBar(HPBarShape(Vector2f(l, w)))
 {
     maxHealthBar.setFillColor(Color{0,0,0,0});
     maxHealthBar.setOutlineColor({255,255,255,200});

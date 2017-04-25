@@ -11,7 +11,7 @@
 class HealthBar {
 
 public:
-    HealthBar(float maxHealth, float length = HP_BAR_LEN, float width = HP_BAR_WIDTH);
+    HealthBar(float length = HP_BAR_LEN, float width = HP_BAR_WIDTH);
     virtual  ~HealthBar();
 
     void setCurrentHealthBar(float hpPercentage);
@@ -19,8 +19,6 @@ public:
     HPBarShape maxHealthBar;
     HPBarShape currentHealthBar;
 
-private:
-    float _maxHealth;
 };
 
 #endif // HEALTHBAR_H

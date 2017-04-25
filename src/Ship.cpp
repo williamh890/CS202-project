@@ -28,7 +28,7 @@ Ship::Ship() : ShipShape(),
                photonReloadCounter(0),
                health(STARTING_HP),
                maxHP(health),
-               hpBar(HealthBar(health)),
+               hpBar(HealthBar()),
                sourceID(PLAYER)
 
 {
