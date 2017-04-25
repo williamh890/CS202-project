@@ -15,11 +15,14 @@ public:
     virtual  ~HealthBar();
 
     void setCurrentHealthBar(float hpPercentage);
+    void setCurrVertical(float hpPercentage);
 
     HPBarShape maxHealthBar;
     HPBarShape currentHealthBar;
 
 };
+
+typedef HealthBar ReloadBar;
 
 #endif // HEALTHBAR_H
 

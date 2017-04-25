@@ -5,6 +5,7 @@
 
 #include "Ship.h"
 #include "World.h"
+#include "healthbar.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Color;
@@ -25,7 +26,9 @@ Ship::Ship() : ShipShape(),
                laserReloadCounter(0),
                photonReloadTime(DEFAULT_PHOTON_FIRERATE),
                photonReloadSpeed(1),
-               photonReloadCounter(0),
+               photonReloadCounter(photonReloadTime),
+               photonReloadBar(ReloadBar(RELOAD_BAR_HEIGHT, RELOAD_BAR_WIDTH)),
+               laserReloadBar(ReloadBar(RELOAD_BAR_HEIGHT, RELOAD_BAR_WIDTH)),
                health(STARTING_HP),
                maxHP(health),
                hpBar(HealthBar()),
@@ -41,7 +44,28 @@ Ship::Ship() : ShipShape(),
     inInvincibleFrame = false;
     bleed = 0;
     clock.restart();
+
     hpBar.setCurrentHealthBar(1.0);
+    photonReloadBar.setCurrentHealthBar(1.0);
+    laserReloadBar.setCurrentHealthBar(1.0);
+
+    int reloadBarBuffer = 5;
+
+    photonReloadBar.currentHealthBar.rotate(180);
+    laserReloadBar.currentHealthBar.rotate(180);
+
+    //Change the positions of the reload bars
+    laserReloadBar.currentHealthBar.setPosition(Vector2f(reloadBarBuffer + RELOAD_BAR_HEIGHT, HEIGHT - reloadBarBuffer));
+    laserReloadBar.maxHealthBar.setPosition(Vector2f(reloadBarBuffer, HEIGHT - reloadBarBuffer - RELOAD_BAR_WIDTH));
+    photonReloadBar.currentHealthBar.setPosition(Vector2f(2.5*reloadBarBuffer + 2*RELOAD_BAR_HEIGHT, HEIGHT - reloadBarBuffer));
+    photonReloadBar.maxHealthBar.setPosition(Vector2f(2.5*reloadBarBuffer + RELOAD_BAR_HEIGHT, HEIGHT - reloadBarBuffer - RELOAD_BAR_WIDTH));
+
+    photonReloadBar.currentHealthBar.setFillColor(Color(66, 164, 244));
+    laserReloadBar.currentHealthBar.setFillColor(Color(244, 163, 65));
+
+    photonReloadBar.maxHealthBar.setOutlineThickness(2);
+    laserReloadBar.maxHealthBar.setOutlineThickness(2);
+
 }
 
 bool Ship::checkIntersect(const sf::Shape &e) {
@@ -155,25 +179,25 @@ void Ship::update(World & world){
         world.bullets.push_back(laser());
     }
     //Add to the reload counter if it's not full
-    else {
+    else if(laserReloadCounter <= laserReloadTime){
         laserReloadCounter += laserReloadSpeed;
     }
     //if the reload counter is full and the button is pressed
     if(photonReloadCounter >= photonReloadTime &&
-       Keyboard::isKeyPressed(Keyboard::LShift)) {
+       Keyboard::isKeyPressed(Keyboard::D)) {
         //Shoots a photon
         world.photons.push_back(photonCannon());
 
     }
     //Add to the reload counter if it's not full
-    else {
+    else if(photonReloadCounter <= photonReloadTime) {
         photonReloadCounter += photonReloadSpeed;
     }
 
     if(bleed <= 0) setColor(Color{255,255,255});
     else --bleed;
 
-    if (inInvincibleFrame && clock.getElapsedTime().asMilliseconds() > 1000) {
+    if (inInvincibleFrame && clock.getElapsedTime().asMilliseconds() > 500) {
         inInvincibleFrame = false;
     }
 
@@ -257,4 +281,15 @@ void Ship::update(World & world){
     //Set the health bar correctly
     float percentHP = health / maxHP;
     hpBar.setCurrentHealthBar(percentHP);
+    //Set the reload bars
+    float percentLaserReload = (float)laserReloadCounter / laserReloadTime;
+    if(percentLaserReload >= 1) percentLaserReload = 1.0F;
+    laserReloadBar.setCurrVertical(percentLaserReload);
+
+    float percentPhotonReload = (float)photonReloadCounter / photonReloadTime;
+    if(percentPhotonReload >= 1) percentPhotonReload = 1.0F;
+    photonReloadBar.setCurrVertical(percentPhotonReload);
+
+
+
 }

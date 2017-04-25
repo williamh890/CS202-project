@@ -42,6 +42,9 @@ struct Ship : public ShipShape{
     int photonReloadSpeed;
     int photonReloadCounter;
 
+    ReloadBar photonReloadBar;
+    ReloadBar laserReloadBar;
+
     /* health */
     float health;
     float maxHP;

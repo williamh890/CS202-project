@@ -323,9 +323,11 @@ Enemy * make_seeker() {
     Vector2f initPos{Enemy::rngTargetWidth(Enemy::rng), 0};
     Vector2f initVel{0,0};
 
-    Enemy * seeker = new Enemy(initPos, initVel, 1, 0, seekerTraits);
+    Enemy * seeker = new Enemy(initPos, initVel, 1, 0, seekerTraits, "resources/sprites/homingEnemySheet.png");
 
-    seeker->setScale(0.15, 0.15);
+    seeker->setScale(0.5, 0.5);
+
+    seeker->setTextureRect(sf::IntRect(0,0,81,87));
 
     return seeker;
 }

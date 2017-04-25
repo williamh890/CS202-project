@@ -33,7 +33,7 @@ const float PLAYER_Y_ACCEL = 0.5F;
 const float SHIP_RADIUS = 20.0F;
 const float SHIP_DRAG = 0.93F;
 const float MAX_SPEED = 6.0F;
-const float STARTING_HP = 100.0F;
+const float STARTING_HP = 25.0F;
 
 const float HP_BAR_LEN = 160.0F;
 const float HP_BAR_WIDTH = 15.0F;
@@ -47,10 +47,13 @@ const int DEFAULT_BULLET_FIRERATE = 20;   //Smaller number is faster fire rate
 
 const float PHOTON_RADIUS = 30;
 const int PHOTON_EDGES = 20;
-const int PHOTON_SPEED = 3;
-const int DEFAULT_PHOTON_FIRERATE = 75;
-const float PHOTON_FREQUENCY = PI / 30;
-const int PHOTON_DAMAGE = 1000000;
+const int PHOTON_SPEED = 2;
+const int DEFAULT_PHOTON_FIRERATE = 200;
+const float PHOTON_FREQUENCY = PI / 35;
+const int PHOTON_DAMAGE = 10;
+
+const float RELOAD_BAR_WIDTH = 160.0F;
+const float RELOAD_BAR_HEIGHT = 8.0F;
 
 const int STAR_SPAWN_RATE = 1; //Larger means less stars
 const float STAR_HEIGHT = 2.0F;

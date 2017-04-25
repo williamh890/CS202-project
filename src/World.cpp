@@ -231,8 +231,16 @@ void World::show(sf::RenderWindow &gameScreen){
     }
     if (!playerShip.playerIsDead) {
         gameScreen.draw(playerShip);
+        //Draw health bar
         gameScreen.draw(playerShip.hpBar.currentHealthBar);
         gameScreen.draw(playerShip.hpBar.maxHealthBar);
+        //Draw reload bars
+        gameScreen.draw(playerShip.photonReloadBar.currentHealthBar);
+        gameScreen.draw(playerShip.photonReloadBar.maxHealthBar);
+
+        gameScreen.draw(playerShip.laserReloadBar.currentHealthBar);
+        gameScreen.draw(playerShip.laserReloadBar.maxHealthBar);
+
     }
 }
 
@@ -249,7 +257,6 @@ int World::Run(sf::RenderWindow &gameScreen){
                 if(event.key.code == sf::Keyboard::Escape) return 0;
             }
         }
-
         gameScreen.clear();
         World::update();
         World::show(gameScreen);

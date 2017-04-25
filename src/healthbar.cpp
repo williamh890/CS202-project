@@ -28,4 +28,8 @@ HealthBar::~HealthBar(){}
 void HealthBar::setCurrentHealthBar(float hpPercentage) {
     //Scales the current hp bar to the percentage given
     currentHealthBar.setScale(hpPercentage, 1.0);
-};
+}
+
+void HealthBar::setCurrVertical(float hpPercentage) {
+    currentHealthBar.setScale(1.0, hpPercentage);
+}
