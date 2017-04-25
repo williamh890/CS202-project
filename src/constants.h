@@ -41,7 +41,7 @@ const float HP_BAR_SCREEN_BUFFER = 10.0F;
 
 const int BULLET_DAMAGE = 1;
 const int BULLET_LEN = 15;
-const int BULLET_WIDTH = 3;
+const int BULLET_WIDTH = 4;
 const int BULLET_SPEED = 23;
 const int DEFAULT_BULLET_FIRERATE = 20;   //Smaller number is faster fire rate
 
@@ -64,16 +64,18 @@ const int ENEMY_WIDTH = 20;
 const float ENEMY_BULLET_SPEED = 5.0F;
 const float ENEMY_MAX_SPEED = 3.0F;
 
-const float ENEMY_SEPARATE_FORCE = 0.155F;
+const float ENEMY_SEPARATE_FORCE = 0.16F;
 const float SEEKER_PLAYERSEEKER_FORCE = 0.3F;
 const float SEEKER_SPEED = 10.0F;
 
-const float WANDERER_TARGET_FORCE = 0.16F;
-const float WANDERER_MAXSPEED = 2.6F;
+const float WANDERER_TARGET_FORCE = 0.17F;
+const float WANDERER_MAXSPEED = 3.0F;
 const float WANDERER_TARGET_SWITCH = 120;
-const int DODGE_TIME = 50;
 
-const float FOLLOWER_BULLET_DODGE = 3.0F;
+const int DODGE_TIME = 75;
+const int DODGE_ANIMATION_TIME = 20;
+
+const float FOLLOWER_BULLET_DODGE = 8.0F;
 const float FOLLOWER_MAXSPEED = 4.5F;
 const float FOLLOWER_TARGET_FORCE = .18F;
 const float FOLLOWER_TARGET_SWITCH = 40;

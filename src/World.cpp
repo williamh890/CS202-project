@@ -126,10 +126,6 @@ void World::updatePhotons(){
 //////////////////////END BULLET FUNCTIONS//////////////////////////////
 
 //////////////////////SHIP FUNCTIONS///////////////////////////////////
-Ship World::getPlayerShip() {
-    return playerShip;
-
-}
 
 // Returns if ship is bounded by the edges of the game window
 vector<bounds> World::onBound(const Ship & playerShip) {
@@ -165,12 +161,10 @@ void World::makeInitEnemies(){
     static int numWanderers = 3;
     static int numFollowers = 3;
 
-
     for(int i = 0; i < numSeekers; ++i){
         //Makes a seeker at a random width at the top of the screen
         enemies.push_back(make_seeker());
     }
-
     for(int i = 0; i < numWanderers; ++i){
         //Makes a seeker at a random width at the top of the screen
         enemies.push_back(make_wanderer());
@@ -206,6 +200,21 @@ World::World() : Screens(),
                  playerShip(Ship())
 {
     populateInitialStars();
+}
+//Cleans up all the memory
+World::~World(){
+    for(int i = 0; i < bullets.size(); ++i) {
+        delete bullets[i];
+    }
+    for(int i = 0; i < photons.size(); ++i) {
+        delete photons[i];
+    }
+    for(int i = 0; i < stars.size(); ++i) {
+        delete stars[i];
+    }
+    for(int i = 0; i < enemies.size(); ++i) {
+        delete enemies[i];
+    }
 }
 
 // Updates all the entities in the game world

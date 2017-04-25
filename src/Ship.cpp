@@ -37,7 +37,7 @@ Ship::Ship() : ShipShape(),
 {
     load_texture(shipTexture,"resources/sprites/f-15.png");
     setTexture(shipTexture);
-    setScale(.15,.15);
+    setScale(.2,.2);
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
     playerIsDead = false;
     isTouchingEnemy = false;

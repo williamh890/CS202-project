@@ -53,10 +53,10 @@ class World : public Screens {
         void updateEnemies();
 
         World();
+        ~World();
 
         void show(sf::RenderWindow &gameScreen);
         void update();
-        Ship getPlayerShip();
 
         int Run(sf::RenderWindow &gameScreen) override;
 

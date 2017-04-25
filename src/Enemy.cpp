@@ -49,7 +49,7 @@ Enemy::Enemy(Vector2f starting_pos,
     enemyDetectionRadius = ENEMY_HEIGHT + ENEMY_WIDTH / 2;
 
     //Make bullet detection larger then enemy detection
-    bulletDetectionRadius = enemyDetectionRadius;
+    bulletDetectionRadius = enemyDetectionRadius * 1.5;
     desiredPlayerDist = World::optimalPlayerDist(World::rng);
 
     dodgeChargeTime = DODGE_TIME;
@@ -186,7 +186,7 @@ void Enemy::update(World & world){
             world.bullets.push_back(new Bullet(ENEMY,
                                                pos.x, pos.y,
                                                Vector2f(0, ENEMY_BULLET_SPEED),
-                                               Color{247, 168, 255}));
+                                               Color{3, 198, 0}));
         }
         //Randomly assign new target
         if(!(randomInt(rng) % traits.targetSwitchChance)) {
@@ -197,14 +197,23 @@ void Enemy::update(World & world){
 
         //Only if the enemy has dodge
         if(traits.bulletDodgeForce){
+            //Reset back to the default texture
+            if(dodgeCounter == (dodgeChargeTime -DODGE_ANIMATION_TIME))
+                setTextureRect(sf::IntRect(4, 3, 50, 50));
             if(dodgeCounter <= 0) {
+                //Default texture rect
                 bool hasForce = false;
                 Vector2f bulletDodge = dodge(world.bullets, hasForce);
 
                 if(hasForce) {
                     accel += bulletDodge;
                     dodgeCounter = dodgeChargeTime;
-                }
+
+                    if(accel.x > 0) //moving to the right
+                        setTextureRect(sf::IntRect(70,4,49,39));
+                    if(accel.x < 0) //moving to the left
+                        setTextureRect(sf::IntRect(129,5,50,35));
+                    }
             }
             else{
                 dodgeCounter--;
@@ -350,7 +359,7 @@ Enemy * make_wanderer() {
 
     Enemy * wanderer = new Enemy(initPos, initVel, hp, 1, wandererTraits);
 
-    wanderer->setScale(0.24, 0.24);
+    wanderer->setScale(0.3, 0.3);
 
     return wanderer;
 }
@@ -371,9 +380,10 @@ Enemy * make_follower() {
     Vector2f initVel{0,0};
     int hp = 5;
 
-    Enemy * follower = new Enemy(initPos, initVel, hp, 1, followerTraits);
+    Enemy * follower = new Enemy(initPos, initVel, hp, 1, followerTraits, "resources/sprites/dodgeEnemySheet.png");
 
-    follower->setScale(0.26, 0.26);
+    follower->setScale(1, 1);
+    follower->setTextureRect(sf::IntRect(4, 3, 50, 50));
 
     return follower;
 }
