@@ -37,9 +37,10 @@ Ship::Ship() : ShipShape(),
                sourceID(PLAYER)
 
 {
-    load_texture(shipTexture,"resources/sprites/f-15.png");
+    load_texture(shipTexture,"resources/sprites/MiG-51S.png");
     setTexture(shipTexture);
-    setScale(.15,.15);
+    setScale(.75,.75);
+    setTextureRect(sf::IntRect(0,5,57,98));
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
     playerIsDead = false;
     isTouchingEnemy = false;
@@ -279,6 +280,9 @@ void Ship::update(World & world){
 
     //Move the players ship
     move(vel);
+        if(vel.x < -1)         setTextureRect(sf::IntRect(70,0,43,99));
+        else if (vel.x > 1)   setTextureRect(sf::IntRect(120,0,43,99));
+        else                setTextureRect(sf::IntRect(0,5,57,98));
 
     //Set the health bar correctly
     float percentHP = health / maxHP;
