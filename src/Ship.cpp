@@ -26,6 +26,9 @@ Ship::Ship() : ShipShape(),
                photonReloadTime(DEFAULT_PHOTON_FIRERATE),
                photonReloadSpeed(1),
                photonReloadCounter(0),
+               health(STARTING_HP),
+               maxHP(health),
+               hpBar(HealthBar()),
                sourceID(PLAYER)
 
 {
@@ -33,12 +36,12 @@ Ship::Ship() : ShipShape(),
     setTexture(shipTexture);
     setScale(.15,.15);
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
-    amountOfLives = 100;
     playerIsDead = false;
     isTouchingEnemy = false;
     inInvincibleFrame = false;
     bleed = 0;
     clock.restart();
+    hpBar.setCurrentHealthBar(1.0);
 }
 
 bool Ship::checkIntersect(const sf::Shape &e) {
@@ -180,7 +183,7 @@ void Ship::update(World & world){
         //If the player and an enemy intersect
         if (checkIntersect(*world.enemies[e])) {
             //minus a single life per collision
-            amountOfLives--;
+            health--;
             if (!inInvincibleFrame) {
                 inInvincibleFrame = true;
                 clock.restart();
@@ -198,7 +201,7 @@ void Ship::update(World & world){
 
             Vector2f collisionForce = shipCenter - enemyPos;
 
-            collisionForce *= (float).5;
+            collisionForce *= (float).2;
 
             vel += collisionForce;
 
@@ -210,7 +213,7 @@ void Ship::update(World & world){
             setColor(Color{244, 66, 66, 200});
             bleed = 10;
 
-            if (amountOfLives <= 0) {
+            if (health <= 0) {
                 playerIsDead=true;
                 break;
             }
@@ -224,13 +227,13 @@ void Ship::update(World & world){
             //If the bullets hits
             if(checkIntersect(*world.bullets[b])) {
                 //Remove a life
-                amountOfLives--;
+
+                health--;
                 if (!inInvincibleFrame) {
                     inInvincibleFrame = true;
                     clock.restart();
                 }
 
-                vel += Vector2f(0, 5);
                 setColor(Color{244, 66, 66, 200});
                 bleed = 5;
 
@@ -238,7 +241,7 @@ void Ship::update(World & world){
                 world.bullets.erase(world.bullets.begin() + b);
 
                 //If yr dead...
-                if (amountOfLives <= 0) {
+                if (health <= 0) {
                     playerIsDead=true;
                     break;
                 }
@@ -250,4 +253,8 @@ void Ship::update(World & world){
 
     //Move the players ship
     move(vel);
+
+    //Set the health bar correctly
+    float percentHP = health / maxHP;
+    hpBar.setCurrentHealthBar(percentHP);
 }
