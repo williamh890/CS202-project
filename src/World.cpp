@@ -161,12 +161,22 @@ vector<bounds> World::onBound(const Ship & playerShip) {
 ////////////////////////ENEMY FUNCTIONS/////////////////////////////
 // Creates first wave of enemies
 void World::makeInitEnemies(){
-    for(int h = 5; h < HEIGHT / 2; h += ENEMY_HEIGHT + 10){
-        Vector2<float> starting_pos(starDist(rng), h);
+    int numSeekers = 3;
+    int numWanderers = 3;
+    int numFollowers = 3;
 
-        Vector2<float> starting_dir = (randomInt(rng) % 2) ? Vector2<float>(-1,0) : Vector2<float>(1,0);
+    for(int i = 0; i < numSeekers; ++i){
+        //Makes a seeker at a random width at the top of the screen
+        enemies.push_back(make_seeker());
+    }
 
-        enemies.push_back(new Enemy(starting_pos, starting_dir, 5, 5));
+    for(int i = 0; i < numWanderers; ++i){
+        //Makes a seeker at a random width at the top of the screen
+        enemies.push_back(make_wanderer());
+    }
+    for(int i = 0; i < numFollowers; ++i){
+        //Makes a seeker at a random width at the top of the screen
+        enemies.push_back(make_follower());
     }
 }
 
@@ -174,7 +184,8 @@ void World::updateEnemies(){
     //Look through all the enemies
     for(int e = enemies.size() - 1; e >= 0; --e){
         enemies[e]->update(*this);
-        if (enemies[e]->hp <= 0) {
+        //If dead
+        if (enemies[e]->hp <= 0 || enemies[e]->getPosition().y > HEIGHT) {
             delete enemies[e];
             enemies.erase(enemies.begin()+e);
         }
