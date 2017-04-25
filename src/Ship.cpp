@@ -16,6 +16,7 @@ using sf::Vector2f;
 #include <vector>
 using std::vector;
 
+
 #include "Loader.h"
 
 Ship::Ship() : ShipShape(),
@@ -31,6 +32,7 @@ Ship::Ship() : ShipShape(),
                laserReloadBar(ReloadBar(RELOAD_BAR_HEIGHT, RELOAD_BAR_WIDTH)),
                health(STARTING_HP),
                maxHP(health),
+               playerScore(0),
                hpBar(HealthBar()),
                sourceID(PLAYER)
 
@@ -184,7 +186,7 @@ void Ship::update(World & world){
     }
     //if the reload counter is full and the button is pressed
     if(photonReloadCounter >= photonReloadTime &&
-       Keyboard::isKeyPressed(Keyboard::D)) {
+       Keyboard::isKeyPressed(Keyboard::E)) {
         //Shoots a photon
         world.photons.push_back(photonCannon());
 
