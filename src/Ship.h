@@ -41,6 +41,7 @@ struct Ship : public ShipShape{
     int photonReloadTime;
     int photonReloadSpeed;
     int photonReloadCounter;
+    int playerScore;
 
     ReloadBar photonReloadBar;
     ReloadBar laserReloadBar;
