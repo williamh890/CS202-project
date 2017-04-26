@@ -188,11 +188,13 @@ void World::updateEnemies(){
         _enemies[e]->update(*this);
         //If dead
         if (_enemies[e]->_hp <= 0 || _enemies[e]->getPosition().y > HEIGHT) {
+            Vector2f pos = _enemies[e]->getPosition();
+
             if (_enemies[e]->_hp <= 0) {
+                //Add to the score
                 _playerShip._playerScore+=25;
                 //Split the wanderers into 2 seekers
                 if(_enemies[e]->_traits._bulletDodgeForce == 0 && _enemies[e]->_traits._seekTargetForce) {
-                    Vector2f pos = _enemies[e]->getPosition();
                     //Splits the wander
                     for(int i = 0; i < SPLIT_NUMBER; i++) {
                         Enemy * newSeeker = make_seeker();
@@ -201,7 +203,11 @@ void World::updateEnemies(){
                     }
 
                 }
+                //Add an explosion where the enemy died
+//                Explosion * newExplosion = new Explosion(pos);
+//                _explosions.push_back(newExplosion);
             }
+
 
             delete _enemies[e];
             _enemies.erase(_enemies.begin()+e);
@@ -237,6 +243,11 @@ World::~World(){
     }
 }
 
+void World::updateExplosions() {
+    //Look through all the explosions
+
+}
+
 // Updates all the entities in the game world
 void World::update()
 {
@@ -245,6 +256,7 @@ void World::update()
     updateBullets();
     updatePhotons();
     updateEnemies();
+    updateExplosions();
 }
 
 //Draws all the entities to the sfml window

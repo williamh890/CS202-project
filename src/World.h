@@ -32,6 +32,9 @@ class World : public Screens {
         std::vector<StarShape*> _stars;
         std::vector<Enemy*> _enemies;
 
+
+        void updateExplosions();
+
         void updatePhotons();
         void addPhoton(Photon p);
 
