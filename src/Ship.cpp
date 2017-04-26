@@ -12,10 +12,11 @@ using sf::Color;
 using sf::Keyboard;
 using sf::Vector2;
 using sf::Vector2f;
+#include<SFML/Window/Joystick.hpp>
 
 #include <vector>
 using std::vector;
-
+#include <iostream>
 
 #include "Loader.h"
 
@@ -110,21 +111,25 @@ void Ship::update(World & world){
     ///////////////////////movement///////////////////////
 
     //LEFT ARROW TO MOVE LEFT
-    if(Keyboard::isKeyPressed(Keyboard::Left) || (Keyboard::isKeyPressed((Keyboard::A)))){
+    if(Keyboard::isKeyPressed(Keyboard::Left) || (Keyboard::isKeyPressed((Keyboard::A)))
+       || (sf::Joystick::getAxisPosition(0,sf::Joystick::X))<-10){
            accel += Vector2f(-PLAYER_X_ACCEL, 0);
     }
 
     //RIGHT ARROW TO MOVE RIGHT
-    if(Keyboard::isKeyPressed(Keyboard::Right) || (Keyboard::isKeyPressed((Keyboard::D)))){
+    if(Keyboard::isKeyPressed(Keyboard::Right) || (Keyboard::isKeyPressed((Keyboard::D)))
+       ||(sf::Joystick::getAxisPosition(0,sf::Joystick::X))>10){
             accel += Vector2f(PLAYER_X_ACCEL, 0);
     }
 
     //UP ARROW TO MOVE UP
-    if(Keyboard::isKeyPressed(Keyboard::Up) || (Keyboard::isKeyPressed((Keyboard::W)))){
+    if(Keyboard::isKeyPressed(Keyboard::Up) || (Keyboard::isKeyPressed((Keyboard::W)))
+       ||sf::Joystick::getAxisPosition(0,sf::Joystick::Y)<-10){
             accel += Vector2f(0, -PLAYER_Y_ACCEL);
     }
     //DOWN ARROW TO MOVE DOWN
-    if(Keyboard::isKeyPressed(Keyboard::Down) || (Keyboard::isKeyPressed((Keyboard::S)))){
+    if(Keyboard::isKeyPressed(Keyboard::Down) || (Keyboard::isKeyPressed((Keyboard::S)))
+       || sf::Joystick::getAxisPosition(0,sf::Joystick::Y)>10){
            accel += Vector2f(0, PLAYER_Y_ACCEL);
     }
     //Add the acceleration to the velocity
@@ -177,7 +182,7 @@ void Ship::update(World & world){
 
     //if the reload counter is full and the button is pressed
     if(laserReloadCounter >= laserReloadTime &&
-       Keyboard::isKeyPressed(Keyboard::Space)){
+       (Keyboard::isKeyPressed(Keyboard::Space))||(sf::Joystick::getAxisPosition(0,sf::Joystick::Z) < -98)){
         //Fires a bullet from the player ship
         world.bullets.push_back(laser());
     }
@@ -187,7 +192,7 @@ void Ship::update(World & world){
     }
     //if the reload counter is full and the button is pressed
     if(photonReloadCounter >= photonReloadTime &&
-       Keyboard::isKeyPressed(Keyboard::E)) {
+       (Keyboard::isKeyPressed(Keyboard::E)||sf::Joystick::getAxisPosition(0,sf::Joystick::Z) > 0)) {
         //Shoots a photon
         world.photons.push_back(photonCannon());
 
