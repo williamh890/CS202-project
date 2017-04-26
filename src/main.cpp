@@ -23,7 +23,7 @@ int main(){
     int screenSelect=0;
 
     //create game window
-    sf::RenderWindow App(sf::VideoMode(WIDTH, HEIGHT), "SPACE GAME");
+    sf::RenderWindow App(sf::VideoMode((unsigned)WIDTH, (unsigned)HEIGHT), "SPACE GAME");
     App.setFramerateLimit(FRAMERATE);
 
     //hide mouse cursor
