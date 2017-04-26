@@ -5,6 +5,7 @@ Updated: 17/4/2017
 Screen_0 is the game menu screen.*/
 
 #include "Screen_0.h"
+#include "constants.h"
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -81,18 +82,18 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu){
                 //If the joystick is pressed halfway up just select
                 if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) <= -detectionThreshold / 2) {
                     menuSelect = 0;
-                    //If stick is push all the way up
-                    if (sf::Joystick::getAxisPosition(0,sf::Joystick::Y) <= -detectionThreshold){
+                    //If the right trigger is pushed
+
+                }
+                if (sf::Joystick::isButtonPressed(0, A) && menuSelect == 0){
                             playing=true;
                             return 1; //starts game
                     }
-                }
                 if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) >= detectionThreshold / 2) {
                     menuSelect = 1;
-
-                    if (sf::Joystick::getAxisPosition(0,sf::Joystick::Y) >= detectionThreshold) {
+                }
+                if (sf::Joystick::isButtonPressed(0, A) && menuSelect == 1) {
                         return -1;
-                    }
                 }
 
             }

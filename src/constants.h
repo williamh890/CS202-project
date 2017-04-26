@@ -14,7 +14,7 @@
 
 
 /* Easily change shapes later if needed */
-typedef sf::RectangleShape StarShape;
+typedef sf::CircleShape StarShape;
 typedef sf::RectangleShape BulletShape;
 typedef sf::Sprite EnemyShape;
 typedef sf::Sprite ShipShape;
@@ -57,7 +57,7 @@ const float RELOAD_BAR_WIDTH = 160.0F;
 const float RELOAD_BAR_HEIGHT = 8.0F;
 
 const int STAR_SPAWN_RATE = 1; //Larger means less stars
-const float STAR_HEIGHT = 2.0F;
+const float STAR_HEIGHT = 1.5F;
 const float STAR_WIDTH = 2.0F;
 
 const int ENEMY_HEIGHT = 30;
@@ -84,5 +84,7 @@ const float FOLLOWER_TARGET_SWITCH = 40;
 enum ID {PLAYER, ENEMY};
 //For bound checking
 enum bounds {RIGHT, LEFT, UPPER, LOWER,EMPTY};
+
+enum controllerButtons {A, B, X, Y, LB, RB, SELECT, START, LTHUMB, RTHUMB, RT};
 
 #endif // GAME_CONSTANTS_H_INCLUDED

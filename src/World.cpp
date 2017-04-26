@@ -46,12 +46,17 @@ std::uniform_int_distribution<int> World::starBrightness(100, 255);
 // Creates a new star
 void World::makeStar(float startingHeight)
 {
+
+    Color starColor(255,255,255,starBrightness(rng));
+	sf::Uint8 alpha = starColor.a;
+
 	// Sets star size, shape, and color
-	Vector2<float> starSize((float)STAR_HEIGHT, (float)STAR_WIDTH);
-    StarShape* newStar= new StarShape(starSize);
+	Vector2<float> starSize;
+
+    StarShape* newStar= new StarShape((float)STAR_HEIGHT * (alpha / 255.0), 6);
 
     // Makes a new star with a random position along width of screen
-    newStar->setFillColor(Color(255,255,255,starBrightness(rng)));
+    newStar->setFillColor(starColor);
     //Makes a new star with a random position along with of screen
 
     float starX = starDist(rng);
@@ -63,7 +68,7 @@ void World::makeStar(float startingHeight)
 void World::populateInitialStars(){
     for(int h = 0; h < HEIGHT; ++h){
         //This is finicky
-        if(!(h % (STAR_SPAWN_RATE*7))){
+        if(!(h % (STAR_SPAWN_RATE*3))){
             makeStar(h);
 
         }
@@ -266,16 +271,15 @@ void World::show(sf::RenderWindow &gameScreen){
 int World::Run(sf::RenderWindow &gameScreen){
     sf::Event event;
 
-    World::makeInitEnemies();
-    World::populateInitialStars();
-
     while(true){
         while(gameScreen.pollEvent(event)){
             if(event.type == sf::Event::Closed) return -1;
             if(event.type == sf::Event::KeyPressed){
                 if(event.key.code == sf::Keyboard::Escape) return 0;
+
             }
         }
+        if(sf::Joystick::isButtonPressed(0, START)) return 0;
         gameScreen.clear();
         World::update();
         World::show(gameScreen);
