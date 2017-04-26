@@ -223,6 +223,7 @@ void Ship::update(World & world){
         if (checkIntersect(*world.enemies[e])) {
             //minus a single life per collision
             health--;
+            world.enemies[e]->hp--;
             if (!inInvincibleFrame) {
                 inInvincibleFrame = true;
                 clock.restart();
