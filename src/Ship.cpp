@@ -277,7 +277,7 @@ void Ship::update(World & world){
     //  !!!NTF: Separate out the player bullets and
     //          the enemy bullets into separate arrays
     for(int b = world.bullets.size() - 1; !inInvincibleFrame && b >= 0; --b) {
-        if(world.bullets[b]->source == ENEMY) {
+        if(world.bullets[b]->_source == ENEMY) {
             //If the bullets hits
             if(checkIntersect(*world.bullets[b])) {
                 //Remove a life

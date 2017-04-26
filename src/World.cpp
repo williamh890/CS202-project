@@ -104,7 +104,7 @@ void World::updateBullets()
 
         // Moves bullets up if not off the screen
         else{
-            bullets[i]->move(bullets[i]->direction.x, bullets[i]->direction.y);
+            bullets[i]->move(bullets[i]->_direction.x, bullets[i]->_direction.y);
         }
     }
 }

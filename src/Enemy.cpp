@@ -127,7 +127,7 @@ Vector2f Enemy::dodge(const vector<Bullet *> & bullets, bool & hasForce) {
 
     for(int i = 0; i < (int)bullets.size(); ++i) {
         //if the bullet is a player bullet
-        if(bullets[i]->source == PLAYER) {
+        if(bullets[i]->_source == PLAYER) {
             //Find the center of that bullet
             Vector2f bulletPos = bullets[i]->getPosition();
             makeCenter(bulletPos, BULLET_WIDTH, BULLET_SPEED);
@@ -274,9 +274,9 @@ void Enemy::update(World & world){
         //Look through all the bullets
         for (int b = world.bullets.size() - 1; b >= 0; --b) {
             //If an enemy and a bullet intersect
-            if (checkIntersect(*world.bullets[b]) && world.bullets[b]->source == PLAYER) {
+            if (checkIntersect(*world.bullets[b]) && world.bullets[b]->_source == PLAYER) {
                 //Do damage to the enemy
-                hp -= world.bullets[b]->damage;
+                hp -= world.bullets[b]->_damage;
 
                 //Have the enemy flash red if hit
                 setColor(Color{244, 66, 66, 200});
