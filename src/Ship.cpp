@@ -112,32 +112,46 @@ Photon* Ship::photonCannon(){
 void Ship::update(World & world){
     ///////////////////////movement///////////////////////
     int joystickDetectionThreshold = 10;
+    float xAccel;
+    float yAccel;
+
     //LEFT ARROW TO MOVE LEFT
     if(Keyboard::isKeyPressed(Keyboard::Left) || (Keyboard::isKeyPressed((Keyboard::A)))
        || (sf::Joystick::getAxisPosition(0,sf::Joystick::X)) < -joystickDetectionThreshold){
-
-           float xAccel = (float)-PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / -100);
-           accel += Vector2f(xAccel, 0);
+        if(sf::Joystick::isConnected(0))
+           xAccel = (float)-PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / -100);
+        else
+            xAccel = -PLAYER_X_ACCEL;
+        accel += Vector2f(xAccel, 0);
     }
 
     //RIGHT ARROW TO MOVE RIGHT
     if(Keyboard::isKeyPressed(Keyboard::Right) || (Keyboard::isKeyPressed((Keyboard::D)))
        ||(sf::Joystick::getAxisPosition(0,sf::Joystick::X)) > joystickDetectionThreshold){
-            float xAccel = (float)PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / 100);
-            accel += Vector2f(xAccel, 0);
+        if(sf::Joystick::isConnected(0))
+            xAccel = (float)PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / 100);
+        else
+            xAccel = PLAYER_X_ACCEL;
+        accel += Vector2f(xAccel, 0);
     }
 
     //UP ARROW TO MOVE UP
     if(Keyboard::isKeyPressed(Keyboard::Up) || (Keyboard::isKeyPressed((Keyboard::W)))
        || sf::Joystick::getAxisPosition(0,sf::Joystick::Y) < -joystickDetectionThreshold){
-            float yAccel = (float)-PLAYER_Y_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) / -100);
-            accel += Vector2f(0, yAccel);
+        if(sf::Joystick::isConnected(0))
+            yAccel = (float)-PLAYER_Y_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) / -100);
+        else
+            yAccel = -PLAYER_Y_ACCEL;
+        accel += Vector2f(0, yAccel);
     }
     //DOWN ARROW TO MOVE DOWN
     if(Keyboard::isKeyPressed(Keyboard::Down) || (Keyboard::isKeyPressed((Keyboard::S)))
        || sf::Joystick::getAxisPosition(0,sf::Joystick::Y) > joystickDetectionThreshold){
-           float yAccel = (float)PLAYER_Y_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) / 100);
-           accel += Vector2f(0, yAccel);
+            if(sf::Joystick::isConnected(0))
+                yAccel = (float)PLAYER_Y_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) / 100);
+            else
+                yAccel = PLAYER_Y_ACCEL;
+            accel += Vector2f(0, yAccel);
     }
     //Add the acceleration to the velocity
     vel += accel;
