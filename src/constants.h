@@ -28,11 +28,11 @@ const float HEIGHT = 750.0F;
 const int FRAMERATE = 60;
 const float BACKGROUND_SPEED = 7.0F;
 
-const float PLAYER_X_ACCEL = 0.7F;
-const float PLAYER_Y_ACCEL = 0.5F;
+const float PLAYER_X_ACCEL = 1.0F;
+const float PLAYER_Y_ACCEL = 1.0F;
 const float SHIP_RADIUS = 20.0F;
-const float SHIP_DRAG = 0.93F;
-const float MAX_SPEED = 6.0F;
+const float SHIP_DRAG = 0.92F;
+const float MAX_SPEED = 8.0F;
 const float STARTING_HP = 25.0F;
 
 const float HP_BAR_LEN = 160.0F;
