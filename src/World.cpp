@@ -46,12 +46,17 @@ std::uniform_int_distribution<int> World::starBrightness(100, 255);
 // Creates a new star
 void World::makeStar(int startingHeight)
 {
+
+    Color starColor(255,255,255,starBrightness(rng));
+	sf::Uint8 alpha = starColor.a;
+
 	// Sets star size, shape, and color
-	Vector2<float> starSize((float)STAR_HEIGHT, (float)STAR_WIDTH);
-    StarShape* newStar= new StarShape(starSize);
+	Vector2<float> starSize;
+
+    StarShape* newStar= new StarShape((float)STAR_HEIGHT * (alpha / 255.0), 6);
 
     // Makes a new star with a random position along width of screen
-    newStar->setFillColor(Color(255,255,255,starBrightness(rng)));
+    newStar->setFillColor(starColor);
     //Makes a new star with a random position along with of screen
 
     float starX = starDist(rng);
@@ -63,7 +68,7 @@ void World::makeStar(int startingHeight)
 void World::populateInitialStars(){
     for(int h = 0; h < HEIGHT; ++h){
         //This is finicky
-        if(!(h % (STAR_SPAWN_RATE*7))){
+        if(!(h % (STAR_SPAWN_RATE*3))){
             makeStar(h);
 
         }
@@ -157,7 +162,7 @@ vector<bounds> World::onBound(const Ship & playerShip) {
 ////////////////////////ENEMY FUNCTIONS/////////////////////////////
 // Creates first wave of _enemies
 void World::makeInitEnemies(){
-    static int numSeekers = 3;
+    static int numSeekers = 0;
     static int numWanderers = 3;
     static int numFollowers = 3;
 
@@ -173,7 +178,6 @@ void World::makeInitEnemies(){
         //Makes a seeker at a random width at the top of the screen
         _enemies.push_back(make_follower());
     }
-    numSeekers++;
     numWanderers++;
     numFollowers++;
 }
@@ -184,9 +188,21 @@ void World::updateEnemies(){
         _enemies[e]->update(*this);
         //If dead
         if (_enemies[e]->_hp <= 0 || _enemies[e]->getPosition().y > HEIGHT) {
-            if (_enemies[e]->_hp <= 0){
+            if (_enemies[e]->_hp <= 0) {
                 _playerShip._playerScore+=25;
+                //Split the wanderers into 2 seekers
+                if(_enemies[e]->_traits._bulletDodgeForce == 0 && _enemies[e]->_traits._seekTargetForce) {
+                    Vector2f pos = _enemies[e]->getPosition();
+                    //Splits the wander
+                    for(int i = 0; i < SPLIT_NUMBER; i++) {
+                        Enemy * newSeeker = make_seeker();
+                        newSeeker->setPosition(pos);
+                        _enemies.push_back(newSeeker);
+                    }
+
+                }
             }
+
             delete _enemies[e];
             _enemies.erase(_enemies.begin()+e);
 
@@ -266,16 +282,15 @@ void World::show(sf::RenderWindow &gameScreen){
 int World::Run(sf::RenderWindow &gameScreen){
     sf::Event event;
 
-    World::makeInitEnemies();
-    World::populateInitialStars();
-
     while(true){
         while(gameScreen.pollEvent(event)){
             if(event.type == sf::Event::Closed) return -1;
             if(event.type == sf::Event::KeyPressed){
                 if(event.key.code == sf::Keyboard::Escape) return 0;
+
             }
         }
+        if(sf::Joystick::isButtonPressed(0, START)) return 0;
         gameScreen.clear();
         World::update();
         World::show(gameScreen);

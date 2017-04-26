@@ -212,8 +212,10 @@ void Ship::update(World & world){
         _laserReloadCounter += _laserReloadSpeed;
     }
     //if the reload counter is full and the button is pressed
+
     if(_photonReloadCounter >= _photonReloadTime && Keyboard::isKeyPressed(Keyboard::E) ||
-       _photonReloadCounter >= _photonReloadTime && sf::Joystick::getAxisPosition(0,sf::Joystick::Z) > 0) {
+       _photonReloadCounter >= _photonReloadTime && sf::Joystick::isButtonPressed(0, X)) {
+
         //Shoots a photon
         world._photons.push_back(photonCannon());
 
