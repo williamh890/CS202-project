@@ -24,6 +24,8 @@ struct Ship : public ShipShape{
     sf::Vector2f vel;
     sf::Vector2f accel;
     sf::Texture shipTexture;
+    sf::Texture explosionTexture;
+    sf::Sprite explosionSprite;
     sf::Clock clock;
     sf::Time time;
 

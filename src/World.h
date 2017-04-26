@@ -25,6 +25,11 @@ class World : public Screens {
         /* Player Ship Object */
         Ship playerShip;
 
+        sf::Texture explosionTexture;
+        sf::Sprite explosionSprite;
+        sf::Clock clock;
+        sf::Time time;
+
         /* Main Containers for game entities*/
         std::vector<Bullet*> bullets;
         std::vector<Photon*> photons;

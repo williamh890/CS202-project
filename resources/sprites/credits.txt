@@ -9,3 +9,5 @@ dodge enemy - general Jerzy http://generaljerzy.deviantart.com/art/Bug-Splat-Blo
 boss enemy - RPG Maker XP
 
 labels - Andy Cummins
+
+explosion - open game graphics

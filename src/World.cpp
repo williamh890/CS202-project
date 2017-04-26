@@ -192,6 +192,20 @@ void World::updateEnemies(){
         if (enemies[e]->hp <= 0 || enemies[e]->getPosition().y > HEIGHT) {
             if (enemies[e]->hp <= 0){
             playerShip.playerScore+=25;
+             //explosion animation
+            load_texture(explosionTexture,"resources/sprites/explosionSprite.bmp");
+            explosionSprite.setTexture(explosionTexture);
+            clock.restart();
+            explosionSprite.setPosition(enemies[e]->getPosition());
+            explosionSprite.setTextureRect(sf::IntRect(0,0,50,45));
+            if (clock.getElapsedTime().asMilliseconds() > 500) explosionSprite.setTextureRect(sf::IntRect(0,0,50,45));
+            if (clock.getElapsedTime().asMilliseconds() > 1000) explosionSprite.setTextureRect(sf::IntRect(50,0,50,45));
+            if (clock.getElapsedTime().asMilliseconds() > 1500) explosionSprite.setTextureRect(sf::IntRect(100,0,50,45));
+            if (clock.getElapsedTime().asMilliseconds() > 2000) explosionSprite.setTextureRect(sf::IntRect(150,0,50,45));
+            if (clock.getElapsedTime().asMilliseconds() > 2500) explosionSprite.setTextureRect(sf::IntRect(0,50,50,45));
+            if (clock.getElapsedTime().asMilliseconds() > 3000) explosionSprite.setTextureRect(sf::IntRect(0,100,50,45));
+            if (clock.getElapsedTime().asMilliseconds() > 3500) explosionSprite.setTextureRect(sf::IntRect(0,150,50,45));
+            if (clock.getElapsedTime().asMilliseconds() > 4000) explosionSprite.setTextureRect(sf::IntRect(0,200,50,45));
             }
             delete enemies[e];
             enemies.erase(enemies.begin()+e);
@@ -239,20 +253,23 @@ void World::show(sf::RenderWindow &gameScreen){
     for(const auto & e : enemies){
         gameScreen.draw(*e);
     }
-    if (!playerShip.playerIsDead) {
-        gameScreen.draw(playerShip);
-        //Draw health bar
-        gameScreen.draw(playerShip.hpBar.currentHealthBar);
-        gameScreen.draw(playerShip.hpBar.maxHealthBar);
-        //Draw reload bars
-        gameScreen.draw(playerShip.photonReloadBar.currentHealthBar);
-        gameScreen.draw(playerShip.photonReloadBar.maxHealthBar);
 
-        gameScreen.draw(playerShip.laserReloadBar.currentHealthBar);
-        gameScreen.draw(playerShip.laserReloadBar.maxHealthBar);
+    //draw player
+    gameScreen.draw(playerShip);
 
+    //Draw health bar
+    if (!playerShip.playerIsDead){
+    gameScreen.draw(playerShip.hpBar.currentHealthBar);
+    gameScreen.draw(playerShip.hpBar.maxHealthBar);
+    //Draw reload bars
+    gameScreen.draw(playerShip.photonReloadBar.currentHealthBar);
+    gameScreen.draw(playerShip.photonReloadBar.maxHealthBar);
+
+    gameScreen.draw(playerShip.laserReloadBar.currentHealthBar);
+    gameScreen.draw(playerShip.laserReloadBar.maxHealthBar);
     }
 }
+
 
 int World::Run(sf::RenderWindow &gameScreen){
     sf::Event event;

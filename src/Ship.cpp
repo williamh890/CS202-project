@@ -277,8 +277,6 @@ void Ship::update(World & world){
                     playerIsDead=true;
                     break;
                 }
-
-
             }
         }
     }
@@ -302,5 +300,18 @@ void Ship::update(World & world){
     photonReloadBar.setCurrVertical(percentPhotonReload);
 
 
-
+    if (playerIsDead) {
+        load_texture(explosionTexture,"resources/sprites/explosionSprite.png");
+                    setTexture(explosionTexture);
+                    setTextureRect(sf::IntRect(0,0,50,45));
+                    if (clock.getElapsedTime().asMilliseconds() > 100)  setTextureRect(sf::IntRect(0,0,50,45));
+                    if (clock.getElapsedTime().asMilliseconds() > 200) setTextureRect(sf::IntRect(50,0,50,45));
+                    if (clock.getElapsedTime().asMilliseconds() > 300) setTextureRect(sf::IntRect(100,0,50,45));
+                    if (clock.getElapsedTime().asMilliseconds() > 400) setTextureRect(sf::IntRect(150,0,50,45));
+                    if (clock.getElapsedTime().asMilliseconds() > 500) setTextureRect(sf::IntRect(0,50,50,45));
+                    if (clock.getElapsedTime().asMilliseconds() > 600) setTextureRect(sf::IntRect(0,100,50,45));
+                    if (clock.getElapsedTime().asMilliseconds() > 700) setTextureRect(sf::IntRect(0,150,50,45));
+                    if (clock.getElapsedTime().asMilliseconds() > 800) setTextureRect(sf::IntRect(0,200,50,45));
+                    //todo: erase the ship here after this animation
+    }
 }
