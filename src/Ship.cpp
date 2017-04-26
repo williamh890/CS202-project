@@ -12,10 +12,11 @@ using sf::Color;
 using sf::Keyboard;
 using sf::Vector2;
 using sf::Vector2f;
+#include<SFML/Window/Joystick.hpp>
 
 #include <vector>
 using std::vector;
-
+#include <iostream>
 
 #include "Loader.h"
 
@@ -110,24 +111,33 @@ Photon* Ship::photonCannon(){
 //          this being a direct move it would just apply a force
 void Ship::update(World & world){
     ///////////////////////movement///////////////////////
-
+    int joystickDetectionThreshold = 10;
     //LEFT ARROW TO MOVE LEFT
-    if(Keyboard::isKeyPressed(Keyboard::Left) || (Keyboard::isKeyPressed((Keyboard::A)))){
-           accel += Vector2f(-PLAYER_X_ACCEL, 0);
+    if(Keyboard::isKeyPressed(Keyboard::Left) || (Keyboard::isKeyPressed((Keyboard::A)))
+       || (sf::Joystick::getAxisPosition(0,sf::Joystick::X)) < -joystickDetectionThreshold){
+
+           float xAccel = (float)-PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / -100);
+           accel += Vector2f(xAccel, 0);
     }
 
     //RIGHT ARROW TO MOVE RIGHT
-    if(Keyboard::isKeyPressed(Keyboard::Right) || (Keyboard::isKeyPressed((Keyboard::D)))){
-            accel += Vector2f(PLAYER_X_ACCEL, 0);
+    if(Keyboard::isKeyPressed(Keyboard::Right) || (Keyboard::isKeyPressed((Keyboard::D)))
+       ||(sf::Joystick::getAxisPosition(0,sf::Joystick::X)) > joystickDetectionThreshold){
+            float xAccel = (float)PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / 100);
+            accel += Vector2f(xAccel, 0);
     }
 
     //UP ARROW TO MOVE UP
-    if(Keyboard::isKeyPressed(Keyboard::Up) || (Keyboard::isKeyPressed((Keyboard::W)))){
-            accel += Vector2f(0, -PLAYER_Y_ACCEL);
+    if(Keyboard::isKeyPressed(Keyboard::Up) || (Keyboard::isKeyPressed((Keyboard::W)))
+       || sf::Joystick::getAxisPosition(0,sf::Joystick::Y) < -joystickDetectionThreshold){
+            float yAccel = (float)-PLAYER_Y_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) / -100);
+            accel += Vector2f(0, yAccel);
     }
     //DOWN ARROW TO MOVE DOWN
-    if(Keyboard::isKeyPressed(Keyboard::Down) || (Keyboard::isKeyPressed((Keyboard::S)))){
-           accel += Vector2f(0, PLAYER_Y_ACCEL);
+    if(Keyboard::isKeyPressed(Keyboard::Down) || (Keyboard::isKeyPressed((Keyboard::S)))
+       || sf::Joystick::getAxisPosition(0,sf::Joystick::Y) > joystickDetectionThreshold){
+           float yAccel = (float)PLAYER_Y_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) / 100);
+           accel += Vector2f(0, yAccel);
     }
     //Add the acceleration to the velocity
     vel += accel;
@@ -178,24 +188,24 @@ void Ship::update(World & world){
     /////////////////weapons and enemies////////////////
 
     //if the reload counter is full and the button is pressed
-    if(laserReloadCounter >= laserReloadTime &&
-       Keyboard::isKeyPressed(Keyboard::Space)){
+    if(laserReloadCounter >= laserReloadTime && Keyboard::isKeyPressed(Keyboard::Space) ||
+       laserReloadCounter >= laserReloadTime && sf::Joystick::getAxisPosition(0,sf::Joystick::Z) < -98){
         //Fires a bullet from the player ship
         world.bullets.push_back(laser());
     }
     //Add to the reload counter if it's not full
-    else if(laserReloadCounter <= laserReloadTime){
+    if(laserReloadCounter <= laserReloadTime){
         laserReloadCounter += laserReloadSpeed;
     }
     //if the reload counter is full and the button is pressed
-    if(photonReloadCounter >= photonReloadTime &&
-       Keyboard::isKeyPressed(Keyboard::E)) {
+    if(photonReloadCounter >= photonReloadTime && Keyboard::isKeyPressed(Keyboard::E) ||
+       photonReloadCounter >= photonReloadTime && sf::Joystick::getAxisPosition(0,sf::Joystick::Z) > 0) {
         //Shoots a photon
         world.photons.push_back(photonCannon());
 
     }
     //Add to the reload counter if it's not full
-    else if(photonReloadCounter <= photonReloadTime) {
+     if(photonReloadCounter <= photonReloadTime) {
         photonReloadCounter += photonReloadSpeed;
     }
 
