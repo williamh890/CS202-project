@@ -66,8 +66,9 @@ const float ENEMY_BULLET_SPEED = 5.0F;
 const float ENEMY_MAX_SPEED = 3.0F;
 
 const float ENEMY_SEPARATE_FORCE = 0.16F;
-const float SEEKER_PLAYERSEEKER_FORCE = 0.3F;
+const float SEEKER_PLAYERSEEKER_FORCE = 0.5F;
 const float SEEKER_SPEED = 10.0F;
+const float SPLIT_NUMBER = 3;
 
 const float WANDERER_TARGET_FORCE = 0.17F;
 const float WANDERER_MAXSPEED = 3.0F;

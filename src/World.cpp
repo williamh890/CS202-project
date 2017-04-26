@@ -157,7 +157,7 @@ vector<bounds> World::onBound(const Ship & playerShip) {
 ////////////////////////ENEMY FUNCTIONS/////////////////////////////
 // Creates first wave of enemies
 void World::makeInitEnemies(){
-    static int numSeekers = 3;
+    static int numSeekers = 0;
     static int numWanderers = 3;
     static int numFollowers = 3;
 
@@ -173,7 +173,6 @@ void World::makeInitEnemies(){
         //Makes a seeker at a random width at the top of the screen
         enemies.push_back(make_follower());
     }
-    numSeekers++;
     numWanderers++;
     numFollowers++;
 }
@@ -184,9 +183,21 @@ void World::updateEnemies(){
         enemies[e]->update(*this);
         //If dead
         if (enemies[e]->hp <= 0 || enemies[e]->getPosition().y > HEIGHT) {
-            if (enemies[e]->hp <= 0){
-            playerShip.playerScore+=25;
+            if (enemies[e]->hp <= 0) {
+                playerShip.playerScore+=25;
+                //Split the wanderers into 2 seekers
+                if(enemies[e]->traits.bulletDodgeForce == 0 && enemies[e]->traits.seekTargetForce) {
+                    Vector2f pos = enemies[e]->getPosition();
+                    //Splits the wander
+                    for(int i = 0; i < SPLIT_NUMBER; i++) {
+                        Enemy * newSeeker = make_seeker();
+                        newSeeker->setPosition(pos);
+                        enemies.push_back(newSeeker);
+                    }
+
+                }
             }
+
             delete enemies[e];
             enemies.erase(enemies.begin()+e);
 
