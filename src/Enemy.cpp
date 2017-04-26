@@ -268,6 +268,9 @@ void Enemy::update(World & world){
         //Zero out the acceleration
         scalarMul(accel, 0);
 
+
+
+
         //Move the enemy
         move(vel);
 
@@ -334,7 +337,7 @@ Enemy * make_seeker() {
 
     Enemy * seeker = new Enemy(initPos, initVel, 1, 0, seekerTraits, "resources/sprites/homingEnemySheet.png");
 
-    seeker->setScale(0.5, 0.5);
+    seeker->setScale(0.48, 0.48);
 
     seeker->setTextureRect(sf::IntRect(0,0,81,87));
 
@@ -355,11 +358,11 @@ Enemy * make_wanderer() {
 
     Vector2f initPos{Enemy::rngTargetWidth(Enemy::rng), 0};
     Vector2f initVel{0,0};
-    int hp = 3;
+    int hp = 6;
 
     Enemy * wanderer = new Enemy(initPos, initVel, hp, 1, wandererTraits);
 
-    wanderer->setScale(0.3, 0.3);
+    wanderer->setScale(0.44, 0.44);
 
     return wanderer;
 }
