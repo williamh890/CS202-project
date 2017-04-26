@@ -44,7 +44,7 @@ std::uniform_int_distribution<int> World::starBrightness(100, 255);
 
 ///////////////////////////STAR FUNCTIONS/////////////////////////////////
 // Creates a new star
-void World::makeStar(float startingHeight)
+void World::makeStar(int startingHeight)
 {
 	// Sets star size, shape, and color
 	Vector2<float> starSize((float)STAR_HEIGHT, (float)STAR_WIDTH);
@@ -55,7 +55,7 @@ void World::makeStar(float startingHeight)
     //Makes a new star with a random position along with of screen
 
     float starX = starDist(rng);
-    newStar->setPosition(starX, startingHeight);
+    newStar->setPosition(starX, (float)startingHeight);
 	stars.push_back(newStar);
 }
 
@@ -207,16 +207,16 @@ World::World() : Screens(),
 }
 //Cleans up all the memory
 World::~World(){
-    for(int i = 0; i < bullets.size(); ++i) {
+    for(size_t i = 0; i < bullets.size(); ++i) {
         delete bullets[i];
     }
-    for(int i = 0; i < photons.size(); ++i) {
+    for(size_t i = 0; i < photons.size(); ++i) {
         delete photons[i];
     }
-    for(int i = 0; i < stars.size(); ++i) {
+    for(size_t i = 0; i < stars.size(); ++i) {
         delete stars[i];
     }
-    for(int i = 0; i < enemies.size(); ++i) {
+    for(size_t i = 0; i < enemies.size(); ++i) {
         delete enemies[i];
     }
 }

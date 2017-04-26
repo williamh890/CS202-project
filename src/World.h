@@ -40,7 +40,7 @@ class World : public Screens {
         void addBullet(Bullet b);
 
         // Utility functions for stars
-        void makeStar(float startingHeight);
+        void makeStar(int startingHeight);
         void populateInitialStars();
         void updateStars();
 
