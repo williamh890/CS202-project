@@ -362,7 +362,7 @@ Enemy * make_wanderer() {
 
     Enemy * wanderer = new Enemy(initPos, initVel, hp, 1, wandererTraits);
 
-    wanderer->setScale(0.44, 0.44);
+    wanderer->setScale(0.41, 0.41);
 
     return wanderer;
 }
