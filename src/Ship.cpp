@@ -55,7 +55,7 @@ Ship::Ship() : ShipShape(),
     photonReloadBar.setCurrentHealthBar(1.0);
     laserReloadBar.setCurrentHealthBar(1.0);
 
-    int reloadBarBuffer = 5;
+    float reloadBarBuffer = 5.0F;
 
     photonReloadBar.currentHealthBar.rotate(180);
     laserReloadBar.currentHealthBar.rotate(180);
@@ -63,8 +63,8 @@ Ship::Ship() : ShipShape(),
     //Change the positions of the reload bars
     laserReloadBar.currentHealthBar.setPosition(Vector2f(reloadBarBuffer + RELOAD_BAR_HEIGHT, HEIGHT - reloadBarBuffer));
     laserReloadBar.maxHealthBar.setPosition(Vector2f(reloadBarBuffer, HEIGHT - reloadBarBuffer - RELOAD_BAR_WIDTH));
-    photonReloadBar.currentHealthBar.setPosition(Vector2f(2.5*reloadBarBuffer + 2*RELOAD_BAR_HEIGHT, HEIGHT - reloadBarBuffer));
-    photonReloadBar.maxHealthBar.setPosition(Vector2f(2.5*reloadBarBuffer + RELOAD_BAR_HEIGHT, HEIGHT - reloadBarBuffer - RELOAD_BAR_WIDTH));
+    photonReloadBar.currentHealthBar.setPosition(Vector2f(2.5F*reloadBarBuffer + 2*RELOAD_BAR_HEIGHT, HEIGHT - reloadBarBuffer));
+    photonReloadBar.maxHealthBar.setPosition(Vector2f(2.5F*reloadBarBuffer + RELOAD_BAR_HEIGHT, HEIGHT - reloadBarBuffer - RELOAD_BAR_WIDTH));
 
     photonReloadBar.currentHealthBar.setFillColor(Color(66, 164, 244));
     laserReloadBar.currentHealthBar.setFillColor(Color(244, 163, 65));
