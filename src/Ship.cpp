@@ -237,7 +237,7 @@ void Ship::update(World & world){
         if (checkIntersect(*world.enemies[e])) {
             //minus a single life per collision
             health--;
-            world.enemies[e]->hp--;
+            world.enemies[e]->_hp--;
             if (!inInvincibleFrame) {
                 inInvincibleFrame = true;
                 clock.restart();
@@ -261,7 +261,7 @@ void Ship::update(World & world){
 
             //Apply an opposite force to the enemy
             collisionForce *= (float)-1;
-            world.enemies[e]->vel += collisionForce;
+            world.enemies[e]->_vel += collisionForce;
 
             //Flash red if hit by an enemy
             setColor(Color{244, 66, 66, 200});

@@ -183,8 +183,8 @@ void World::updateEnemies(){
     for(int e = enemies.size() - 1; e >= 0; --e){
         enemies[e]->update(*this);
         //If dead
-        if (enemies[e]->hp <= 0 || enemies[e]->getPosition().y > HEIGHT) {
-            if (enemies[e]->hp <= 0){
+        if (enemies[e]->_hp <= 0 || enemies[e]->getPosition().y > HEIGHT) {
+            if (enemies[e]->_hp <= 0){
             playerShip.playerScore+=25;
             }
             delete enemies[e];

@@ -26,38 +26,39 @@ std::uniform_real_distribution<float> Enemy::rngFollowerHeight(HEIGHT / 5, HEIGH
 std::uniform_int_distribution<int> Enemy::randomInt(-2000000, 2000000);
 
 //Ctor
-Enemy::Enemy(Vector2f starting_pos,
-             Vector2f starting_vel,
-             int health, int d,
-             Traits enemyTraits,
+Enemy::Enemy(Vector2f &startingPos,
+             Vector2f &startingVel,
+             int health,
+             int dam,
+             Traits &enemyTraits,
              string textureFilePath) :  EnemyShape(),
-                                        vel(starting_vel),
-                                        accel(Vector2f(0,0)),
-                                        traits(enemyTraits),
-                                        hp(health),
-                                        damage(d),
-                                        sourceID(ENEMY)
+                                        _vel(startingVel),
+                                        _accel(Vector2f(0.0F,0.0F)),
+                                        _traits(enemyTraits),
+                                        _hp(health),
+                                        _damage(dam),
+                                        _sourceID(ENEMY)
 {
     Vector2f rngStartingDir(World::enemyStartingVel(World::rng), World::enemyStartingVel(World::rng));
-    vel = rngStartingDir;
+    _vel = rngStartingDir;
 
-    load_texture(enemyTexture ,textureFilePath);
-    setTexture(enemyTexture);
+    load_texture(_enemyTexture, textureFilePath);
+    setTexture(_enemyTexture);
     setScale(0.2F,0.2F);
-    setPosition(starting_pos);
+    setPosition(startingPos);
 
-    enemyDetectionRadius = ENEMY_HEIGHT + ENEMY_WIDTH / 2;
+    _enemyDetectionRadius = ENEMY_HEIGHT + ENEMY_WIDTH / 2;
 
-    //Make bullet detection larger then enemy detection
-    bulletDetectionRadius = enemyDetectionRadius * 1.5F;
-    desiredPlayerDist = World::optimalPlayerDist(World::rng);
+    // Make bullet detection larger then enemy detection
+    _bulletDetectionRadius = _enemyDetectionRadius * 1.5F;
+    _desiredPlayerDist = World::optimalPlayerDist(World::rng);
 
-    dodgeChargeTime = DODGE_TIME;
-    dodgeCounter = 0;
+    _dodgeChargeTime = DODGE_TIME;
+    _dodgeCounter = 0;
 
-    target = Vector2f(rngTargetWidth(rng), rngTargetHeight(rng));
+    _target = Vector2f(rngTargetWidth(rng), rngTargetHeight(rng));
 
-    bleed = 0;
+    _bleed = 0;
 }
 
 bool Enemy::checkIntersect(const Bullet &b) {
@@ -92,7 +93,8 @@ static void setMag(Vector2f & vec, float newMag) {
     scalarMul(vec, newMag);
 }
 
-Vector2f Enemy::separate(const vector<Enemy*> & enemies) {
+Vector2f Enemy::separate(const vector<Enemy*> & enemies)
+{
     Vector2f steer{0,0};
 
     //Find the center of the current enemy
@@ -108,9 +110,9 @@ Vector2f Enemy::separate(const vector<Enemy*> & enemies) {
 
         float dist = distance(currEnemyPos, pos);
         //check if the enemy can see the other enemy
-        if(dist < enemyDetectionRadius) {
+        if(dist < _enemyDetectionRadius) {
             Vector2f desired = currEnemyPos - pos;
-            steer += desired - vel;
+            steer += desired - _vel;
             //Make the force a repulsion force
         }
     }
@@ -134,7 +136,7 @@ Vector2f Enemy::dodge(const vector<Bullet *> & bullets, bool & hasForce) {
             //find the distance between the bullet and the enemy
             float dist = distance(bulletPos, enemyPos);
             //Sees the bullet
-            if(dist < bulletDetectionRadius) {
+            if(dist < _bulletDetectionRadius) {
                 //Boost left or right based on where the bullet is respectively
                 boostForce = (enemyPos.x > bulletPos.x) ? Vector2f(20, 0) : Vector2f(-20, 0);
                 hasForce = true;
@@ -158,7 +160,7 @@ Vector2f Enemy::seekPlayer(const Ship & playerShip) {
 
     Vector2f desired =  playerCenter - enemyCenter;
 
-    Vector2f seek = desired - vel;
+    Vector2f seek = desired - _vel;
 
     return seek;
 }
@@ -169,8 +171,8 @@ Vector2f Enemy::seekTarget() {
     //Find the center
     makeCenter(enemyCenter, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
-    Vector2f desired =  target - enemyCenter;
-    Vector2f seek = desired - vel;
+    Vector2f desired =  _target - enemyCenter;
+    Vector2f seek = desired - _vel;
 
     return seek;
 
@@ -181,7 +183,7 @@ void Enemy::update(World & world){
         Vector2f pos = getPosition();
 
         //Have enemies periodically shoot
-        if(traits.hasGun && World::randomInt(World::rng) % 300 == 0){
+        if(_traits._hasGun && World::randomInt(World::rng) % 300 == 0){
             //Make a bullet shooting down
             world.bullets.push_back(new Bullet(ENEMY,
                                                pos.x, pos.y,
@@ -189,34 +191,34 @@ void Enemy::update(World & world){
                                                Color{3, 198, 0}));
         }
         //Randomly assign new target
-        if(!(randomInt(rng) % traits.targetSwitchChance)) {
-            target = traits.setTarget(world.playerShip);
+        if(!(randomInt(rng) % _traits._targetSwitchChance)) {
+            _target = _traits.setTarget(world.playerShip);
         }
 
         //  !!!NTF: Bullet dodge doesnt work right
 
         //Only if the enemy has dodge
-        if(traits.bulletDodgeForce){
+        if(_traits._bulletDodgeForce){
             //Reset back to the default texture
-            if(dodgeCounter == (dodgeChargeTime -DODGE_ANIMATION_TIME))
+            if(_dodgeCounter == (_dodgeChargeTime -DODGE_ANIMATION_TIME))
                 setTextureRect(sf::IntRect(4, 3, 50, 50));
-            if(dodgeCounter <= 0) {
+            if(_dodgeCounter <= 0) {
                 //Default texture rect
                 bool hasForce = false;
                 Vector2f bulletDodge = dodge(world.bullets, hasForce);
 
                 if(hasForce) {
-                    accel += bulletDodge;
-                    dodgeCounter = dodgeChargeTime;
+                    _accel += bulletDodge;
+                    _dodgeCounter = _dodgeChargeTime;
 
-                    if(accel.x > 0) //moving to the right
+                    if(_accel.x > 0) //moving to the right
                         setTextureRect(sf::IntRect(70,4,49,39));
-                    if(accel.x < 0) //moving to the left
+                    if(_accel.x < 0) //moving to the left
                         setTextureRect(sf::IntRect(129,5,50,35));
                     }
             }
             else{
-                dodgeCounter--;
+                _dodgeCounter--;
             }
         }
 
@@ -224,69 +226,68 @@ void Enemy::update(World & world){
         Vector2f enemySeparation = separate(world.enemies);
         //Add weights to the separation force for balance
 
-        setMag(enemySeparation, traits.separateForce);
+        setMag(enemySeparation, _traits._separateForce);
 
         //Only add target steer if that enemy has it
-        if(traits.seekTargetForce) {
+        if(_traits._seekTargetForce) {
             Vector2f targetSteer = seekTarget();
-            setMag(targetSteer, traits.seekTargetForce);
-            accel += targetSteer;
+            setMag(targetSteer, _traits._seekTargetForce);
+            _accel += targetSteer;
         }
         //Only seek the player if that enemy has it
-        if(traits.seekPlayerForce) {
+        if(_traits._seekPlayerForce) {
             //If the seeker passed the player
             if(getPosition().y <= world.playerShip.getPosition().y) {
                 Vector2f playerSteer = seekPlayer(world.playerShip);
-                setMag(playerSteer, traits.seekPlayerForce);
-                accel += playerSteer;
+                setMag(playerSteer, _traits._seekPlayerForce);
+                _accel += playerSteer;
             }
             //
             else
-                vel.y += 0.5F;
+                _vel.y += 0.5F;
 
         }
         //Add the separation force to the total acceleration
-        accel += enemySeparation;
+        _accel += enemySeparation;
 
-
-        //Add the total acceleration to the velocity
-        vel += accel;
+		 //Add the total acceleration to the velocity
+        _vel += _accel;
 
         //Dampening of the velocity
-        scalarMul(vel, 0.99F);
+        scalarMul(_vel, 0.99F);
 
-        float velocityMag = sqrt(vel.y * vel.y + vel.x * vel.x);
+        float velocityMag = sqrt(_vel.y * _vel.y + _vel.x * _vel.x);
         //Going faster then the max speed
-        if(velocityMag >= traits.maxSpeed) {
+        if(velocityMag >= _traits._maxSpeed) {
             //Normalize
-            normalize(vel);
+            normalize(_vel);
 
             //Scale to the max speed
-            scalarMul(vel, traits.maxSpeed);
+            scalarMul(_vel, _traits._maxSpeed);
         }
 
         //Zero out the acceleration
-        scalarMul(accel, 0);
+        scalarMul(_accel, 0);
 
         //Move the enemy
-        move(vel);
+        move(_vel);
 
         //Look through all the bullets
         for (int b = world.bullets.size() - 1; b >= 0; --b) {
             //If an enemy and a bullet intersect
             if (checkIntersect(*world.bullets[b]) && world.bullets[b]->_source == PLAYER) {
                 //Do damage to the enemy
-                hp -= world.bullets[b]->_damage;
+                _hp -= world.bullets[b]->_damage;
 
                 //Have the enemy flash red if hit
                 setColor(Color{244, 66, 66, 200});
-                bleed = 10;
+                _bleed = 10;
 
                 //Remove the bullet
                 delete world.bullets[b];
                 world.bullets.erase(world.bullets.begin()+b);
                 //Check if the enemy is dead
-                if(hp <= 0) return;
+                if(_hp <= 0) return;
                 //erases the enemy outside the function
             }
 
@@ -296,22 +297,22 @@ void Enemy::update(World & world){
             //If an enemy and a bullet intersect
             if (getGlobalBounds().intersects(world.photons[p]->hitBox.getGlobalBounds()) ) {
                 //Do damage to the enemy
-                hp -= world.photons[p]->damage;
+                _hp -= world.photons[p]->damage;
 
                 //Remove the bullet
                 delete world.photons[p];
                 world.photons.erase(world.photons.begin()+p);
                 //Check if enemy is dead
-                if(hp <= 0) return;
+                if(_hp <= 0) return;
                 //erases the enemy outside the function
             }
         }
 
-        if(bleed <= 0) {
+        if(_bleed <= 0) {
             setColor(Color::White);
         }
         else
-            --bleed;
+            --_bleed;
 }
 
 Enemy * make_seeker() {
