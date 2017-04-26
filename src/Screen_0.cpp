@@ -4,8 +4,10 @@ Created: 17/4/2017
 Updated: 17/4/2017
 Screen_0 is the game menu screen.*/
 
-#include <iostream>
 #include "Screen_0.h"
+
+#include <SFML/Graphics.hpp>
+#include <iostream>
 
 //GameMenu Constants
 bool drawMenu = true;
@@ -72,6 +74,27 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu){
                         menuSelect=-1; //all other keys clear selection
                         break;
                 }
+            }
+            //Use the joystick to check the input
+            int detectionThreshold = 98;
+            if(sf::Joystick::isConnected(0)){
+                //If the joystick is pressed halfway up just select
+                if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) <= -detectionThreshold / 2) {
+                    menuSelect = 0;
+                    //If stick is push all the way up
+                    if (sf::Joystick::getAxisPosition(0,sf::Joystick::Y) <= -detectionThreshold){
+                            playing=true;
+                            return 1; //starts game
+                    }
+                }
+                if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) >= detectionThreshold / 2) {
+                    menuSelect = 1;
+
+                    if (sf::Joystick::getAxisPosition(0,sf::Joystick::Y) >= detectionThreshold) {
+                        return -1;
+                    }
+                }
+
             }
             //update menu text colors based on selection
             if(menuSelect==0){
