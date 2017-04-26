@@ -12,16 +12,17 @@
 using sf::Vector2f;
 using sf::Color;
 
+Color Bullet::defaultBulletColor{255, 0, 0};
+
 Bullet::Bullet(int source,
                float bulletX,
                float bulletY,
-               Vector2f &dir,
-               Color &col) : BulletShape(Vector2f(BULLET_WIDTH,BULLET_SPEED)),
+               Vector2f & dir,
+               Color & col) : BulletShape(Vector2f(BULLET_WIDTH,BULLET_SPEED)),
                             _source(source),
                             _damage(BULLET_DAMAGE),
                             _direction(dir)
 {
     setPosition(bulletX, bulletY);
     setFillColor(col);
-
 }

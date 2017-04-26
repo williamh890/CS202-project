@@ -76,14 +76,14 @@ struct Enemy : public EnemyShape
 
     // Push away from other enemies
     Vector2f separate(const std::vector<Enemy*> &enemies);
-    
+
 	// Pull in the direction of the player
     Vector2f seekPlayer(const Ship &playerShip);
-    
+
 	// Seek a random target
     Vector2f seekTarget();
     Vector2f _target;
-	
+
     float _enemyDetectionRadius;
     float _bulletDetectionRadius;
     float _desiredPlayerDist;

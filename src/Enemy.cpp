@@ -120,18 +120,18 @@ Vector2f Enemy::separate(const vector<Enemy*> & enemies)
     return steer;
 }
 
-Vector2f Enemy::dodge(const vector<Bullet *> & bullets, bool & hasForce) {
+Vector2f Enemy::dodge(const vector<Bullet *> & _bullets, bool & hasForce) {
     Vector2f boostForce{0,0};
 
     //look through all the bullets
     Vector2f enemyPos = getPosition();
     makeCenter(enemyPos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
-    for(int i = 0; i < (int)bullets.size(); ++i) {
+    for(int i = 0; i < (int)_bullets.size(); ++i) {
         //if the bullet is a player bullet
-        if(bullets[i]->_source == PLAYER) {
+        if(_bullets[i]->_source == PLAYER) {
             //Find the center of that bullet
-            Vector2f bulletPos = bullets[i]->getPosition();
+            Vector2f bulletPos = _bullets[i]->getPosition();
             makeCenter(bulletPos, BULLET_WIDTH, BULLET_SPEED);
             //find the distance between the bullet and the enemy
             float dist = distance(bulletPos, enemyPos);
@@ -185,14 +185,16 @@ void Enemy::update(World & world){
         //Have enemies periodically shoot
         if(_traits._hasGun && World::randomInt(World::rng) % 300 == 0){
             //Make a bullet shooting down
-            world.bullets.push_back(new Bullet(ENEMY,
+            Color EnemyBulletColor{3, 198, 0};
+            Vector2f dir{0, ENEMY_BULLET_SPEED};
+            world._bullets.push_back(new Bullet(ENEMY,
                                                pos.x, pos.y,
-                                               Vector2f(0, ENEMY_BULLET_SPEED),
-                                               Color{3, 198, 0}));
+                                               dir,
+                                               EnemyBulletColor));
         }
         //Randomly assign new target
         if(!(randomInt(rng) % _traits._targetSwitchChance)) {
-            _target = _traits.setTarget(world.playerShip);
+            _target = _traits.setTarget(world._playerShip);
         }
 
         //  !!!NTF: Bullet dodge doesnt work right
@@ -205,7 +207,7 @@ void Enemy::update(World & world){
             if(_dodgeCounter <= 0) {
                 //Default texture rect
                 bool hasForce = false;
-                Vector2f bulletDodge = dodge(world.bullets, hasForce);
+                Vector2f bulletDodge = dodge(world._bullets, hasForce);
 
                 if(hasForce) {
                     _accel += bulletDodge;
@@ -223,7 +225,7 @@ void Enemy::update(World & world){
         }
 
 
-        Vector2f enemySeparation = separate(world.enemies);
+        Vector2f enemySeparation = separate(world._enemies);
         //Add weights to the separation force for balance
 
         setMag(enemySeparation, _traits._separateForce);
@@ -237,8 +239,8 @@ void Enemy::update(World & world){
         //Only seek the player if that enemy has it
         if(_traits._seekPlayerForce) {
             //If the seeker passed the player
-            if(getPosition().y <= world.playerShip.getPosition().y) {
-                Vector2f playerSteer = seekPlayer(world.playerShip);
+            if(getPosition().y <= world._playerShip.getPosition().y) {
+                Vector2f playerSteer = seekPlayer(world._playerShip);
                 setMag(playerSteer, _traits._seekPlayerForce);
                 _accel += playerSteer;
             }
@@ -273,19 +275,19 @@ void Enemy::update(World & world){
         move(_vel);
 
         //Look through all the bullets
-        for (int b = world.bullets.size() - 1; b >= 0; --b) {
+        for (int b = world._bullets.size() - 1; b >= 0; --b) {
             //If an enemy and a bullet intersect
-            if (checkIntersect(*world.bullets[b]) && world.bullets[b]->_source == PLAYER) {
+            if (checkIntersect(*world._bullets[b]) && world._bullets[b]->_source == PLAYER) {
                 //Do damage to the enemy
-                _hp -= world.bullets[b]->_damage;
+                _hp -= world._bullets[b]->_damage;
 
                 //Have the enemy flash red if hit
                 setColor(Color{244, 66, 66, 200});
                 _bleed = 10;
 
                 //Remove the bullet
-                delete world.bullets[b];
-                world.bullets.erase(world.bullets.begin()+b);
+                delete world._bullets[b];
+                world._bullets.erase(world._bullets.begin()+b);
                 //Check if the enemy is dead
                 if(_hp <= 0) return;
                 //erases the enemy outside the function
@@ -293,15 +295,15 @@ void Enemy::update(World & world){
 
         }
         // !!!NTF: THIS IS BAAAADDD...
-        for (int p = world.photons.size() - 1; p >= 0; --p) {
+        for (int p = world._photons.size() - 1; p >= 0; --p) {
             //If an enemy and a bullet intersect
-            if (getGlobalBounds().intersects(world.photons[p]->hitBox.getGlobalBounds()) ) {
+            if (getGlobalBounds().intersects(world._photons[p]->_hitBox.getGlobalBounds()) ) {
                 //Do damage to the enemy
-                _hp -= world.photons[p]->damage;
+                _hp -= world._photons[p]->_damage;
 
                 //Remove the bullet
-                delete world.photons[p];
-                world.photons.erase(world.photons.begin()+p);
+                delete world._photons[p];
+                world._photons.erase(world._photons.begin()+p);
                 //Check if enemy is dead
                 if(_hp <= 0) return;
                 //erases the enemy outside the function

@@ -29,9 +29,10 @@ int main(){
     //hide mouse cursor
     App.setMouseCursorVisible(false);
 
-    //Make screens
+    //Make main menu
     MenuScreen ms;
     screens.push_back(&ms);
+    //Make game world
     World gw;
     screens.push_back(&gw);
 

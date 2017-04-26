@@ -32,7 +32,7 @@ using std::sin;
 using std::floor;
 
 
-// Setup for random real number generator for stars
+// Setup for random real number generator for _stars
 std::random_device World::ranDev;
 std::mt19937 World::rng = std::mt19937(ranDev());
 std::uniform_real_distribution<float> World::starDist(0.0,(float)WIDTH);
@@ -56,7 +56,7 @@ void World::makeStar(int startingHeight)
 
     float starX = starDist(rng);
     newStar->setPosition(starX, (float)startingHeight);
-	stars.push_back(newStar);
+	_stars.push_back(newStar);
 }
 
 // Fills screen with stars
@@ -75,13 +75,13 @@ void World::populateInitialStars(){
 void World::updateStars()
 {
     // Move all the stars down
-    for(int i = stars.size() - 1; i >= 0; --i)
+    for(int i = _stars.size() - 1; i >= 0; --i)
 	{
-        stars[i]->move(0.0, (float)BACKGROUND_SPEED);
+        _stars[i]->move(0.0, (float)BACKGROUND_SPEED);
         // Move stars to the top with a random width if they reaches the bottom
-        if(stars[i]->getPosition().y > HEIGHT + STAR_HEIGHT)
+        if(_stars[i]->getPosition().y > HEIGHT + STAR_HEIGHT)
 		{
-            stars[i]->setPosition(starDist(rng), 0);
+            _stars[i]->setPosition(starDist(rng), 0);
         }
     }
 }
@@ -92,34 +92,34 @@ void World::updateStars()
 void World::updateBullets()
 {
     // Loops through the bullets vector backwards
-    for(int i = bullets.size() - 1; i >= 0; --i)
+    for(int i = _bullets.size() - 1; i >= 0; --i)
 	{
         // Checks if the bullet is off the screen
-        if(bullets[i]->getPosition().x < 0)
+        if(_bullets[i]->getPosition().x < 0)
 		{
             // Removes the bullet if so
-            delete bullets[i];
-            bullets.erase(bullets.begin() + i);
+            delete _bullets[i];
+            _bullets.erase(_bullets.begin() + i);
         }
 
-        // Moves bullets up if not off the screen
+        // Moves _bullets up if not off the screen
         else{
-            bullets[i]->move(bullets[i]->_direction.x, bullets[i]->_direction.y);
+            _bullets[i]->move(_bullets[i]->_direction.x, _bullets[i]->_direction.y);
         }
     }
 }
 
 void World::updatePhotons(){
-    for(int i = photons.size() - 1; i >= 0; --i){
-        if(photons[i]->getPosition().x < 0){
-            delete photons[i];
-            photons.erase(photons.begin() + i);
+    for(int i = _photons.size() - 1; i >= 0; --i){
+        if(_photons[i]->getPosition().x < 0){
+            delete _photons[i];
+            _photons.erase(_photons.begin() + i);
         }
         else{
-            photons[i]->moveCounter += PHOTON_FREQUENCY;
-            float xDiff = 3*sin(photons[i]->moveCounter);
+            _photons[i]->_moveCounter += PHOTON_FREQUENCY;
+            float xDiff = 3*sin(_photons[i]->_moveCounter);
             float yDiff = -PHOTON_SPEED;
-            photons[i]->movePhoton(xDiff, yDiff);
+            _photons[i]->movePhoton(xDiff, yDiff);
         }
     }
 }
@@ -155,7 +155,7 @@ vector<bounds> World::onBound(const Ship & playerShip) {
 //////////////////////////END SHIP FUNCTIONS/////////////////////////
 
 ////////////////////////ENEMY FUNCTIONS/////////////////////////////
-// Creates first wave of enemies
+// Creates first wave of _enemies
 void World::makeInitEnemies(){
     static int numSeekers = 3;
     static int numWanderers = 3;
@@ -163,15 +163,15 @@ void World::makeInitEnemies(){
 
     for(int i = 0; i < numSeekers; ++i){
         //Makes a seeker at a random width at the top of the screen
-        enemies.push_back(make_seeker());
+        _enemies.push_back(make_seeker());
     }
     for(int i = 0; i < numWanderers; ++i){
         //Makes a seeker at a random width at the top of the screen
-        enemies.push_back(make_wanderer());
+        _enemies.push_back(make_wanderer());
     }
     for(int i = 0; i < numFollowers; ++i){
         //Makes a seeker at a random width at the top of the screen
-        enemies.push_back(make_follower());
+        _enemies.push_back(make_follower());
     }
     numSeekers++;
     numWanderers++;
@@ -180,19 +180,19 @@ void World::makeInitEnemies(){
 
 void World::updateEnemies(){
     //Look through all the enemies
-    for(int e = enemies.size() - 1; e >= 0; --e){
-        enemies[e]->update(*this);
+    for(int e = _enemies.size() - 1; e >= 0; --e){
+        _enemies[e]->update(*this);
         //If dead
-        if (enemies[e]->_hp <= 0 || enemies[e]->getPosition().y > HEIGHT) {
-            if (enemies[e]->_hp <= 0){
-            playerShip.playerScore+=25;
+        if (_enemies[e]->_hp <= 0 || _enemies[e]->getPosition().y > HEIGHT) {
+            if (_enemies[e]->_hp <= 0){
+                _playerShip._playerScore+=25;
             }
-            delete enemies[e];
-            enemies.erase(enemies.begin()+e);
+            delete _enemies[e];
+            _enemies.erase(_enemies.begin()+e);
 
         }
     }
-    if (enemies.size() <= 0) {
+    if (_enemies.size() <= 0) {
         makeInitEnemies();
     }
 
@@ -201,30 +201,30 @@ void World::updateEnemies(){
 
 // Constructor
 World::World() : Screens(),
-                 playerShip(Ship())
+                 _playerShip(Ship())
 {
     populateInitialStars();
 }
 //Cleans up all the memory
 World::~World(){
-    for(size_t i = 0; i < bullets.size(); ++i) {
-        delete bullets[i];
+    for(size_t i = 0; i < _bullets.size(); ++i) {
+        delete _bullets[i];
     }
-    for(size_t i = 0; i < photons.size(); ++i) {
-        delete photons[i];
+    for(size_t i = 0; i < _photons.size(); ++i) {
+        delete _photons[i];
     }
-    for(size_t i = 0; i < stars.size(); ++i) {
-        delete stars[i];
+    for(size_t i = 0; i < _stars.size(); ++i) {
+        delete _stars[i];
     }
-    for(size_t i = 0; i < enemies.size(); ++i) {
-        delete enemies[i];
+    for(size_t i = 0; i < _enemies.size(); ++i) {
+        delete _enemies[i];
     }
 }
 
 // Updates all the entities in the game world
 void World::update()
 {
-    playerShip.update(*this);
+    _playerShip.update(*this);
     updateStars();
     updateBullets();
     updatePhotons();
@@ -235,30 +235,30 @@ void World::update()
 void World::show(sf::RenderWindow &gameScreen){
     // !!!NTF: Find a way to just loop through all the entities and draw them
     //         instead of having separate loops
-    for(const auto & s : stars){
+    for(const auto & s : _stars){
         gameScreen.draw(*s);
     }
-    for(const auto & b : bullets){
+    for(const auto & b : _bullets){
        gameScreen.draw(*b);
     }
-    for(const auto & p : photons){
+    for(const auto & p : _photons){
         gameScreen.draw(*p);
         //this->draw(p.hitBox);
     }
-    for(const auto & e : enemies){
+    for(const auto & e : _enemies){
         gameScreen.draw(*e);
     }
-    if (!playerShip.playerIsDead) {
-        gameScreen.draw(playerShip);
+    if (!_playerShip._playerIsDead) {
+        gameScreen.draw(_playerShip);
         //Draw health bar
-        gameScreen.draw(playerShip.hpBar.currentHealthBar);
-        gameScreen.draw(playerShip.hpBar.maxHealthBar);
+        gameScreen.draw(_playerShip._hpBar._currentHealthBar);
+        gameScreen.draw(_playerShip._hpBar._maxHealthBar);
         //Draw reload bars
-        gameScreen.draw(playerShip.photonReloadBar.currentHealthBar);
-        gameScreen.draw(playerShip.photonReloadBar.maxHealthBar);
+        gameScreen.draw(_playerShip._photonReloadBar._currentHealthBar);
+        gameScreen.draw(_playerShip._photonReloadBar._maxHealthBar);
 
-        gameScreen.draw(playerShip.laserReloadBar.currentHealthBar);
-        gameScreen.draw(playerShip.laserReloadBar.maxHealthBar);
+        gameScreen.draw(_playerShip._laserReloadBar._currentHealthBar);
+        gameScreen.draw(_playerShip._laserReloadBar._maxHealthBar);
 
     }
 }

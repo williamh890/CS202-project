@@ -23,13 +23,13 @@
 class World : public Screens {
     public:
         /* Player Ship Object */
-        Ship playerShip;
+        Ship _playerShip;
 
         /* Main Containers for game entities*/
-        std::vector<Bullet*> bullets;
-        std::vector<Photon*> photons;
-        std::vector<StarShape*> stars;
-        std::vector<Enemy*> enemies;
+        std::vector<Bullet*> _bullets;
+        std::vector<Photon*> _photons;
+        std::vector<StarShape*> _stars;
+        std::vector<Enemy*> _enemies;
 
         void updatePhotons();
         void addPhoton(Photon p);

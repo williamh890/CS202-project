@@ -15,13 +15,16 @@
 using sf::Vector2f;
 using sf::Color;
 
+
+
 struct Bullet : public BulletShape{
     Bullet(int source,
            float x,
            float y,
            Vector2f &dir,
-           Color &col = Color{255, 0, 0});
+           Color & col = defaultBulletColor);
 
+    static Color defaultBulletColor;
     int _source;
     int _damage;
     Vector2f _direction;
