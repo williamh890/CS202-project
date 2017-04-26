@@ -43,13 +43,13 @@ Enemy::Enemy(Vector2f starting_pos,
 
     load_texture(enemyTexture ,textureFilePath);
     setTexture(enemyTexture);
-    setScale(.2,.2);
+    setScale(0.2F,0.2F);
     setPosition(starting_pos);
 
     enemyDetectionRadius = ENEMY_HEIGHT + ENEMY_WIDTH / 2;
 
     //Make bullet detection larger then enemy detection
-    bulletDetectionRadius = enemyDetectionRadius * 1.5;
+    bulletDetectionRadius = enemyDetectionRadius * 1.5F;
     desiredPlayerDist = World::optimalPlayerDist(World::rng);
 
     dodgeChargeTime = DODGE_TIME;
@@ -253,7 +253,7 @@ void Enemy::update(World & world){
         vel += accel;
 
         //Dampening of the velocity
-        scalarMul(vel, .99);
+        scalarMul(vel, 0.99F);
 
         float velocityMag = sqrt(vel.y * vel.y + vel.x * vel.x);
         //Going faster then the max speed
@@ -359,7 +359,7 @@ Enemy * make_wanderer() {
 
     Enemy * wanderer = new Enemy(initPos, initVel, hp, 1, wandererTraits);
 
-    wanderer->setScale(0.3, 0.3);
+    wanderer->setScale(0.3F, 0.3F);
 
     return wanderer;
 }

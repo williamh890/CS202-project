@@ -42,8 +42,8 @@ const float HP_BAR_SCREEN_BUFFER = 10.0F;
 
 const int BULLET_DAMAGE = 1;
 const int BULLET_LEN = 15;
-const int BULLET_WIDTH = 4;
-const int BULLET_SPEED = 23;
+const float BULLET_WIDTH = 4.0F;
+const float BULLET_SPEED = 23.0F;
 const int DEFAULT_BULLET_FIRERATE = 20;   //Smaller number is faster fire rate
 
 const float PHOTON_RADIUS = 30;
@@ -60,8 +60,8 @@ const int STAR_SPAWN_RATE = 1; //Larger means less stars
 const float STAR_HEIGHT = 2.0F;
 const float STAR_WIDTH = 2.0F;
 
-const int ENEMY_HEIGHT = 30;
-const int ENEMY_WIDTH = 20;
+const float ENEMY_HEIGHT = 30.0F;
+const float ENEMY_WIDTH = 20.0F;
 const float ENEMY_BULLET_SPEED = 5.0F;
 const float ENEMY_MAX_SPEED = 3.0F;
 
@@ -71,7 +71,7 @@ const float SEEKER_SPEED = 10.0F;
 
 const float WANDERER_TARGET_FORCE = 0.17F;
 const float WANDERER_MAXSPEED = 3.0F;
-const float WANDERER_TARGET_SWITCH = 120;
+const int WANDERER_TARGET_SWITCH = 120;
 
 const int DODGE_TIME = 75;
 const int DODGE_ANIMATION_TIME = 20;
@@ -79,7 +79,7 @@ const int DODGE_ANIMATION_TIME = 20;
 const float FOLLOWER_BULLET_DODGE = 8.0F;
 const float FOLLOWER_MAXSPEED = 4.5F;
 const float FOLLOWER_TARGET_FORCE = .18F;
-const float FOLLOWER_TARGET_SWITCH = 40;
+const int FOLLOWER_TARGET_SWITCH = 40;
 
 enum ID {PLAYER, ENEMY};
 //For bound checking
