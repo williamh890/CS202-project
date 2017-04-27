@@ -1,7 +1,7 @@
 /*Screen_0.cpp
 Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
 Created: 17/4/2017
-Updated: 17/4/2017
+Updated: 26/4/2017
 Screen_0 is the game menu screen.*/
 
 #include "Screen_0.h"
@@ -13,7 +13,7 @@ Screen_0 is the game menu screen.*/
 #include <string>
 using std::string;
 
-//GameMenu Constants
+// GameMenu Constants
 bool drawMenu = true;
 bool playing = false;
 sf::CircleShape shape;
@@ -47,16 +47,6 @@ void initialDraw(sf::RenderWindow &gameMenu, bool drawMenu){
     exitLabel.setPosition(250, 500);
     //exitLabel.setScale(1.5F, 1.5);
 
-    shape.setRadius(70);
-    shape.setOrigin(shape.getRadius(),shape.getRadius());
-    shape.setPosition(250, 200);
-    shape.setFillColor(sf::Color::Green);
-
-    shape2.setRadius(70);
-    shape2.setOrigin(shape2.getRadius(),shape2.getRadius());
-    shape2.setPosition(250,500);
-    shape2.setFillColor(sf::Color::Red);
-
     gameMenu.clear();
     gameMenu.draw(startLabel);
     gameMenu.draw(exitLabel);
@@ -64,44 +54,56 @@ void initialDraw(sf::RenderWindow &gameMenu, bool drawMenu){
     drawMenu = false;
 }
 
-int MenuScreen::Run(sf::RenderWindow &gameMenu){
+int MenuScreen::Run(sf::RenderWindow &gameMenu)
+{
     sf::Event event;
     int menuSelect=0;
 
-    //checks if game flag is true; if it is, changes menu option to Continue game
-    if(playing){
+    // Checks if game flag is true; if it is, changes menu option to Continue game
+    if(playing)
+	{
         shape.setFillColor(sf::Color::Red);
         gameMenu.draw(shape);
     }
 
     if(drawMenu) initialDraw(gameMenu,drawMenu);
 
-    while(true){
-        //check SFML events
-        while(gameMenu.pollEvent(event)){
-            //check if window has been closed
+    while(true)
+	{
+        // Check SFML events
+        while(gameMenu.pollEvent(event))
+		{
+            // Check if window has been closed
             if (event.type == sf::Event::Closed) return -1;
-            //check for key presses
-            if(event.type == sf::Event::KeyPressed){
-                switch (event.key.code){
+
+			//Check for key presses
+            if(event.type == sf::Event::KeyPressed)
+			{
+                switch (event.key.code)
+				{
                     case sf::Keyboard::Up:
                         menuSelect=0;
                         break;
-                    case sf::Keyboard::Down:
+
+					case sf::Keyboard::Down:
                         menuSelect=1;
                         drawMenu = true;
                         break;
-                    case sf::Keyboard::Return:
-                        if (menuSelect==0){
+
+					case sf::Keyboard::Return:
+                        if (menuSelect==0)
+						{
                             playing=true;
-                            return 1; //starts game
+                            return 1; // Starts game
                         }
                         else if (menuSelect==1) return -1;
                         break;
-                    case sf::Keyboard::Escape:
+
+					case sf::Keyboard::Escape:
                             return -1;
-                    default:
-                        menuSelect=-1; //all other keys clear selection
+
+					default:
+                        menuSelect=-1; // All other keys clear selection
                         break;
                 }
             }
@@ -130,26 +132,24 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu){
             const int EXIT_SELECTED = 1;
             const int START_SELECTED = 0;
 
-            if(menuSelect==START_SELECTED){
+            if(menuSelect==START_SELECTED)
+            {
                 (playing) ? continueLabel.setColor(sf::Color::Red) : startLabel.setColor(sf::Color::Red);
                 exitLabel.setColor(sf::Color::White);
             }
-            else if (menuSelect==EXIT_SELECTED){
+            else if (menuSelect==EXIT_SELECTED)
+            {
                 exitLabel.setColor(sf::Color::Red);
                 (playing) ? continueLabel.setColor(sf::Color::White) : startLabel.setColor(sf::Color::White);
-
             }
-            else{
+            else
+            {
                 (playing) ? continueLabel.setColor(sf::Color::White) : startLabel.setColor(sf::Color::White);
                 exitLabel.setColor(sf::Color::White);
             }
 
-            //clears the screen
+            // Clears the screen
             gameMenu.clear();
-
-            //draw text menu - WON'T WORK UNTIL FONT IMPORTS WORK
-            /*gameMenu.draw(menu1);
-            gameMenu.draw(menu2);*/
 
             //display the screen
             (playing) ? gameMenu.draw(continueLabel) : gameMenu.draw(startLabel);

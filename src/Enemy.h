@@ -49,7 +49,7 @@ struct Traits
     // 2 possible types:
     //   -random x, random y
     //   -player x, random y
-    std::function<Vector2f(const ShipShape & ship)> setTarget;
+    std::function<Vector2f(const ShipShape &ship)> setTarget;
 };
 
 class World;
@@ -70,7 +70,7 @@ struct Enemy : public EnemyShape
 	Traits _traits;
 
     // Used to periodically dodge bullets
-    Vector2f dodge(const std::vector<Bullet *> &bullets, bool &hasForce);
+    Vector2f dodge(const std::vector<Bullet *> &_bullets, bool &hasForce);
     int _dodgeChargeTime;
     int _dodgeCounter;
 

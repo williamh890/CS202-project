@@ -1,7 +1,10 @@
-//Kyle Tam
-//Healthbar.cpp
-// 4-22-17
-//Last Rev 4-22-17
+// healthbar.cpp
+// CS 202 Project: Scrolling Space Shooter
+// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
+// Created: 20170412
+// Updated: 20170426
+//
+// Definitions for HealthBar class
 
 #include "healthbar.h"
 #include "constants.h"
@@ -9,9 +12,10 @@
 using sf::Vector2f;
 using sf::Color;
 
-HealthBar::HealthBar( float l,
-                      float w ) : _maxHealthBar(HPBarShape(Vector2f(l,w))),
-                                  _currentHealthBar(HPBarShape(Vector2f(l, w)))
+// Constructor
+HealthBar::HealthBar( float length,
+                      float width ) : _maxHealthBar(HPBarShape(Vector2f(length, width))),
+                                  _currentHealthBar(HPBarShape(Vector2f(length, width)))
 {
     _maxHealthBar.setFillColor(Color{0,0,0,0});
     _maxHealthBar.setOutlineColor({255,255,255,200});
@@ -19,17 +23,21 @@ HealthBar::HealthBar( float l,
 
     _currentHealthBar.setFillColor(Color{255, 66, 66,230});
 
-    _currentHealthBar.setPosition(WIDTH - l - HP_BAR_SCREEN_BUFFER, HEIGHT - w -HP_BAR_SCREEN_BUFFER);
-    _maxHealthBar.setPosition(WIDTH - l - HP_BAR_SCREEN_BUFFER, HEIGHT - w - HP_BAR_SCREEN_BUFFER);
+    _currentHealthBar.setPosition(WIDTH - length - HP_BAR_SCREEN_BUFFER, HEIGHT - width -HP_BAR_SCREEN_BUFFER);
+    _maxHealthBar.setPosition(WIDTH - length - HP_BAR_SCREEN_BUFFER, HEIGHT - width - HP_BAR_SCREEN_BUFFER);
 
 }
+
+// Destructor
 HealthBar::~HealthBar(){}
 
-void HealthBar::setCurrentHealthBar(float hpPercentage) {
-    //Scales the current hp bar to the percentage given
+// Scales the current hp bar to the percentage given
+void HealthBar::setCurrentHealthBar(float hpPercentage)
+{
     _currentHealthBar.setScale(hpPercentage, 1.0);
 }
 
-void HealthBar::setCurrVertical(float hpPercentage) {
+void HealthBar::setCurrVertical(float hpPercentage)
+{
     _currentHealthBar.setScale(1.0, hpPercentage);
 }
