@@ -33,11 +33,11 @@ Ship::Ship() : ShipShape(),
                _photonReloadTime(DEFAULT_PHOTON_FIRERATE),
                _photonReloadSpeed(1),
                _photonReloadCounter(_photonReloadTime),
+               _playerScore(0),
                _photonReloadBar(ReloadBar(RELOAD_BAR_HEIGHT, RELOAD_BAR_WIDTH)),
                _laserReloadBar(ReloadBar(RELOAD_BAR_HEIGHT, RELOAD_BAR_WIDTH)),
                _health(STARTING_HP),
                _maxHP(_health),
-               _playerScore(0),
                _hpBar(HealthBar()),
                _sourceID(PLAYER)
 
@@ -85,7 +85,9 @@ Ship::Ship() : ShipShape(),
 // Collision detection with shapes
 bool Ship::checkIntersect(const sf::Shape &e) {
     return (getGlobalBounds().intersects(e.getGlobalBounds()));
-}
+}    // Weapon reload bars
+	ReloadBar _photonReloadBar;
+	ReloadBar _laserReloadBar;
 
 // Collision detection with sprites
 bool Ship::checkIntersect(const sf::Sprite &e) {
@@ -135,58 +137,47 @@ void Ship::update(World & world)
     float yAccel;
 
     // Left movement
-    if(Keyboard::isKeyPressed(Keyboard::Left) || // Arrow keys
-	   Keyboard::isKeyPressed(Keyboard::A) || // WASD
-	   sf::Joystick::getAxisPosition(0,sf::Joystick::X) < -joystickDetectionThreshold) // Game controller
-	{
+    if(Keyboard::isKeyPressed(Keyboard::Left)||Keyboard::isKeyPressed(Keyboard::A)){ //keyboard inputs
+        xAccel = -PLAYER_X_ACCEL;
+        _accel += Vector2f(xAccel, 0);
+    }
+    else if (sf::Joystick::getAxisPosition(0,sf::Joystick::X) < -joystickDetectionThreshold){ // Game controller
         if(sf::Joystick::isConnected(0))
-           xAccel = (float)-PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / -100);
-
-		else
-            xAccel = -PLAYER_X_ACCEL;
-
+            xAccel = (float)-PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / -100);
         _accel += Vector2f(xAccel, 0);
     }
 
     // Right movement
-    if(Keyboard::isKeyPressed(Keyboard::Right) || // Arrow keys
-	   Keyboard::isKeyPressed(Keyboard::D) || // WASD
-	   sf::Joystick::getAxisPosition(0,sf::Joystick::X) > joystickDetectionThreshold) // Game controller
-	{
+    if(Keyboard::isKeyPressed(Keyboard::Right)||Keyboard::isKeyPressed(Keyboard::D)){
+        xAccel = PLAYER_X_ACCEL;
+		_accel += Vector2f(xAccel, 0);
+    }
+    else if (sf::Joystick::getAxisPosition(0,sf::Joystick::X) > joystickDetectionThreshold){// Game controller
+
         if(sf::Joystick::isConnected(0))
             xAccel = (float)PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / 100);
-
-		else
-            xAccel = PLAYER_X_ACCEL;
-
 		_accel += Vector2f(xAccel, 0);
     }
 
     // Up movement
-    if(Keyboard::isKeyPressed(Keyboard::Up) || // Arrow keys
-	   Keyboard::isKeyPressed(Keyboard::W) || // WASD
-	   sf::Joystick::getAxisPosition(0,sf::Joystick::Y) < -joystickDetectionThreshold) // Game controller
-	{
+    if(Keyboard::isKeyPressed(Keyboard::Up)||Keyboard::isKeyPressed(Keyboard::W)){//keyboard controls
+        yAccel = -PLAYER_Y_ACCEL;
+		_accel += Vector2f(0, yAccel);
+    }
+    else if (sf::Joystick::getAxisPosition(0,sf::Joystick::Y) < -joystickDetectionThreshold){//Game controller
         if(sf::Joystick::isConnected(0))
             yAccel = (float)-PLAYER_Y_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) / -100);
-
-		else
-            yAccel = -PLAYER_Y_ACCEL;
-
 		_accel += Vector2f(0, yAccel);
     }
 
     // Down movement
-    if(Keyboard::isKeyPressed(Keyboard::Down) || // Arrow Keys
-	   Keyboard::isKeyPressed(Keyboard::S) || // WASD
-	   sf::Joystick::getAxisPosition(0,sf::Joystick::Y) > joystickDetectionThreshold) // Game controller
-	{
+    if(Keyboard::isKeyPressed(Keyboard::Down)||Keyboard::isKeyPressed(Keyboard::S)){//keyboard controls{
+             yAccel = PLAYER_Y_ACCEL;
+			_accel += Vector2f(0, yAccel);
+    }
+    else if (sf::Joystick::getAxisPosition(0,sf::Joystick::Y) > joystickDetectionThreshold){// Game controller
             if(sf::Joystick::isConnected(0))
                 yAccel = (float)PLAYER_Y_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) / 100);
-
-			else
-                yAccel = PLAYER_Y_ACCEL;
-
 			_accel += Vector2f(0, yAccel);
     }
 
@@ -290,8 +281,8 @@ void Ship::update(World & world)
 
     // Photon
     // Fires if the reload counter is full and the button is pressed
-    if(_photonReloadCounter >= _photonReloadTime && Keyboard::isKeyPressed(Keyboard::E) ||
-       _photonReloadCounter >= _photonReloadTime && sf::Joystick::isButtonPressed(0, X))
+    if((_photonReloadCounter >= _photonReloadTime && Keyboard::isKeyPressed(Keyboard::E)) ||
+       (_photonReloadCounter >= _photonReloadTime && sf::Joystick::isButtonPressed(0, X)))
     {
         //Shoots a photon
         world._photons.push_back(photonCannon());

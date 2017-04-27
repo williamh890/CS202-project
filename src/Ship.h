@@ -35,10 +35,6 @@ struct Ship : public ShipShape
     Photon* photonCannon(); //Creates a photon at the ships position
     Bullet* laser(); //Creates a bullet at the ships position
 
-    // Weapon reload bars
-	ReloadBar _photonReloadBar;
-	ReloadBar _laserReloadBar;
-
     // Reload values
 	// !!!NTF: Put these in some sort of struct along with the weapon functions
     int _laserReloadTime;
@@ -49,6 +45,10 @@ struct Ship : public ShipShape
     int _photonReloadCounter;
     int _playerScore;
     bool _hasDoubleLaser;
+
+    // Weapon reload bars
+	ReloadBar _photonReloadBar;
+	ReloadBar _laserReloadBar;
 
     //Health
     float _health;

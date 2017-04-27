@@ -59,7 +59,7 @@ void World::makeStar(int startingHeight)
     //Makes a new star with a random position along with of screen
     float starX = starDist(rng);
     newStar->setPosition(starX, (float)startingHeight);
-    
+
 	//Add star into the world
 	_stars.push_back(newStar);
 }
