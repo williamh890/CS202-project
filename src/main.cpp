@@ -1,10 +1,15 @@
-// main.cpp
-// CS 202 Project: Scrolling Space Shooter
-// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
-// Created: 201704??
-// Updated: 20170426
-//
-// Game framework
+/*
+main.cpp
+CS 202 Final Project: Scrolling Space Shooter
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 9/4/2017
+Last Updated: 27/04/2017
+main.cpp contains the game RenderWindow object, as well as stores a vector of pointers to Screens objects (pure virtual).
+New screens are declared in main and stored the the Screens vector by reference; additional screens can be implemented in
+main by adding the appropriate header file include, creating a new screen object (must inherit from Screens.h) and storing
+it in the screens vector.
+The runtime loop manages screens by setting the screenSelect to a value return by each screen's run function.
+*/
 
 #include "constants.h"
 #include "Screens.h"

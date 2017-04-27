@@ -1,10 +1,13 @@
-// world.h
-// CS 202 Project: Scrolling Space Shooter
-// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
-// Created: 20170409
-// Updated: 20170412
-//
-// Header for World class
+/*
+World.h
+CS 202 Final Project: Scrolling Space Shooter
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 9/4/2017
+Last Updated: 27/04/2017
+Header for World class.
+World manages the game screen, and is a derivative of Screens. Class contains all objects and functions used to manage
+the game screen.
+*/
 
 #ifndef WORLD_H
 #define WORLD_H

@@ -1,8 +1,11 @@
-/* Screens.h
-Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
+/*
+Screens.h
+CS 202 Final Project
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
 Created: 17/4/2017
-Updated: 17/4/2017
-Pure virtual class, used to create games screens.*/
+Last Updated: 27/04/2017
+Pure virtual class. All managed screens inherit run from this class and define it's operation.
+*/
 
 #include <SFML/Graphics.hpp>
 
