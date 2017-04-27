@@ -59,10 +59,10 @@ int GameOverScreen::Run(sf::RenderWindow & gameMenu){
                     return -1;
                     break;
                 
-				// If user hits enter, restart the game
-                case sf::Keyboard::Return:
-                    return 1;
-                    break;
+				// TODO: Make a way for players to restart the game
+                // case sf::Keyboard::Return:
+                //     return 1;
+                //     break;
                     
                 default:
                     break;
