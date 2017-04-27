@@ -1,10 +1,11 @@
-// world.cpp
-// CS 202 Project: Scrolling Space Shooter
-// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
-// Created: 20170409
-// Updated: 20170412
-//
-// Definitions and constructor for World class
+/*
+World.cpp
+CS 202 Final Project: Scrolling Space Shooter
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 9/4/2017
+Last Updated: 27/04/2017
+Defines functions and object behavior for game screen objects (including background management).
+*/
 
 #include "constants.h"
 #include "World.h"
@@ -357,7 +358,7 @@ int World::Run(sf::RenderWindow &gameScreen)
             }
              if(_playerShip._playerIsDead==true) return 2;
         }
-        //If start button is pressed go to the pause menu
+        // If start button is pressed go to the pause menu
         if(sf::Joystick::isButtonPressed(0, START)) return 0;
 
 		// Updates display
@@ -366,8 +367,8 @@ int World::Run(sf::RenderWindow &gameScreen)
         World::show(gameScreen);
         gameScreen.display();
 
-        //pause if game loses focus
-	    if(!gameScreen.hasFocus())
-            return 0;
+		// Pause if game loses focus
+		if (!gameScreen.hasFocus())
+			return 0;
     }
 }

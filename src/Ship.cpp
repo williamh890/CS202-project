@@ -1,10 +1,11 @@
-// Ship.cpp
-// CS 202 Project: Scrolling Space Shooter
-// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
-// Created: 20170412
-// Updated: 20170426
-//
-// Definitions for Ship struct
+/*
+Ship.cpp
+CS 202 Final Project: Scrolling Space Shooter
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 12/4/2017
+Last Updated: 27/04/2017
+Defines characteristics of ship class objects.
+*/
 
 #include "Ship.h"
 #include "World.h"
