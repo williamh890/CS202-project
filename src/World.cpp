@@ -358,7 +358,7 @@ int World::Run(sf::RenderWindow &gameScreen)
             }
              if(_playerShip._playerIsDead==true) return 2;
         }
-        //If start button is pressed go to the pause menu
+        // If start button is pressed go to the pause menu
         if(sf::Joystick::isButtonPressed(0, START)) return 0;
 
 		// Updates display
@@ -366,5 +366,9 @@ int World::Run(sf::RenderWindow &gameScreen)
         World::update();
         World::show(gameScreen);
         gameScreen.display();
+
+		// Pause if game loses focus
+		if (!gameScreen.hasFocus())
+			return 0;
     }
 }

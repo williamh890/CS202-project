@@ -46,6 +46,8 @@ int main()
 	// Make game world
     World gw;
     screens.push_back(&gw);
+
+	// Make game over screen
     GameOverScreen go;
     screens.push_back(&go);
 

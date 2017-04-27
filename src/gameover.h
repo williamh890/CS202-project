@@ -7,7 +7,8 @@ Last Updated: 27/04/2017
 Header for GameOverScreen class
 */
 
-#pragma once
+#ifndef GAMEOVER_H
+#define GAMEOVER_H
 
 #include "Screens.h"
 #include <SFML/Graphics.hpp>
@@ -19,3 +20,5 @@ public:
 
 // Draws the game over screen
 void gameOverDraw(sf::RenderWindow &, bool);
+
+#endif
