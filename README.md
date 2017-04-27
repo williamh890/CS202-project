@@ -1,5 +1,5 @@
 # CS202-project: ScrollingSpace Shooter
-### Members: Mike Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Wessels
+### Members: Mike Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
 
 This project was built for Windows and requires Simple and Fast Multimedia Library (SFML).
 
