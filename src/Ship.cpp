@@ -55,6 +55,8 @@ Ship::Ship() : ShipShape(),
     _photonReloadBar.setCurrentHealthBar(1.0);
     _laserReloadBar.setCurrentHealthBar(1.0);
 
+    _hasDoubleLaser = false;
+
     float reloadBarBuffer = 5.0F;
 
     _photonReloadBar._currentHealthBar.rotate(180);
@@ -205,7 +207,29 @@ void Ship::update(World & world){
     if((_laserReloadCounter >= _laserReloadTime && Keyboard::isKeyPressed(Keyboard::Space)) ||
        (_laserReloadCounter >= _laserReloadTime && sf::Joystick::getAxisPosition(0,sf::Joystick::Z) < -98)) {
         //Fires a bullet from the player ship
-        world._bullets.push_back(laser());
+        if(!_hasDoubleLaser)
+            world._bullets.push_back(laser());
+        else { //HAS DOUBLE LASER!!!
+            Bullet * bullet1 = laser();
+            Bullet * bullet2 = laser();
+
+            //Get the position of the ship
+            Vector2f shipPos = getPosition();
+
+            float bulletY = shipPos.y;
+
+            float bullet1X = shipPos.x + 12;
+            float bullet2X = shipPos.x + 2*SHIP_RADIUS - 12;
+
+            bullet1->setPosition(bullet1X, bulletY);
+            bullet2->setPosition(bullet2X, bulletY);
+
+            bullet1->setScale(.7, 1);
+            bullet2->setScale(.7, 1);
+
+            world._bullets.push_back(bullet1);
+            world._bullets.push_back(bullet2);
+        }
     }
     //Add to the reload counter if it's not full
     if(_laserReloadCounter <= _laserReloadTime){
@@ -234,7 +258,7 @@ void Ship::update(World & world){
 
     //Check  if collied with an enemy
     // !!!NTF: Maybe add some damage to the enemies as well
-    for (int e = world._enemies.size() - 1; !_inInvincibleFrame && e >= 0; --e) {
+    for (int e = (int)world._enemies.size() - 1; !_inInvincibleFrame && e >= 0; --e) {
         //If the player and an enemy intersect
         if (checkIntersect(*world._enemies[e])) {
             //minus a single life per collision
@@ -274,10 +298,46 @@ void Ship::update(World & world){
             }
         }
     }
+
+    //Look through all the powerups
+    for(int p = (int)world._powerups.size() - 1; p >= 0; --p) {
+        //If collision with one
+        if (checkIntersect(*world._powerups[p])) {
+            //If life up
+            if(world._powerups[p]->getType() == LIFE_UP) {
+                //Add to health
+                ++_health;
+                //Health pool can grow
+                if(_health > _maxHP) {
+                    _maxHP = _health;
+                }
+            }
+            //If reload up
+            if(world._powerups[p]->getType() == RELOAD_UP) {
+                //For max firerate cap
+                if(_laserReloadTime >= 3) {
+                    _laserReloadTime -= 1;
+                }
+                //Also increase the photon fire rate
+                if(_photonReloadTime >= 15) {
+                    _photonReloadTime -= 13;
+                }
+            }
+
+            //At a certain point activate the double laser
+            if(_laserReloadTime < 18) {
+                _hasDoubleLaser = true;
+            }
+
+            delete world._powerups[p];
+            world._powerups.erase(world._powerups.begin() + p);
+        }
+    }
+
     //Check if an enemy bullet hits the player
     //  !!!NTF: Separate out the player bullets and
     //          the enemy bullets into separate arrays
-    for(int b = world._bullets.size() - 1; !_inInvincibleFrame && b >= 0; --b) {
+    for(int b = (int)world._bullets.size() - 1; !_inInvincibleFrame && b >= 0; --b) {
         if(world._bullets[b]->_source == ENEMY) {
             //If the bullets hits
             if(checkIntersect(*world._bullets[b])) {

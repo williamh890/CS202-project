@@ -15,6 +15,7 @@
 #include "Photon.h"
 #include "Ship.h"
 #include "Screens.h"
+#include "powerup.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -31,7 +32,7 @@ class World : public Screens {
         std::vector<Photon*> _photons;
         std::vector<StarShape*> _stars;
         std::vector<Enemy*> _enemies;
-
+        std::vector<Powerup*> _powerups;
 
         void updateExplosions();
 
@@ -71,6 +72,9 @@ class World : public Screens {
         static std::uniform_real_distribution<float> starDist;
         static std::uniform_real_distribution<float> enemyStartingVel;
         static std::uniform_real_distribution<float> optimalPlayerDist;
+
+        static std::uniform_real_distribution<float> randomWidht;
+        static std::uniform_real_distribution<float> randomHeight;
 
         static std::uniform_int_distribution<int> starBrightness;
         static std::uniform_int_distribution<int> randomInt;

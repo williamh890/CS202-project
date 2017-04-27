@@ -35,12 +35,16 @@ using std::floor;
 // Setup for random real number generator for _stars
 std::random_device World::ranDev;
 std::mt19937 World::rng = std::mt19937(ranDev());
+
 std::uniform_real_distribution<float> World::starDist(0.0,(float)WIDTH);
 std::uniform_real_distribution<float> World::enemyStartingVel(-10.,10.);
 std::uniform_real_distribution<float> World::optimalPlayerDist(HEIGHT / 2, HEIGHT - 100);
+
 std::uniform_int_distribution<int> World::randomInt(-1000, 1000);
 std::uniform_int_distribution<int> World::starBrightness(100, 255);
 
+std::uniform_real_distribution<float> World::randomWidht(10, WIDTH - 10);
+std::uniform_real_distribution<float> World::randomHeight(10, HEIGHT - 10);
 
 ///////////////////////////STAR FUNCTIONS/////////////////////////////////
 // Creates a new star
@@ -163,8 +167,8 @@ vector<bounds> World::onBound(const Ship & playerShip) {
 // Creates first wave of _enemies
 void World::makeInitEnemies(){
     static int numSeekers = 0;
-    static int numWanderers = 3;
-    static int numFollowers = 3;
+    static int numWanderers = 1;
+    static int numFollowers = 1;
 
     for(int i = 0; i < numSeekers; ++i){
         //Makes a seeker at a random width at the top of the screen
@@ -178,6 +182,14 @@ void World::makeInitEnemies(){
         //Makes a seeker at a random width at the top of the screen
         _enemies.push_back(make_follower());
     }
+
+    //Spawn life up powerup
+    _powerups.push_back(new Powerup(Vector2f(randomWidht(rng),randomHeight(rng)), LIFE_UP));
+    //Spawn reload up powerup
+    _powerups.push_back(new Powerup(Vector2f(randomWidht(rng),randomHeight(rng)), RELOAD_UP));
+
+    //Add to the number of enemies spawned next round
+    numSeekers++;
     numWanderers++;
     numFollowers++;
 }
@@ -203,9 +215,6 @@ void World::updateEnemies(){
                     }
 
                 }
-                //Add an explosion where the enemy died
-//                Explosion * newExplosion = new Explosion(pos);
-//                _explosions.push_back(newExplosion);
             }
 
 
@@ -275,6 +284,9 @@ void World::show(sf::RenderWindow &gameScreen){
     }
     for(const auto & e : _enemies){
         gameScreen.draw(*e);
+    }
+    for(const auto & u : _powerups) {
+        gameScreen.draw(*u);
     }
 
     gameScreen.draw(_playerShip);

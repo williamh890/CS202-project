@@ -101,6 +101,7 @@ const int FOLLOWER_TARGET_SWITCH = 40;
 // Bullet _source values
 enum ID {PLAYER, ENEMY};
 
+enum PowerupTypes {LIFE_UP, RELOAD_UP};
 //For bound checking
 enum bounds {RIGHT, LEFT, UPPER, LOWER,EMPTY};
 
