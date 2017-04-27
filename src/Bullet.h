@@ -1,7 +1,12 @@
-//Bullet.h
-//Auth: William Horn
-//4.12.2017
-//Header for Bullet class
+/*
+Bullet.h
+CS 202 Final Project
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 12/4/2017
+Last Updated: 26/4/2017
+<brief text description of file; feel free to update these>
+*/
+
 
 #ifndef BULLET_H
 #define BULLET_H

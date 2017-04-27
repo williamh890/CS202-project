@@ -1,10 +1,10 @@
-//game_constants.h
-//CS 202 Proj
-//Auth: William Horn
-//4.7.2017
-
 /*
-    Constants related to all parts of the game
+constants.h
+CS 202 Final Project
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 7/4/2017
+Last Updated: 26/4/2017
+Constants games constants used by several game files
 */
 
 #include <SFML/Graphics.hpp>

@@ -1,7 +1,11 @@
-//Enemy.h
-//Auth: William Horn
-//4.20.2017
-//Class header to represent base enemy
+/*
+Enemy.h
+CS 202 Final Project
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 20/4/2017
+Last Updated: 26/4/2017
+<brief text description of file; feel free to update these>
+*/
 
 #ifndef ENEMY_H
 #define ENEMY_H

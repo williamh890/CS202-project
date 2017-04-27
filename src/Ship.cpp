@@ -1,7 +1,11 @@
-//Ship.cpp
-//Auth : William Horn
-//4.12.2017
-//Definitions for ship class
+/*
+Ship.cpp
+CS 202 Final Project
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 12/4/2017
+Last Updated: 26/4/2017
+Defines characteristics of ship class objects.
+*/
 
 #include "Ship.h"
 #include "World.h"

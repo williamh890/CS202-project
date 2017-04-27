@@ -1,8 +1,10 @@
-/*Screen_0.cpp
-Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
+/*
+Screen_0.cpp
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
 Created: 17/4/2017
-Updated: 17/4/2017
-Screen_0 is the game menu screen.*/
+Updated: 26/4/2017
+Screen_0 manages the menu screen.
+*/
 
 #include <iostream>
 #include "Screen_0.h"

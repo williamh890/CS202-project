@@ -1,7 +1,11 @@
-//Enemy.cpp
-//Auth: William Horn
-//4.10.2017
-//Definitions for Enemy class
+/*
+Enemy.cpp
+CS 202 Final Project
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 10/4/2017
+Last Updated: 26/4/2017
+
+*/
 
 #include "Enemy.h"
 #include "World.h"
