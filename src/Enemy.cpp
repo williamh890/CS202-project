@@ -107,18 +107,18 @@ Vector2f Enemy::separate(const vector<Enemy*> & enemies)
     // Look through all the enemies
 	for(int e = 0; e < (int)enemies.size(); ++e) {
         Vector2f pos = enemies[e]->getPosition();
-        // Find the center of the enemy
+        
+		// Find the center of the enemy
         makeCenter(pos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
         float dist = distance(currEnemyPos, pos);
-        // Check if the enemy can see the other enemy
+        
+		// Check if the enemy can see the other enemy
         if(dist < _enemyDetectionRadius) {
             Vector2f desired = currEnemyPos - pos;
             steer += desired - _vel;
-            // Make the force a repulsion force
         }
     }
-
     return steer;
 }
 
@@ -143,8 +143,9 @@ Vector2f Enemy::dodge(const vector<Bullet *> & _bullets, bool &hasForce)
             float dist = distance(bulletPos, enemyPos);
 
 			// Sees the bullet
-            if(dist < _bulletDetectionRadius) {
-                //Boost left or right based on where the bullet is respectively
+            if(dist < _bulletDetectionRadius)
+			{
+                // Boost left or right based on where the bullet is respectively
                 boostForce = (enemyPos.x > bulletPos.x) ? Vector2f(20, 0) : Vector2f(-20, 0);
                 hasForce = true;
                 break;
@@ -164,7 +165,6 @@ Vector2f Enemy::seekPlayer(const Ship & playerShip)
     Vector2f playerCenter = playerShip.getPosition();
     makeCenter(playerCenter, SHIP_RADIUS / 2, SHIP_RADIUS / 2);
 
-	//
     Vector2f desired =  playerCenter - enemyCenter;
 	Vector2f seek = desired - _vel;
 	return seek;
@@ -199,13 +199,13 @@ void Enemy::update(World & world)
                                             EnemyBulletColor));
     }
 
-	//Randomly assign new target
+	// Randomly assign new target
     if(!(randomInt(rng) % _traits._targetSwitchChance))
 	{
         _target = _traits.setTarget(world._playerShip);
     }
 
-    // !!!NTF: Bullet dodge doesnt work right
+    // !!!NTF: Bullet dodge doesn't work right
     // Only if the enemy has dodge
     if(_traits._bulletDodgeForce)
 	{
@@ -354,18 +354,17 @@ Enemy * make_seeker()
                         SEEKER_SPEED,              // Enemy speed
                         false);                    // Has a gun
 
-    //Dummy function
+    // Determines target
     std::function<Vector2f(const ShipShape &)> targetSetter = [](const ShipShape &)-> Vector2f{return Vector2f(0,0);};
-
     seekerTraits.setTarget = targetSetter;
 
+	// Position and velocity
     Vector2f initPos{Enemy::rngTargetWidth(Enemy::rng), 0};
     Vector2f initVel{0,0};
 
+	// Loads sprite
     Enemy * seeker = new Enemy(initPos, initVel, 1, 0, seekerTraits, "resources/sprites/homingEnemySheet.png");
-
-    seeker->setScale(0.48, 0.48);
-
+    seeker->setScale(0.48F, 0.48F);
     seeker->setTextureRect(sf::IntRect(0,0,81,87));
 
     return seeker;
@@ -381,19 +380,20 @@ Enemy * make_wanderer()
                           WANDERER_MAXSPEED,        // Enemy speed
                           true);                    // Has a gun
 
+	// Determines target
     std::function<Vector2f (const ShipShape &)> targetSetter = [](const ShipShape & ship)->Vector2f{return Vector2f(Enemy::rngTargetWidth(Enemy::rng),
-                                                                                                                     Enemy::rngTargetHeight(Enemy::rng));};
+                                                                                                                Enemy::rngTargetHeight(Enemy::rng));};
     wandererTraits.setTarget = targetSetter;
 
+	// Position and velocity
     Vector2f initPos{Enemy::rngTargetWidth(Enemy::rng), 0};
     Vector2f initVel{0,0};
-    int hp = 6;
+    
+	// Health
+	int hp = 6;
 
     Enemy * wanderer = new Enemy(initPos, initVel, hp, 1, wandererTraits);
-
-
-    wanderer->setScale(0.41, 0.41);
-
+    wanderer->setScale(0.41F, 0.41F);
     return wanderer;
 }
 
@@ -407,16 +407,20 @@ Enemy * make_follower()
                           FOLLOWER_MAXSPEED,      // Enemy speed
                           true);                  // Has a gun
 
+	// Target
     std::function<Vector2f (const ShipShape &)> targetSetter = [](const ShipShape & ship)->Vector2f{return Vector2f(ship.getPosition().x,
                                                                                                                      Enemy::rngFollowerHeight(Enemy::rng));};
     followerTraits.setTarget = targetSetter;
 
+	// Position and velocity
     Vector2f initPos{Enemy::rngTargetWidth(Enemy::rng), 0};
     Vector2f initVel{0,0};
+
+	// Health
     int hp = 5;
 
+	// Loads texture
     Enemy * follower = new Enemy(initPos, initVel, hp, 1, followerTraits, "resources/sprites/dodgeEnemySheet.png");
-
     follower->setScale(1, 1);
     follower->setTextureRect(sf::IntRect(4, 3, 50, 50));
 

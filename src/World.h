@@ -53,7 +53,6 @@ class World : public Screens
         void updateStars();
 
         // Utility Functions for player ship
-        void updateShip();
         std::vector<bounds> onBound(const Ship & playerShip);
 
 		// Utility functions for enemies

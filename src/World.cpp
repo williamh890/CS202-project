@@ -6,8 +6,6 @@
 //
 // Definitions and constructor for World class
 
-//Ctor for  world class
-
 #include "constants.h"
 #include "World.h"
 #include "Ship.h"
@@ -50,20 +48,19 @@ std::uniform_real_distribution<float> World::randomHeight(20, HEIGHT - 20);
 // Creates a new star
 void World::makeStar(int startingHeight)
 {
-
+	// Star color
     Color starColor(255,255,255,starBrightness(rng));
 	sf::Uint8 alpha = starColor.a;
 
 	// Sets star size, shape, and color
-    StarShape* newStar= new StarShape((float)STAR_HEIGHT * (alpha / 255.0), 6);
-
-    // Makes a new star with a random position along width of screen
+    StarShape* newStar= new StarShape((float)STAR_HEIGHT * (alpha / 255.0F), 6);
     newStar->setFillColor(starColor);
-    //Makes a new star with a random position along with of screen
 
+    //Makes a new star with a random position along with of screen
     float starX = starDist(rng);
     newStar->setPosition(starX, (float)startingHeight);
-    //Add star into the world
+    
+	//Add star into the world
 	_stars.push_back(newStar);
 }
 
@@ -212,6 +209,7 @@ void World::updateEnemies()
     for(int e = _enemies.size() - 1; e >= 0; --e)
 	{
         _enemies[e]->update(*this);
+
         //If dead
         if (_enemies[e]->_hp <= 0 || //Destroyed
             _enemies[e]->getPosition().y > HEIGHT) // Off the screen
@@ -220,15 +218,17 @@ void World::updateEnemies()
 
             if (_enemies[e]->_hp <= 0)
             {
-                //Add to the score
+                // Add to the score
                 _playerShip._playerScore+=25;
-                //Split the wanderers into seekers
+
+                // Split the wanderers into seekers
                 if(_enemies[e]->_traits._bulletDodgeForce == 0 &&
                    _enemies[e]->_traits._seekTargetForce)
                 {
-                    //Make a random amount between 3 and 6
+                    // Make a random amount between 3 and 6
                     int splitNum = randomSplitNumber(rng);
-                    //Splits the wander
+
+                    // Splits the wander
                     for(int i = 0; i < splitNum; i++)
                     {
                         Enemy * newSeeker = make_seeker();
@@ -259,7 +259,7 @@ World::World() : Screens(),
     populateInitialStars();
 }
 
-//Cleans up all the memory
+// Cleans up all the memory
 World::~World()
 {
     for(size_t i = 0; i < _bullets.size(); ++i)

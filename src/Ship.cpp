@@ -276,8 +276,8 @@ void Ship::update(World & world)
             bullet1->setPosition(bullet1X, bulletY);
             bullet2->setPosition(bullet2X, bulletY);
 
-            bullet1->setScale(.7, 1);
-            bullet2->setScale(.7, 1);
+            bullet1->setScale(0.7F, 1);
+            bullet2->setScale(0.7F, 1);
 
             world._bullets.push_back(bullet1);
             world._bullets.push_back(bullet2);
@@ -358,39 +358,42 @@ void Ship::update(World & world)
         }
     }
 
-    //Look through all the powerups
+    // Look through all the powerups
     for(int p = (int)world._powerups.size() - 1; p >= 0; --p)
     {
-        //If collision with one
+        // If collision with one
         if (checkIntersect(*world._powerups[p]))
         {
-            //If life up
+            // If life up
             if(world._powerups[p]->getType() == LIFE_UP)
             {
-                //Add to health
+                // Add to health
                 ++_health;
-                //Health pool can grow
+
+                // Incrase maximum HP if new health is larger
                 if(_health > _maxHP)
                 {
                     _maxHP = _health;
                 }
             }
-            //If reload up
+
+            // If reload up
             if(world._powerups[p]->getType() == RELOAD_UP)
             {
-                //For max firerate cap
+                // Decrease reload time until minimum is reached
                 if(_laserReloadTime >= 3)
                 {
                     _laserReloadTime -= 1;
                 }
-                //Also increase the photon fire rate
+
+                // Also increase the photon fire rate
                 if(_photonReloadTime >= 15)
                 {
                     _photonReloadTime -= 13;
                 }
             }
 
-            //At a certain point activate the double laser
+            // At a certain point activate the double laser
             if(_laserReloadTime < 18)
             {
                 _hasDoubleLaser = true;
@@ -400,6 +403,7 @@ void Ship::update(World & world)
             world._powerups.erase(world._powerups.begin() + p);
         }
     }
+
     // Check if an enemy bullet hits the player
     // !!!NTF: Separate out the player bullets and the enemy bullets into separate arrays
     for(int b = world._bullets.size() - 1; !_inInvincibleFrame && b >= 0; --b)
@@ -451,6 +455,7 @@ void Ship::update(World & world)
     {
 		setTextureRect(sf::IntRect(0,5,57,98));
     }
+
     // Set the _health bar
     float percentHP = _health / _maxHP;
     _hpBar.setCurrentHealthBar(percentHP);

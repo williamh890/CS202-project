@@ -25,7 +25,7 @@ Powerup::Powerup(Vector2f initPos, int type) : _type(type) {
     setTexture(_texture);
 
     //Just woked out that .3 worked for both types
-    setScale(.3,.3);
+    setScale(0.3F,0.3F);
     //Set the position of the powerup
     setPosition(initPos);
 }
