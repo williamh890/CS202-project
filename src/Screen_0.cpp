@@ -14,7 +14,7 @@ sf::CircleShape shape;
 sf::CircleShape shape2;
 
 // Initial Menu Setup
-void initialDraw(sf::RenderWindow &gameMenu, bool drawMenu)
+void menuDraw(sf::RenderWindow &gameMenu, bool drawMenu)
 {
     shape.setRadius(50);
     shape.setOrigin(shape.getRadius(),shape.getRadius());
@@ -45,7 +45,7 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu)
         gameMenu.draw(shape);
     }
 
-    if(drawMenu) initialDraw(gameMenu,drawMenu);
+    if(drawMenu) menuDraw(gameMenu,drawMenu);
 
     while(true)
 	{
