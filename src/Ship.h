@@ -29,12 +29,14 @@ struct Ship : public ShipShape
 	sf::Vector2f _vel;
 	sf::Vector2f _accel;
 	sf::Texture _shipTexture;
-	sf::SoundBuffer _photonBuffer;
-    sf::SoundBuffer _laserBuffer;
-    sf::SoundBuffer _explosionBuffer;
+	sf::SoundBuffer _laserSoundBuffer;
+	sf::SoundBuffer _photonSoundBuffer;
+    sf::SoundBuffer _healSoundBuffer;
+    sf::SoundBuffer _powerupSoundBuffer;
     sf::Sound _photonSound;
     sf::Sound _laserSound;
-    sf::Sound _explosionSound;
+    sf::Sound _healSound;
+    sf::Sound _powerupSound;
 	sf::Clock _clock;
 	sf::Time _time;
 

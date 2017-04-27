@@ -49,10 +49,14 @@ Ship::Ship() : ShipShape(),
     setTextureRect(sf::IntRect(0,5,57,98));
 
     //Load ship sound files
-    load_buffer(_laserBuffer, "resources/sound/laserSound.wav");
-    _laserSound.setBuffer(_laserBuffer);
-    load_buffer(_photonBuffer,"resources/sound/photonSound.wav");
-    _photonSound.setBuffer(_photonBuffer);
+    load_buffer(_laserSoundBuffer, "resources/sound/laserSound.wav");
+    _laserSound.setBuffer(_laserSoundBuffer);
+    load_buffer(_photonSoundBuffer,"resources/sound/photonSound.wav");
+    _photonSound.setBuffer(_photonSoundBuffer);
+    load_buffer(_healSoundBuffer, "resources/sound/healSound.wav");
+    _healSound.setBuffer(_healSoundBuffer);
+    load_buffer(_powerupSoundBuffer,"resources/sound/powerupSound.wav");
+    _powerupSound.setBuffer(_powerupSoundBuffer);
 
 	// Starting position
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
@@ -375,7 +379,8 @@ void Ship::update(World & world)
             // If life up
             if(world._powerups[p]->getType() == LIFE_UP)
             {
-                // Add to health
+                // Add to health & play sound fx
+                _healSound.play();
                 ++_health;
 
                 // Incrase maximum HP if new health is larger
@@ -388,15 +393,20 @@ void Ship::update(World & world)
             // If reload up
             if(world._powerups[p]->getType() == RELOAD_UP)
             {
+
                 // Decrease reload time until minimum is reached
                 if(_laserReloadTime >= 3)
                 {
+                    //play powerup sound fx
+                    _powerupSound.play();
                     _laserReloadTime -= 1;
                 }
 
                 // Also increase the photon fire rate
                 if(_photonReloadTime >= 15)
                 {
+                    //play powerup sound fx
+                    _powerupSound.play();
                     _photonReloadTime -= 13;
                 }
             }
