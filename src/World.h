@@ -20,47 +20,49 @@
 #include <vector>
 #include <random>
 
-class World : public Screens {
+class World : public Screens
+{
     public:
-        /* Player Ship Object */
-        Ship playerShip;
+		// Constructor and destructor
+		World();
+		~World();
 
-        /* Main Containers for game entities*/
-        std::vector<Bullet*> bullets;
-        std::vector<Photon*> photons;
-        std::vector<StarShape*> stars;
-        std::vector<Enemy*> enemies;
+        // Player Ship Object
+        Ship _playerShip;
 
+        // Main Containers for game entities
+        std::vector<Bullet*> _bullets;
+        std::vector<Photon*> _photons;
+        std::vector<StarShape*> _stars;
+        std::vector<Enemy*> _enemies;
+
+		// Utility functions for photons
         void updatePhotons();
-        void addPhoton(Photon p);
+        void addPhoton(Photon &p);
 
-        /* Utility Functions for bullets */
-
+        // Utility functions for bullets
         void updateBullets();
-        void addBullet(Bullet b);
+        void addBullet(Bullet &b);
 
         // Utility functions for stars
-        void makeStar(float startingHeight);
+        void makeStar(int startingHeight);
         void populateInitialStars();
         void updateStars();
 
-        /* Utility Functions for player ship */
-
+        // Utility Functions for player ship
         void updateShip();
         std::vector<bounds> onBound(const Ship & playerShip);
 
+		// Utility functions for enemies
         void makeInitEnemies();
         void updateEnemies();
 
-        World();
-        ~World();
-
+		// Display functions
         void show(sf::RenderWindow &gameScreen);
         void update();
-
         int Run(sf::RenderWindow &gameScreen) override;
 
-        // Random Real Generators
+        // Random number generators
         static std::random_device ranDev;
         static std::mt19937 rng;
 
@@ -70,7 +72,6 @@ class World : public Screens {
 
         static std::uniform_int_distribution<int> starBrightness;
         static std::uniform_int_distribution<int> randomInt;
-
 };
 
 #endif // WORLD_H
