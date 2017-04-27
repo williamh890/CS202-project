@@ -288,11 +288,23 @@ World::~World()
 // Updates all the entities in the game world
 void World::update()
 {
-    _playerShip.update(*this);
+	// These values are stored for the dynamic pitch change
+	static float previousShipHealth = _playerShip._health;
+	static float basePitch = _bgSound.getPitch();
+	
+	// Update functions
+	_playerShip.update(*this);
     updateStars();
     updateBullets();
     updatePhotons();
     updateEnemies();
+
+	// This dynamically scales the pitch of the bg song to the percentage of the players health
+	if (_playerShip._health != previousShipHealth) 
+	{
+		_bgSound.setPitch(basePitch * ((1 + (_playerShip._maxHP - _playerShip._health) / (_playerShip._maxHP * 5))));
+		previousShipHealth = _playerShip._health;
+	}
 }
 
 // Draws all the entities to the sfml window
