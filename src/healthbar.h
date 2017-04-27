@@ -19,11 +19,8 @@ public:
 
     HPBarShape _maxHealthBar;
     HPBarShape _currentHealthBar;
-
 };
 
 typedef HealthBar ReloadBar;
 
 #endif // HEALTHBAR_H
-
-
