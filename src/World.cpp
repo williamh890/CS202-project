@@ -179,8 +179,8 @@ vector<bounds> World::onBound(const Ship & playerShip)
 void World::makeInitEnemies()
 {
     static int numSeekers = 0;
-    static int numWanderers = 1;
-    static int numFollowers = 1;
+    static int numWanderers = 10;
+    static int numFollowers = 10;
 
 	// Makes a seeker at a random width at the top of the screen
     for(int seeker = 0; seeker < numSeekers; ++seeker)
@@ -291,7 +291,7 @@ void World::update()
 	// These values are stored for the dynamic pitch change
 	static float previousShipHealth = _playerShip._health;
 	static float basePitch = _bgSound.getPitch();
-	
+
 	// Update functions
 	_playerShip.update(*this);
     updateStars();
@@ -300,7 +300,7 @@ void World::update()
     updateEnemies();
 
 	// This dynamically scales the pitch of the bg song to the percentage of the players health
-	if (_playerShip._health != previousShipHealth) 
+	if (_playerShip._health != previousShipHealth)
 	{
 		_bgSound.setPitch(basePitch * ((1 + (_playerShip._maxHP - _playerShip._health) / (_playerShip._maxHP * 5))));
 		previousShipHealth = _playerShip._health;
