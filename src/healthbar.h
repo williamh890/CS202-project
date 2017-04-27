@@ -1,10 +1,11 @@
-// healthbar.h
-// CS 202 Project: Scrolling Space Shooter
-// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
-// Created: 20170412
-// Updated: 20170426
-//
-// Header for HealthBar class
+/*
+healthbar.h
+CS 202 Final Project: Scrolling Space Shooter
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 20/4/2017
+Last Updated: 27/04/2017
+Header for HealthBar class
+*/
 
 #include "constants.h"
 

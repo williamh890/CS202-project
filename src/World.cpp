@@ -1,10 +1,11 @@
-// world.cpp
-// CS 202 Project: Scrolling Space Shooter
-// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
-// Created: 20170409
-// Updated: 20170412
-//
-// Definitions and constructor for World class
+/*
+World.cpp
+CS 202 Final Project: Scrolling Space Shooter
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 9/4/2017
+Last Updated: 27/04/2017
+Defines functions and object behavior for game screen objects (including background management).
+*/
 
 #include "constants.h"
 #include "World.h"
@@ -264,6 +265,7 @@ World::World() : Screens(),
     load_buffer(_bgBuffer,"resources/sound/bgMusic.wav");
     _bgSound.setBuffer(_bgBuffer);
     _bgSound.setLoop(true);
+    _bgSound.setPitch(0.7F);
     _bgSound.play();
 }
 
@@ -286,19 +288,23 @@ World::~World()
 // Updates all the entities in the game world
 void World::update()
 {
-    //these values are stored for the dynamic pitch change
-    static float previousShipHealth = _playerShip._health;
-    static float basePitch = _bgSound.getPitch();
-    _playerShip.update(*this);
+	// These values are stored for the dynamic pitch change
+	static float previousShipHealth = _playerShip._health;
+	static float basePitch = _bgSound.getPitch();
+	
+	// Update functions
+	_playerShip.update(*this);
     updateStars();
     updateBullets();
     updatePhotons();
     updateEnemies();
-    //This dynamically scales the pitch of the bg song to the percentage of the players health
-    if (_playerShip._health != previousShipHealth) {
-    _bgSound.setPitch(basePitch * ((1+(_playerShip._maxHP-_playerShip._health)/(_playerShip._maxHP*5))));
-    previousShipHealth = _playerShip._health;
-    }
+
+	// This dynamically scales the pitch of the bg song to the percentage of the players health
+	if (_playerShip._health != previousShipHealth) 
+	{
+		_bgSound.setPitch(basePitch * ((1 + (_playerShip._maxHP - _playerShip._health) / (_playerShip._maxHP * 5))));
+		previousShipHealth = _playerShip._health;
+	}
 }
 
 // Draws all the entities to the sfml window
@@ -321,7 +327,9 @@ void World::show(sf::RenderWindow &gameScreen)
     for(const auto & u : _powerups)
         gameScreen.draw(*u);
 
+
     gameScreen.draw(_playerShip);
+
     if (!_playerShip._playerIsDead)
 	{
         // Draw ship
@@ -362,7 +370,7 @@ int World::Run(sf::RenderWindow &gameScreen)
             }
              if(_playerShip._playerIsDead==true) return 2;
         }
-        //If start button is pressed go to the pause menu
+        // If start button is pressed go to the pause menu
         if(sf::Joystick::isButtonPressed(0, START)) return 0;
 
 		// Updates display
@@ -370,5 +378,9 @@ int World::Run(sf::RenderWindow &gameScreen)
         World::update();
         World::show(gameScreen);
         gameScreen.display();
+
+		// Pause if game loses focus
+		if (!gameScreen.hasFocus())
+			return 0;
     }
 }

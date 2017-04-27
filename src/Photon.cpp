@@ -1,10 +1,11 @@
-// Photon.cpp
-// CS 202 Project: Scrolling Space Shooter
-// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
-// Created: 20170412
-// Updated: 20170426
-//
-// Definitions for Photon weapon class
+/*
+Photon.cpp
+CS 202 Final Project
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 12/4/2017
+Last Updated: 27/04/2017
+Definitions for Photon weapon class
+*/
 
 #include "constants.h"
 #include "Photon.h"

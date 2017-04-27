@@ -1,4 +1,11 @@
-
+/*
+powerup.h
+CS 202 Final Project: Scrolling Space Shooter
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 26/4/2017
+Last Updated: 27/04/2017
+Header for Powerup class
+*/
 
 #ifndef POWERUP_H
 #define POWERUP_H

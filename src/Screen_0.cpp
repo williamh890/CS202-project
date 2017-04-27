@@ -1,8 +1,10 @@
-/*Screen_0.cpp
-Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
+/*
+Screen_0.cpp
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
 Created: 17/4/2017
-Updated: 26/4/2017
-Screen_0 is the game menu screen.*/
+Updated: 27/04/2017
+Screen_0 manages the menu screen.
+*/
 
 #include "Screen_0.h"
 #include "Loader.h"
@@ -114,12 +116,12 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu)
 				{
                     menuSelect = 0;
                 }
-                
+
 				if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) >= detectionThreshold / 2)
 				{
                     menuSelect = 1;
                 }
-                
+
 				// If the right trigger is pushed on top menu item
 				if (sf::Joystick::isButtonPressed(0, A) && menuSelect == 0)
 				{

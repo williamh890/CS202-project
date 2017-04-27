@@ -1,10 +1,11 @@
-// Ship.h
-// CS 202 Project: Scrolling Space Shooter
-// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
-// Created: 20170412
-// Updated: 20170426
-//
-// Header for ship struct
+/*
+Ship.cpp
+CS 202 Final Project: Scrolling Space Shooter
+Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
+Created: 12/4/2017
+Last Updated: 27/04/2017
+Header for ship struct
+*/
 
 #ifndef SHIP_H
 #define SHIP_H
@@ -44,10 +45,6 @@ struct Ship : public ShipShape
     Photon* photonCannon(); //Creates a photon at the ships position
     Bullet* laser(); //Creates a bullet at the ships position
 
-    // Weapon reload bars
-	ReloadBar _photonReloadBar;
-	ReloadBar _laserReloadBar;
-
     // Reload values
 	// !!!NTF: Put these in some sort of struct along with the weapon functions
     int _laserReloadTime;
@@ -58,6 +55,10 @@ struct Ship : public ShipShape
     int _photonReloadCounter;
     int _playerScore;
     bool _hasDoubleLaser;
+
+    // Weapon reload bars
+	ReloadBar _photonReloadBar;
+	ReloadBar _laserReloadBar;
 
     //Health
     float _health;
