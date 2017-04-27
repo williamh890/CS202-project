@@ -49,8 +49,6 @@ Ship::Ship() : ShipShape(),
     _laserSound.setBuffer(_laserBuffer);
     load_buffer(_photonBuffer,"resources/sound/photonSound.wav");
     _photonSound.setBuffer(_photonBuffer);
-    load_buffer(_explosionBuffer, "resources/sound/explosionSound.wav");
-    _explosionSound.setBuffer(_explosionBuffer);
 
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
     _playerIsDead = false;

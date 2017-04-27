@@ -229,9 +229,6 @@ World::World() : Screens(),
     _bgSound.setLoop(true);
     _bgSound.setPitch(.7);
     _bgSound.play();
-    //gameover sound object
-    load_buffer(_gameOverBuffer,"resources/sound/gameOverSound.wav");
-    _gameOverSound.setBuffer(_gameOverBuffer);
 }
 //Cleans up all the memory
 World::~World(){
@@ -292,7 +289,6 @@ void World::show(sf::RenderWindow &gameScreen){
     }
     if (_playerShip._playerIsDead) {
         _bgSound.stop();
-        _gameOverSound.play();
     }
 }
 
