@@ -20,6 +20,7 @@ using sf::Color;
 using sf::Vector2;
 using sf::Keyboard;
 using sf::CircleShape;
+#include <SFML/Audio.hpp>
 #include <vector>
 using std::vector;
 #include <iostream>
@@ -255,8 +256,16 @@ void World::updateEnemies()
 // Constructor
 World::World() : Screens(),
                  _playerShip(Ship())
+
+
 {
     populateInitialStars();
+    //bg sound object
+    load_buffer(_bgBuffer,"resources/sound/bgMusic.wav");
+    _bgSound.setBuffer(_bgBuffer);
+    _bgSound.setLoop(true);
+    _bgSound.setPitch(0.7F);
+    _bgSound.play();
 }
 
 // Cleans up all the memory
@@ -325,13 +334,15 @@ void World::show(sf::RenderWindow &gameScreen)
         gameScreen.draw(_playerShip._laserReloadBar._currentHealthBar);
         gameScreen.draw(_playerShip._laserReloadBar._maxHealthBar);
     }
+    if (_playerShip._playerIsDead) {
+        _bgSound.stop();
+    }
 }
 
 // Game window
 int World::Run(sf::RenderWindow &gameScreen)
 {
     sf::Event event;
-
 	// Game loop
     while(true)
 	{
