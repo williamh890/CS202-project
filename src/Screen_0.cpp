@@ -114,12 +114,12 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu)
 				{
                     menuSelect = 0;
                 }
-                
+
 				if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) >= detectionThreshold / 2)
 				{
                     menuSelect = 1;
                 }
-                
+
 				// If the right trigger is pushed on top menu item
 				if (sf::Joystick::isButtonPressed(0, A) && menuSelect == 0)
 				{

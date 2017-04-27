@@ -23,7 +23,7 @@ int main()
 {
     // Vector of screens, holds all game screens
     std::vector<Screens*> screens;
-    
+
 	// Manages which screen to run; -1 indicates close status
     int screenSelect=0;
 
@@ -37,10 +37,12 @@ int main()
     // Make main menu
     MenuScreen ms;
     screens.push_back(&ms);
-    
+
 	// Make game world
     World gw;
     screens.push_back(&gw);
+
+    //make game over screen
     GameOverScreen go;
     screens.push_back(&go);
 
@@ -49,7 +51,7 @@ int main()
 	{
         screenSelect = screens[screenSelect]->Run(App);
     }
-    
+
 	// Return value set but should not happen
     return 0;
 }

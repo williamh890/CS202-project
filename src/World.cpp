@@ -365,5 +365,9 @@ int World::Run(sf::RenderWindow &gameScreen)
         World::update();
         World::show(gameScreen);
         gameScreen.display();
+
+        //pause if game loses focus
+	    if(!gameScreen.hasFocus())
+            return 0;
     }
 }
