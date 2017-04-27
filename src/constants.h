@@ -36,7 +36,7 @@ const float SHIP_RADIUS = 20.0F;
 const float SHIP_DRAG = 0.92F;
 const float MAX_SPEED = 8.0F;
 const float STARTING_HP = 25.0F;
-const float SWITCH_THRESHHOLD = 5.0F;
+const float SWITCH_THRESHHOLD = 6.5F;
 
 // Health bar dimensions
 const float HP_BAR_LEN = 160.0F;
@@ -101,6 +101,7 @@ const int FOLLOWER_TARGET_SWITCH = 40;
 // Bullet _source values
 enum ID {PLAYER, ENEMY};
 
+enum PowerupTypes {LIFE_UP, RELOAD_UP};
 //For bound checking
 enum bounds {RIGHT, LEFT, UPPER, LOWER,EMPTY};
 
