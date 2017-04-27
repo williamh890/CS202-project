@@ -51,6 +51,8 @@ Ship::Ship() : ShipShape(),
     //Load ship sound files
     load_buffer(_laserSoundBuffer, "resources/sound/laserSound.wav");
     _laserSound.setBuffer(_laserSoundBuffer);
+    //set the laser pitch MUCH lower for our sanity
+    _laserSound.setPitch(.5);
     load_buffer(_photonSoundBuffer,"resources/sound/photonSound.wav");
     _photonSound.setBuffer(_photonSoundBuffer);
     load_buffer(_healSoundBuffer, "resources/sound/healSound.wav");
