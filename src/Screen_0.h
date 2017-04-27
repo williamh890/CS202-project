@@ -16,6 +16,6 @@ public:
     virtual int Run(sf::RenderWindow &) override;
 };
 
-void initialDraw(sf::RenderWindow &, bool);
+void menuDraw(sf::RenderWindow &, bool);
 
 #endif // SCREEN0_H_INCLUDED

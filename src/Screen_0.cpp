@@ -4,7 +4,7 @@ Created: 17/4/2017
 Updated: 26/4/2017
 Screen_0 is the game menu screen.*/
 
-#include <iostream>
+//#include <iostream>
 #include "Screen_0.h"
 
 // GameMenu Constants
@@ -14,7 +14,7 @@ sf::CircleShape shape;
 sf::CircleShape shape2;
 
 // Initial Menu Setup
-void initialDraw(sf::RenderWindow &gameMenu, bool drawMenu)
+void menuDraw(sf::RenderWindow &gameMenu, bool drawMenu)
 {
     shape.setRadius(50);
     shape.setOrigin(shape.getRadius(),shape.getRadius());
@@ -45,7 +45,7 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu)
         gameMenu.draw(shape);
     }
 
-    if(drawMenu) initialDraw(gameMenu,drawMenu);
+    if(drawMenu) menuDraw(gameMenu,drawMenu);
 
     while(true)
 	{

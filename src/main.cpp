@@ -9,6 +9,7 @@
 #include "constants.h"
 #include "Screens.h"
 #include "Screen_0.h"
+#include "gameover.h"
 #include "World.h"
 #include "Photon.h"
 
@@ -40,6 +41,8 @@ int main()
 	// Make game world
     World gw;
     screens.push_back(&gw);
+    GameOverScreen go;
+    screens.push_back(&go);
 
     // Main game loop
     while(screenSelect>=0)
