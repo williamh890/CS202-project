@@ -108,12 +108,12 @@ Vector2f Enemy::separate(const vector<Enemy*> & enemies)
     // Look through all the enemies
 	for(int e = 0; e < (int)enemies.size(); ++e) {
         Vector2f pos = enemies[e]->getPosition();
-        
+
 		// Find the center of the enemy
         makeCenter(pos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
         float dist = distance(currEnemyPos, pos);
-        
+
 		// Check if the enemy can see the other enemy
         if(dist < _enemyDetectionRadius) {
             Vector2f desired = currEnemyPos - pos;
@@ -356,7 +356,7 @@ Enemy * make_seeker()
                         false);                    // Has a gun
 
     // Determines target
-    std::function<Vector2f(const ShipShape &)> targetSetter = [](const ShipShape &)-> Vector2f{return Vector2f(0,0);};
+    auto targetSetter = [](const ShipShape &){return Vector2f(0,0);};
     seekerTraits.setTarget = targetSetter;
 
 	// Position and velocity
@@ -382,14 +382,14 @@ Enemy * make_wanderer()
                           true);                    // Has a gun
 
 	// Determines target
-    std::function<Vector2f (const ShipShape &)> targetSetter = [](const ShipShape & ship)->Vector2f{return Vector2f(Enemy::rngTargetWidth(Enemy::rng),
-                                                                                                                Enemy::rngTargetHeight(Enemy::rng));};
+    auto targetSetter = [](const ShipShape & ship){return Vector2f(Enemy::rngTargetWidth(Enemy::rng),
+                                                                   Enemy::rngTargetHeight(Enemy::rng));};
     wandererTraits.setTarget = targetSetter;
 
 	// Position and velocity
     Vector2f initPos{Enemy::rngTargetWidth(Enemy::rng), 0};
     Vector2f initVel{0,0};
-    
+
 	// Health
 	int hp = 6;
 
@@ -409,8 +409,8 @@ Enemy * make_follower()
                           true);                  // Has a gun
 
 	// Target
-    std::function<Vector2f (const ShipShape &)> targetSetter = [](const ShipShape & ship)->Vector2f{return Vector2f(ship.getPosition().x,
-                                                                                                                     Enemy::rngFollowerHeight(Enemy::rng));};
+    auto targetSetter = [](const ShipShape & ship){return Vector2f(ship.getPosition().x,
+                                                                   Enemy::rngFollowerHeight(Enemy::rng));};
     followerTraits.setTarget = targetSetter;
 
 	// Position and velocity

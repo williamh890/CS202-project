@@ -47,7 +47,7 @@ void menuDraw(sf::RenderWindow &gameMenu, bool drawMenu){
     exitLabel.setPosition(250, 500);
 
     gameMenu.clear();
-    gameMenu.draw(startLabel);
+    (playing) ? gameMenu.draw(continueLabel) : gameMenu.draw(startLabel);
     gameMenu.draw(exitLabel);
     gameMenu.display();
     drawMenu = false;
