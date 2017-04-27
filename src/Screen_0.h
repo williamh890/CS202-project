@@ -3,7 +3,7 @@ Screens_0.h
 CS 202 Final Project
 Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
 Created: 17/4/2017
-Last Updated: 26/4/2017
+Last Updated: 27/04/2017
 Creates a new derivative class to manage the menu screen, inheriting directly from the Screens class.
 */
 
@@ -13,11 +13,12 @@ Creates a new derivative class to manage the menu screen, inheriting directly fr
 #include "Screens.h"
 #include <SFML/Graphics.hpp>
 
-class MenuScreen : public Screens{
+class MenuScreen : public Screens
+{
 public:
     virtual int Run(sf::RenderWindow &) override;
 };
 
-void initialDraw();
+void menuDraw(sf::RenderWindow &, bool);
 
 #endif // SCREEN0_H_INCLUDED

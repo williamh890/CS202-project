@@ -1,10 +1,10 @@
 /*
 Ship.cpp
-CS 202 Final Project
+CS 202 Final Project: Scrolling Space Shooter
 Team Members: Michael Bilan, Andrew Cummins, Corey Gray, William Horn, Kyle Tam, Cameron Titus
 Created: 12/4/2017
-Last Updated: 26/4/2017
-Ship class
+Last Updated: 27/04/2017
+Header for ship struct
 */
 
 #ifndef SHIP_H
@@ -16,60 +16,70 @@ Ship class
 #include "healthbar.h"
 
 #include <vector>
-
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class World;
 
-struct Ship : public ShipShape{
-    //constructor
-    Ship();
+struct Ship : public ShipShape
+{
+	// Constructor
+	Ship();
 
-    sf::Vector2f vel;
-    sf::Vector2f accel;
-    sf::Texture shipTexture;
-    sf::Clock clock;
-    sf::Time time;
+	// Data members
+	sf::Vector2f _vel;
+	sf::Vector2f _accel;
+	sf::Texture _shipTexture;
+	sf::SoundBuffer _laserSoundBuffer;
+	sf::SoundBuffer _photonSoundBuffer;
+    sf::SoundBuffer _healSoundBuffer;
+    sf::SoundBuffer _powerupSoundBuffer;
+    sf::Sound _photonSound;
+    sf::Sound _laserSound;
+    sf::Sound _healSound;
+    sf::Sound _powerupSound;
+	sf::Clock _clock;
+	sf::Time _time;
 
-    /* weapons */
-    //Creates a photon at the ships position
-    Photon* photonCannon();
-    //Creates a bullet at the ships position
-    Bullet* laser();
+    // Weapons
+    Photon* photonCannon(); //Creates a photon at the ships position
+    Bullet* laser(); //Creates a bullet at the ships position
 
-    /* reload values */ // !!!NTF: Put these in some sort of struct
-                        //         Along with the weapon functions
-    int laserReloadTime;
-    int laserReloadSpeed;
-    int laserReloadCounter;
-    int photonReloadTime;
-    int photonReloadSpeed;
-    int photonReloadCounter;
-    int playerScore;
+    // Reload values
+	// !!!NTF: Put these in some sort of struct along with the weapon functions
+    int _laserReloadTime;
+    int _laserReloadSpeed;
+    int _laserReloadCounter;
+    int _photonReloadTime;
+    int _photonReloadSpeed;
+    int _photonReloadCounter;
+    int _playerScore;
+    bool _hasDoubleLaser;
 
-    ReloadBar photonReloadBar;
-    ReloadBar laserReloadBar;
+    // Weapon reload bars
+	ReloadBar _photonReloadBar;
+	ReloadBar _laserReloadBar;
 
-    /* health */
-    float health;
-    float maxHP;
-    bool playerIsDead;
-    bool isTouchingEnemy;
-    bool inInvincibleFrame;
-    HealthBar hpBar;
+    //Health
+    float _health;
+    float _maxHP;
+    bool _playerIsDead;
+    bool _isTouchingEnemy;
+    bool _inInvincibleFrame;
+    HealthBar _hpBar;
 
-    //Checks if an enemy collides with the ship
+    // Checks if an enemy collides with the ship
     bool checkIntersect(const sf::Shape &e);
     bool checkIntersect(const sf::Sprite &e);
 
-    int bleed;
-    //To id the bullets
-    int sourceID;
+    int _bleed;
 
-    //Respond to keyboard inputs, controls movement and weapons
-    //Modifies the world
+	// To id the bullets
+    int _sourceID;
+
+    // Respond to keyboard inputs, controls movement and weapons
+    // Modifies the world
     void update(World & world);
-
 };
 
 #endif // SHIP_H

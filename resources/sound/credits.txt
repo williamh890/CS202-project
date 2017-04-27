@@ -1,0 +1,6 @@
+bgMusic - Kenny Phoenix
+healSound - noiseforfun magic-whip.wav
+laserSound, photonSound - Andy Cummins
+powerupSound - https://www.freesound.org/people/GameAudio/sounds/220173/
+gameOverSound - http://www.freesound.org/people/noirenex/sounds/159408/ & 
+		http://www.freesound.org/people/irrlicht/sounds/42349/
