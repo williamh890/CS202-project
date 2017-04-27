@@ -38,11 +38,19 @@ Ship::Ship() : ShipShape(),
                _sourceID(PLAYER)
 
 {
+    //ship texture
     load_texture(_shipTexture,"resources/sprites/MiG-51S.png");
     setTexture(_shipTexture);
-
     setScale(.75,.75);
     setTextureRect(sf::IntRect(0,5,57,98));
+
+    //ship sound files
+    load_buffer(_laserBuffer, "resources/sounds/laserSound.wav");
+    _laserSound.setBuffer(_laserBuffer);
+    load_buffer(_photonBuffer,"resources/sounds/photonSound.wav");
+    _photonSound.setBuffer(_photonBuffer);
+    load_buffer(_explosionBuffer, "resources/sounds/explosionSound.wav");
+    _explosionSound.setBuffer(_explosionBuffer);
 
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
     _playerIsDead = false;
@@ -205,6 +213,7 @@ void Ship::update(World & world){
     if((_laserReloadCounter >= _laserReloadTime && Keyboard::isKeyPressed(Keyboard::Space)) ||
        (_laserReloadCounter >= _laserReloadTime && sf::Joystick::getAxisPosition(0,sf::Joystick::Z) < -98)) {
         //Fires a bullet from the player ship
+        _laserSound.play();
         world._bullets.push_back(laser());
     }
     //Add to the reload counter if it's not full
@@ -217,6 +226,7 @@ void Ship::update(World & world){
        _photonReloadCounter >= _photonReloadTime && sf::Joystick::isButtonPressed(0, X)) {
 
         //Shoots a photon
+        _photonSound.play();
         world._photons.push_back(photonCannon());
 
     }
@@ -310,7 +320,7 @@ void Ship::update(World & world){
 
     if(_vel.x < -SWITCH_THRESHHOLD)        setTextureRect(sf::IntRect(70,0,43,99));
     else if (_vel.x > SWITCH_THRESHHOLD)   setTextureRect(sf::IntRect(120,0,43,99));
-    else                setTextureRect(sf::IntRect(0,5,57,98));
+    else                                   setTextureRect(sf::IntRect(0,5,57,98));
 
     //Set the _health bar correctly
     float percentHP = _health / _maxHP;
@@ -326,6 +336,7 @@ void Ship::update(World & world){
 
     if (_playerIsDead) {
         load_texture(_explosionTexture,"resources/sprites/explosionSprite.png");
+        _explosionSound.play();
         setTexture(_explosionTexture);
         setTextureRect(sf::IntRect(0,0,50,45));
             if (_clock.getElapsedTime().asMilliseconds() > 100) setTextureRect(sf::IntRect(0,0,50,45));
