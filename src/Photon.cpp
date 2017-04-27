@@ -1,7 +1,10 @@
-//Asteroid.cpp
-//Auth: William Horn
-//4.12.2017
-//Definitions for Asteroid class
+// Photon.cpp
+// CS 202 Project: Scrolling Space Shooter
+// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
+// Created: 20170412
+// Updated: 20170426
+//
+// Definitions for Photon weapon class
 
 #include "constants.h"
 #include "Photon.h"
@@ -22,17 +25,18 @@ using std::sin;
 
 int hitBoxDiff = 25;
 
-//Ctor
+// Constructor
 Photon::Photon(float radius, unsigned int numVertices) : _vertices(VertexArray(TriangleFan, numVertices)),
                                                          _hitBox(CircleShape(radius - hitBoxDiff, numVertices)),
                                                          _damage(PHOTON_DAMAGE),
                                                          _moveCounter(0)
 {
-    //Center of the circle
+    // Center of the circle
     _vertices[0].position = Vector2<float>(0,0);
     _vertices[0].color = Color(200,200,255);
 
-    for(int v = 1; v < (int)numVertices - 1; ++v){
+	for(int v = 1; v < (int)numVertices - 1; ++v)
+	{
         _vertices[v].position = Vector2<float>(cos((2 * PI * v) / (numVertices - 1)) * radius,
                                               sin((2 * PI * v)/ (numVertices - 1)) * radius);
         _vertices[v].color =  Color(0, 0, 255, 0);
@@ -46,17 +50,21 @@ Photon::Photon(float radius, unsigned int numVertices) : _vertices(VertexArray(T
 
 };
 
-void Photon::setPhotonPosition(float x, float y){
+void Photon::setPhotonPosition(float x, float y)
+{
     this->setPosition(x,y);
     _hitBox.setPosition(x,y);
 }
 
-void Photon::movePhoton(float delX, float delY){
+void Photon::movePhoton(float delX, float delY)
+{
     this->move(delX, delY);
     _hitBox.move(delX, delY);
 }
 
-FloatRect Photon::getGlobalBounds(){
+// Hit box for colliding with targets
+FloatRect Photon::getGlobalBounds()
+{
     return _hitBox.getGlobalBounds();
 }
 
