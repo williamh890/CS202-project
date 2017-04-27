@@ -24,6 +24,7 @@ class World : public Screens {
     public:
         /* Player Ship Object */
         Ship _playerShip;
+        sf::Clock _clock;
 
         /* Main Containers for game entities*/
         std::vector<Bullet*> _bullets;

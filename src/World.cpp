@@ -264,18 +264,19 @@ void World::show(sf::RenderWindow &gameScreen){
     for(const auto & e : _enemies){
         gameScreen.draw(*e);
     }
+
+    gameScreen.draw(_playerShip);
+
     if (!_playerShip._playerIsDead) {
-        gameScreen.draw(_playerShip);
-        //Draw health bar
-        gameScreen.draw(_playerShip._hpBar._currentHealthBar);
-        gameScreen.draw(_playerShip._hpBar._maxHealthBar);
-        //Draw reload bars
-        gameScreen.draw(_playerShip._photonReloadBar._currentHealthBar);
-        gameScreen.draw(_playerShip._photonReloadBar._maxHealthBar);
+    //Draw health bar
+    gameScreen.draw(_playerShip._hpBar._currentHealthBar);
+    gameScreen.draw(_playerShip._hpBar._maxHealthBar);
+    //Draw reload bars
+    gameScreen.draw(_playerShip._photonReloadBar._currentHealthBar);
+    gameScreen.draw(_playerShip._photonReloadBar._maxHealthBar);
 
-        gameScreen.draw(_playerShip._laserReloadBar._currentHealthBar);
-        gameScreen.draw(_playerShip._laserReloadBar._maxHealthBar);
-
+    gameScreen.draw(_playerShip._laserReloadBar._currentHealthBar);
+    gameScreen.draw(_playerShip._laserReloadBar._maxHealthBar);
     }
 }
 

@@ -24,8 +24,10 @@ struct Ship : public ShipShape{
     sf::Vector2f _vel;
     sf::Vector2f _accel;
     sf::Texture _shipTexture;
+    sf::Texture _explosionTexture;
     sf::Clock _clock;
     sf::Time _time;
+
 
     /* weapons */
     //Creates a photon at the ships position

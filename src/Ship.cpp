@@ -271,7 +271,6 @@ void Ship::update(World & world){
 
             if (_health <= 0) {
                 _playerIsDead=true;
-                break;
             }
         }
     }
@@ -299,7 +298,6 @@ void Ship::update(World & world){
                 //If yr dead...
                 if (_health <= 0) {
                     _playerIsDead=true;
-                    break;
                 }
 
 
@@ -326,6 +324,18 @@ void Ship::update(World & world){
     if(percentPhotonReload >= 1) percentPhotonReload = 1.0F;
     _photonReloadBar.setCurrVertical(percentPhotonReload);
 
-
+    if (_playerIsDead) {
+        load_texture(_explosionTexture,"resources/sprites/explosionSprite.png");
+        setTexture(_explosionTexture);
+        setTextureRect(sf::IntRect(0,0,50,45));
+            if (_clock.getElapsedTime().asMilliseconds() > 100) setTextureRect(sf::IntRect(0,0,50,45));
+            if (_clock.getElapsedTime().asMilliseconds() > 200) setTextureRect(sf::IntRect(50,0,50,45));
+            if (_clock.getElapsedTime().asMilliseconds() > 300) setTextureRect(sf::IntRect(100,0,50,45));
+            if (_clock.getElapsedTime().asMilliseconds() > 400) setTextureRect(sf::IntRect(150,0,50,45));
+            if (_clock.getElapsedTime().asMilliseconds() > 500) setTextureRect(sf::IntRect(0,50,50,45));
+            if (_clock.getElapsedTime().asMilliseconds() > 600) setTextureRect(sf::IntRect(0,100,50,45));
+            if (_clock.getElapsedTime().asMilliseconds() > 700) setTextureRect(sf::IntRect(0,150,50,45));
+            if (_clock.getElapsedTime().asMilliseconds() > 800) setTextureRect(sf::IntRect(0,200,50,45));
+        }
 
 }
