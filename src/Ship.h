@@ -1,7 +1,10 @@
-//Ship.h
-//Auth : William Horn
-//4.12.2017
-//Header for ship class
+// Ship.h
+// CS 202 Project: Scrolling Space Shooter
+// Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
+// Created: 20170412
+// Updated: 20170426
+//
+// Header for ship struct
 
 #ifndef SHIP_H
 #define SHIP_H
@@ -12,29 +15,32 @@
 #include "healthbar.h"
 
 #include <vector>
-
 #include <SFML/Graphics.hpp>
 
 class World;
 
-struct Ship : public ShipShape{
-    //constructor
-    Ship();
+struct Ship : public ShipShape
+{
+	// Constructor
+	Ship();
 
-    sf::Vector2f _vel;
-    sf::Vector2f _accel;
-    sf::Texture _shipTexture;
-    sf::Clock _clock;
-    sf::Time _time;
+	// Data members
+	sf::Vector2f _vel;
+	sf::Vector2f _accel;
+	sf::Texture _shipTexture;
+	sf::Clock _clock;
+	sf::Time _time;
 
-    /* weapons */
-    //Creates a photon at the ships position
-    Photon* photonCannon();
-    //Creates a bullet at the ships position
-    Bullet* laser();
+    // Weapons
+    Photon* photonCannon(); //Creates a photon at the ships position
+    Bullet* laser(); //Creates a bullet at the ships position
 
-    /* reload values */ // !!!NTF: Put these in some sort of struct
-                        //         Along with the weapon functions
+    // Weapon reload bars
+	ReloadBar _photonReloadBar;
+	ReloadBar _laserReloadBar;
+
+    // Reload values
+	// !!!NTF: Put these in some sort of struct along with the weapon functions
     int _laserReloadTime;
     int _laserReloadSpeed;
     int _laserReloadCounter;
@@ -43,10 +49,7 @@ struct Ship : public ShipShape{
     int _photonReloadCounter;
     int _playerScore;
 
-    ReloadBar _photonReloadBar;
-    ReloadBar _laserReloadBar;
-
-    /* health */
+    //Health
     float _health;
     float _maxHP;
     bool _playerIsDead;
@@ -54,18 +57,18 @@ struct Ship : public ShipShape{
     bool _inInvincibleFrame;
     HealthBar _hpBar;
 
-    //Checks if an enemy collides with the ship
+    // Checks if an enemy collides with the ship
     bool checkIntersect(const sf::Shape &e);
     bool checkIntersect(const sf::Sprite &e);
 
     int _bleed;
-    //To id the bullets
+    
+	// To id the bullets
     int _sourceID;
 
-    //Respond to keyboard inputs, controls movement and weapons
-    //Modifies the world
+    // Respond to keyboard inputs, controls movement and weapons
+    // Modifies the world
     void update(World & world);
-
 };
 
 #endif // SHIP_H
