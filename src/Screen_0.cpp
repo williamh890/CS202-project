@@ -9,7 +9,6 @@ Screen_0 is the game menu screen.*/
 #include "constants.h"
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <string>
 using std::string;
 
@@ -19,33 +18,31 @@ bool playing = false;
 sf::CircleShape shape;
 sf::CircleShape shape2;
 
+// Menu item textures
 string labelFilePath = "resources/sprites/LABELS.png";
 sf::Texture labelTexture;
 sf::Sprite startLabel;
 sf::Sprite continueLabel;
 sf::Sprite exitLabel;
 
-//Initial Menu Setup
-void initialDraw(sf::RenderWindow &gameMenu, bool drawMenu){
+// Initial Menu Setup
+void menuDraw(sf::RenderWindow &gameMenu, bool drawMenu){
     load_texture(labelTexture, labelFilePath);
 
     startLabel.setTexture(labelTexture);
     startLabel.setTextureRect(sf::IntRect(160,0, 114,63));
     startLabel.setOrigin(160 / 2. - 23, 63 / 2.0);
     startLabel.setPosition(250,200);
-    //startLabel.setScale(1.5F, 1.5);
 
     continueLabel.setTexture(labelTexture);
     continueLabel.setTextureRect(sf::IntRect(454, 0, 147, 63));
     continueLabel.setOrigin(147 / 2., 63 / 2.);
     continueLabel.setPosition(250,200);
-    //continueLabel.setScale(1.5F, 1.5);
 
     exitLabel.setTexture(labelTexture);
     exitLabel.setTextureRect(sf::IntRect(370, 0, 74, 63));
     exitLabel.setOrigin(74 / 2.0, 63 / 2.0);
     exitLabel.setPosition(250, 500);
-    //exitLabel.setScale(1.5F, 1.5);
 
     gameMenu.clear();
     gameMenu.draw(startLabel);
@@ -66,7 +63,7 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu)
         gameMenu.draw(shape);
     }
 
-    if(drawMenu) initialDraw(gameMenu,drawMenu);
+    if(drawMenu) menuDraw(gameMenu,drawMenu);
 
     while(true)
 	{
@@ -76,7 +73,7 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu)
             // Check if window has been closed
             if (event.type == sf::Event::Closed) return -1;
 
-			//Check for key presses
+			// Check for key presses
             if(event.type == sf::Event::KeyPressed)
 			{
                 switch (event.key.code)
@@ -107,28 +104,38 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu)
                         break;
                 }
             }
-            //Use the joystick to check the input
-            int detectionThreshold = 98;
-            if(sf::Joystick::isConnected(0)){
-                //If the joystick is pressed halfway up just select
-                if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) <= -detectionThreshold / 2) {
-                    menuSelect = 0;
-                    //If the right trigger is pushed
 
+            // Use the joystick to check the input
+            int detectionThreshold = 98;
+            if(sf::Joystick::isConnected(0))
+			{
+                // If the joystick is pressed halfway up just select
+                if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) <= -detectionThreshold / 2)
+				{
+                    menuSelect = 0;
                 }
-                if (sf::Joystick::isButtonPressed(0, A) && menuSelect == 0){
-                            playing=true;
-                            return 1; //starts game
-                    }
-                if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) >= detectionThreshold / 2) {
+                
+				if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) >= detectionThreshold / 2)
+				{
                     menuSelect = 1;
                 }
-                if (sf::Joystick::isButtonPressed(0, A) && menuSelect == 1) {
+                
+				// If the right trigger is pushed on top menu item
+				if (sf::Joystick::isButtonPressed(0, A) && menuSelect == 0)
+				{
+					playing = true;
+					return 1; //starts game
+				}
+
+				// If the right trigger is pushed on bottom menu item
+				if (sf::Joystick::isButtonPressed(0, A) && menuSelect == 1)
+				{
                         return -1;
                 }
 
             }
-            //update menu text colors based on selection
+
+            // Update menu text colors based on selection
             const int EXIT_SELECTED = 1;
             const int START_SELECTED = 0;
 

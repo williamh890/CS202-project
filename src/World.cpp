@@ -344,6 +344,7 @@ int World::Run(sf::RenderWindow &gameScreen)
                 if(event.key.code == sf::Keyboard::Escape) return 0;
 
             }
+             if(_playerShip._playerIsDead==true) return 2;
         }
         //If start button is pressed go to the pause menu
         if(sf::Joystick::isButtonPressed(0, START)) return 0;

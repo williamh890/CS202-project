@@ -9,6 +9,7 @@
 #include "Ship.h"
 #include "World.h"
 #include "healthbar.h"
+#include "gameover.h"
 #include "Loader.h"
 
 #include <SFML/Graphics.hpp>
@@ -353,9 +354,7 @@ void Ship::update(World & world)
 
 			// Check if the damage killed the player
             if (_health <= 0)
-			{
                 _playerIsDead=true;
-            }
         }
     }
 
