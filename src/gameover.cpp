@@ -16,19 +16,16 @@ extern const float WIDTH;
 extern const float HEIGHT;
 extern bool playerIsDead;
 bool drawGameOver=true;
-sf::Texture * gameOverTexture;
-sf::RectangleShape TextBox;
+sf::Texture gameOverTexture;
+sf::Sprite TextBox;
 
 
 void initalDraw(sf::RenderWindow & gameMenu, bool drawGameOver){
 
-    TextBox.setSize(sf::Vector2f(WIDTH,HEIGHT));
     TextBox.setPosition(0,0);
-    load_texture(*gameOverTexture, "resources/sprites/GAME_OVER.png");
-    TextBox.setTexture(gameOverTexture,true);
+    load_texture(gameOverTexture, "resources/sprites/GAME_OVER.png");
+    TextBox.setTexture(gameOverTexture);
     TextBox.setTextureRect(sf::IntRect(0,0,WIDTH,HEIGHT));
-
-
 
     gameMenu.clear();
     gameMenu.draw(TextBox);
