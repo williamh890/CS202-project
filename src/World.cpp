@@ -274,7 +274,9 @@ int World::Run(sf::RenderWindow &gameScreen){
             if(event.type == sf::Event::Closed) return -1;
             if(event.type == sf::Event::KeyPressed){
                 if(event.key.code == sf::Keyboard::Escape) return 0;
+
             }
+             if(playerShip.playerIsDead==true) return 2;
         }
         gameScreen.clear();
         World::update();
