@@ -1,4 +1,4 @@
-// Enemy.cpp
+// healthbar.cpp
 // CS 202 Project: Scrolling Space Shooter
 // Team Members: William Horn, Corey Gray, Michael Bilan, Cameron Titus, Kyle Tam, Andrew Cummins
 // Created: 20170412
