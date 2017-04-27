@@ -293,9 +293,6 @@ void World::show(sf::RenderWindow &gameScreen){
     if (_playerShip._playerIsDead) {
         _bgSound.stop();
         _gameOverSound.play();
-        if (_clock.getElapsedTime().asSeconds() > 10) {
-            gameScreen.clear();
-        }
     }
 }
 

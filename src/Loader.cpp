@@ -1,6 +1,7 @@
 #include "Loader.h"
 
 #include <fstream>
+#include <stdexcept>
 
 bool load_texture(sf::Texture& tex,const std::string& filename)
 {
@@ -9,7 +10,7 @@ bool load_texture(sf::Texture& tex,const std::string& filename)
 	istr.unsetf(std::ios_base::skipws);
 
 	if(!istr)
-		return false;
+        throw std::runtime_error("Couldn't open file \""+filename+"\".");
 
 	std::string data="";
 
@@ -28,7 +29,7 @@ bool load_font(sf::Font& tex,const std::string& filename)
 	istr.unsetf(std::ios_base::skipws);
 
 	if(!istr)
-		return false;
+        throw std::runtime_error("Couldn't open file \""+filename+"\".");
 
 	std::string data="";
 
@@ -47,7 +48,7 @@ bool load_buffer(sf::SoundBuffer& soundBuffer,const std::string& filename)
 	istr.unsetf(std::ios_base::skipws);
 
 	if(!istr)
-		return false;
+        throw std::runtime_error("Couldn't open file \""+filename+"\".");
 
 	std::string data="";
 

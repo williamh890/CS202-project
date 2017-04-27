@@ -45,11 +45,11 @@ Ship::Ship() : ShipShape(),
     setTextureRect(sf::IntRect(0,5,57,98));
 
     //ship sound files
-    load_buffer(_laserBuffer, "resources/sounds/laserSound.wav");
+    load_buffer(_laserBuffer, "resources/sound/laserSound.wav");
     _laserSound.setBuffer(_laserBuffer);
-    load_buffer(_photonBuffer,"resources/sounds/photonSound.wav");
+    load_buffer(_photonBuffer,"resources/sound/photonSound.wav");
     _photonSound.setBuffer(_photonBuffer);
-    load_buffer(_explosionBuffer, "resources/sounds/explosionSound.wav");
+    load_buffer(_explosionBuffer, "resources/sound/explosionSound.wav");
     _explosionSound.setBuffer(_explosionBuffer);
 
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
@@ -336,7 +336,6 @@ void Ship::update(World & world){
 
     if (_playerIsDead) {
         load_texture(_explosionTexture,"resources/sprites/explosionSprite.png");
-        _explosionSound.play();
         setTexture(_explosionTexture);
         setTextureRect(sf::IntRect(0,0,50,45));
             if (_clock.getElapsedTime().asMilliseconds() > 100) setTextureRect(sf::IntRect(0,0,50,45));
