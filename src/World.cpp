@@ -264,7 +264,6 @@ World::World() : Screens(),
     load_buffer(_bgBuffer,"resources/sound/bgMusic.wav");
     _bgSound.setBuffer(_bgBuffer);
     _bgSound.setLoop(true);
-    _bgSound.setPitch(.7);
     _bgSound.play();
 }
 
@@ -287,11 +286,19 @@ World::~World()
 // Updates all the entities in the game world
 void World::update()
 {
+    //these values are stored for the dynamic pitch change
+    static float previousShipHealth = _playerShip._health;
+    static float basePitch = _bgSound.getPitch();
     _playerShip.update(*this);
     updateStars();
     updateBullets();
     updatePhotons();
     updateEnemies();
+    //This dynamically scales the pitch of the bg song to the percentage of the players health
+    if (_playerShip._health != previousShipHealth) {
+    _bgSound.setPitch(basePitch * ((1+(_playerShip._maxHP-_playerShip._health)/(_playerShip._maxHP*5))));
+    previousShipHealth = _playerShip._health;
+    }
 }
 
 // Draws all the entities to the sfml window
@@ -314,9 +321,7 @@ void World::show(sf::RenderWindow &gameScreen)
     for(const auto & u : _powerups)
         gameScreen.draw(*u);
 
-
     gameScreen.draw(_playerShip);
-
     if (!_playerShip._playerIsDead)
 	{
         // Draw ship
