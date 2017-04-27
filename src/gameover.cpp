@@ -9,19 +9,26 @@
 
 
 #include <SFML/Graphics.hpp>
+#include "Loader.h"
 
 
 extern const float WIDTH;
 extern const float HEIGHT;
 extern bool playerIsDead;
 bool drawGameOver=true;
-
+sf::Texture * gameOverTexture;
 sf::RectangleShape TextBox;
 
+
 void initalDraw(sf::RenderWindow & gameMenu, bool drawGameOver){
-    TextBox.setFillColor(sf::Color::Red);
-    TextBox.setSize(sf::Vector2f(400,200));
-    TextBox.setPosition(50,HEIGHT/2.0);
+
+    TextBox.setSize(sf::Vector2f(WIDTH,HEIGHT));
+    TextBox.setPosition(0,0);
+    load_texture(*gameOverTexture, "resources/sprites/GAME_OVER.png");
+    TextBox.setTexture(gameOverTexture,true);
+    TextBox.setTextureRect(sf::IntRect(0,0,WIDTH,HEIGHT));
+
+
 
     gameMenu.clear();
     gameMenu.draw(TextBox);

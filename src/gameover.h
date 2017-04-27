@@ -9,6 +9,8 @@
 
 class GameOverScreen: public Screens{
 public:
+
     virtual int Run(sf::RenderWindow &) override;
+
 };
 void initalDraw();
