@@ -10,11 +10,12 @@ Screen_0 inherits from the Screens.h virtual class; it is an object that control
 #include "Screens.h"
 #include <SFML/Graphics.hpp>
 
-class MenuScreen : public Screens{
+class MenuScreen : public Screens
+{
 public:
     virtual int Run(sf::RenderWindow &) override;
 };
 
-void initialDraw();
+void initialDraw(sf::RenderWindow &, bool);
 
 #endif // SCREEN0_H_INCLUDED
