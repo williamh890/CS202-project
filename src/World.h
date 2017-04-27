@@ -15,6 +15,7 @@
 #include "Photon.h"
 #include "Ship.h"
 #include "Screens.h"
+#include "powerup.h"
 
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -29,12 +30,14 @@ class World : public Screens
 
         // Player Ship Object
         Ship _playerShip;
+        sf::Clock _clock;
 
         // Main Containers for game entities
         std::vector<Bullet*> _bullets;
         std::vector<Photon*> _photons;
         std::vector<StarShape*> _stars;
         std::vector<Enemy*> _enemies;
+        std::vector<Powerup*> _powerups;
 
 		// Utility functions for photons
         void updatePhotons();
@@ -50,7 +53,6 @@ class World : public Screens
         void updateStars();
 
         // Utility Functions for player ship
-        void updateShip();
         std::vector<bounds> onBound(const Ship & playerShip);
 
 		// Utility functions for enemies
@@ -70,8 +72,12 @@ class World : public Screens
         static std::uniform_real_distribution<float> enemyStartingVel;
         static std::uniform_real_distribution<float> optimalPlayerDist;
 
+        static std::uniform_real_distribution<float> randomWidht;
+        static std::uniform_real_distribution<float> randomHeight;
+
         static std::uniform_int_distribution<int> starBrightness;
         static std::uniform_int_distribution<int> randomInt;
+        static std::uniform_int_distribution<int> randomSplitNumber;
 };
 
 #endif // WORLD_H

@@ -4,8 +4,13 @@ Created: 17/4/2017
 Updated: 26/4/2017
 Screen_0 is the game menu screen.*/
 
-//#include <iostream>
 #include "Screen_0.h"
+#include "Loader.h"
+#include "constants.h"
+
+#include <SFML/Graphics.hpp>
+#include <string>
+using std::string;
 
 // GameMenu Constants
 bool drawMenu = true;
@@ -13,22 +18,35 @@ bool playing = false;
 sf::CircleShape shape;
 sf::CircleShape shape2;
 
-// Initial Menu Setup
-void menuDraw(sf::RenderWindow &gameMenu, bool drawMenu)
-{
-    shape.setRadius(50);
-    shape.setOrigin(shape.getRadius(),shape.getRadius());
-    shape.setPosition(250, 200);
-    shape.setFillColor(sf::Color::Green);
+// Menu item textures
+string labelFilePath = "resources/sprites/LABELS.png";
+sf::Texture labelTexture;
+sf::Sprite startLabel;
+sf::Sprite continueLabel;
+sf::Sprite exitLabel;
 
-    shape2.setRadius(50);
-    shape2.setOrigin(shape2.getRadius(),shape2.getRadius());
-    shape2.setPosition(250,500);
-    shape2.setFillColor(sf::Color::Red);
+// Initial Menu Setup
+void menuDraw(sf::RenderWindow &gameMenu, bool drawMenu){
+    load_texture(labelTexture, labelFilePath);
+
+    startLabel.setTexture(labelTexture);
+    startLabel.setTextureRect(sf::IntRect(160,0, 114,63));
+    startLabel.setOrigin(160 / 2. - 23, 63 / 2.0);
+    startLabel.setPosition(250,200);
+
+    continueLabel.setTexture(labelTexture);
+    continueLabel.setTextureRect(sf::IntRect(454, 0, 147, 63));
+    continueLabel.setOrigin(147 / 2., 63 / 2.);
+    continueLabel.setPosition(250,200);
+
+    exitLabel.setTexture(labelTexture);
+    exitLabel.setTextureRect(sf::IntRect(370, 0, 74, 63));
+    exitLabel.setOrigin(74 / 2.0, 63 / 2.0);
+    exitLabel.setPosition(250, 500);
 
     gameMenu.clear();
-    gameMenu.draw(shape);
-    gameMenu.draw(shape2);
+    gameMenu.draw(startLabel);
+    gameMenu.draw(exitLabel);
     gameMenu.display();
     drawMenu = false;
 }
@@ -54,8 +72,8 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu)
 		{
             // Check if window has been closed
             if (event.type == sf::Event::Closed) return -1;
-            
-			//Check for key presses
+
+			// Check for key presses
             if(event.type == sf::Event::KeyPressed)
 			{
                 switch (event.key.code)
@@ -63,12 +81,12 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu)
                     case sf::Keyboard::Up:
                         menuSelect=0;
                         break;
-                    
+
 					case sf::Keyboard::Down:
                         menuSelect=1;
                         drawMenu = true;
                         break;
-                    
+
 					case sf::Keyboard::Return:
                         if (menuSelect==0)
 						{
@@ -77,55 +95,72 @@ int MenuScreen::Run(sf::RenderWindow &gameMenu)
                         }
                         else if (menuSelect==1) return -1;
                         break;
-                    
+
 					case sf::Keyboard::Escape:
                             return -1;
-                    
+
 					default:
                         menuSelect=-1; // All other keys clear selection
                         break;
                 }
             }
-            
-			// Update menu text colors based on selection
-            if(menuSelect==0)
+
+            // Use the joystick to check the input
+            int detectionThreshold = 98;
+            if(sf::Joystick::isConnected(0))
 			{
-                shape.setFillColor(sf::Color::Blue);
-                shape2.setFillColor(sf::Color::Red);
+                // If the joystick is pressed halfway up just select
+                if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) <= -detectionThreshold / 2)
+				{
+                    menuSelect = 0;
+                }
+                
+				if(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) >= detectionThreshold / 2)
+				{
+                    menuSelect = 1;
+                }
+                
+				// If the right trigger is pushed on top menu item
+				if (sf::Joystick::isButtonPressed(0, A) && menuSelect == 0)
+				{
+					playing = true;
+					return 1; //starts game
+				}
+
+				// If the right trigger is pushed on bottom menu item
+				if (sf::Joystick::isButtonPressed(0, A) && menuSelect == 1)
+				{
+                        return -1;
+                }
+
             }
-            
-			else if (menuSelect==1)
-			{
-                if(playing)
-                    shape.setFillColor(sf::Color::Cyan);
-                
-				else
-                    shape.setFillColor(sf::Color::Green);
-                
-				shape2.setFillColor(sf::Color::Blue);
+
+            // Update menu text colors based on selection
+            const int EXIT_SELECTED = 1;
+            const int START_SELECTED = 0;
+
+            if(menuSelect==START_SELECTED)
+            {
+                (playing) ? continueLabel.setColor(sf::Color::Red) : startLabel.setColor(sf::Color::Red);
+                exitLabel.setColor(sf::Color::White);
             }
-            
-			else
-			{
-                if(playing)
-                    shape.setFillColor(sf::Color::Cyan);
-            
-				else
-                    shape.setFillColor(sf::Color::Green);
-                
-				shape2.setFillColor(sf::Color::Red);
+            else if (menuSelect==EXIT_SELECTED)
+            {
+                exitLabel.setColor(sf::Color::Red);
+                (playing) ? continueLabel.setColor(sf::Color::White) : startLabel.setColor(sf::Color::White);
+            }
+            else
+            {
+                (playing) ? continueLabel.setColor(sf::Color::White) : startLabel.setColor(sf::Color::White);
+                exitLabel.setColor(sf::Color::White);
             }
 
             // Clears the screen
             gameMenu.clear();
 
-            //draw text menu - WON'T WORK UNTIL FONT IMPORTS WORK
-            /*gameMenu.draw(menu1);
-            gameMenu.draw(menu2);*/
-
-            // Display the screen
-            gameMenu.draw(shape);
-            gameMenu.draw(shape2);
+            //display the screen
+            (playing) ? gameMenu.draw(continueLabel) : gameMenu.draw(startLabel);
+            gameMenu.draw(exitLabel);
             gameMenu.display();
         }
     }

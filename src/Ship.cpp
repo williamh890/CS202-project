@@ -50,7 +50,7 @@ Ship::Ship() : ShipShape(),
 
 	// Starting position
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
-    
+
 	// Starting health and invincibility
 	_playerIsDead = false;
     _isTouchingEnemy = false;
@@ -63,13 +63,16 @@ Ship::Ship() : ShipShape(),
 	_hpBar.setCurrentHealthBar(1.0);
     _photonReloadBar.setCurrentHealthBar(1.0);
     _laserReloadBar.setCurrentHealthBar(1.0);
+
+    _hasDoubleLaser = false;
+
 	_photonReloadBar._currentHealthBar.rotate(180);
     _laserReloadBar._currentHealthBar.rotate(180);
 
     // Changes the position of the laser reload bars
     _laserReloadBar._currentHealthBar.setPosition(Vector2f(reloadBarBuffer + RELOAD_BAR_HEIGHT, HEIGHT - reloadBarBuffer));
     _laserReloadBar._maxHealthBar.setPosition(Vector2f(reloadBarBuffer, HEIGHT - reloadBarBuffer - RELOAD_BAR_WIDTH));
-	_laserReloadBar._currentHealthBar.setFillColor(Color(244, 163, 65)); 
+	_laserReloadBar._currentHealthBar.setFillColor(Color(244, 163, 65));
 	_laserReloadBar._maxHealthBar.setOutlineThickness(2);
 
 	// Changes the position of the photon reload bar
@@ -112,7 +115,7 @@ Photon* Ship::photonCannon()
 	// Gets the ship's x/y coordinates
 	float X = getPosition().x + 0.7F*SHIP_RADIUS;
 	float Y = getPosition().y - 0.7F*SHIP_RADIUS;
-	
+
 	// Creates a photon
 	Photon* newPhoton = new Photon{PHOTON_RADIUS};
 	newPhoton->setPhotonPosition(X, Y);
@@ -138,7 +141,7 @@ void Ship::update(World & world)
 	{
         if(sf::Joystick::isConnected(0))
            xAccel = (float)-PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / -100);
-        
+
 		else
             xAccel = -PLAYER_X_ACCEL;
 
@@ -152,10 +155,10 @@ void Ship::update(World & world)
 	{
         if(sf::Joystick::isConnected(0))
             xAccel = (float)PLAYER_X_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::X) / 100);
-        
+
 		else
             xAccel = PLAYER_X_ACCEL;
-        
+
 		_accel += Vector2f(xAccel, 0);
     }
 
@@ -166,10 +169,10 @@ void Ship::update(World & world)
 	{
         if(sf::Joystick::isConnected(0))
             yAccel = (float)-PLAYER_Y_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) / -100);
-        
+
 		else
             yAccel = -PLAYER_Y_ACCEL;
-        
+
 		_accel += Vector2f(0, yAccel);
     }
 
@@ -180,13 +183,13 @@ void Ship::update(World & world)
 	{
             if(sf::Joystick::isConnected(0))
                 yAccel = (float)PLAYER_Y_ACCEL*(sf::Joystick::getAxisPosition(0,sf::Joystick::Y) / 100);
-            
+
 			else
                 yAccel = PLAYER_Y_ACCEL;
-            
+
 			_accel += Vector2f(0, yAccel);
     }
-    
+
 	// Add the acceleration to the _velocity
     _vel += _accel;
 	_accel *= (float)0;
@@ -195,17 +198,17 @@ void Ship::update(World & world)
     _vel *= (float)SHIP_DRAG;
 
     float velocityMag = sqrt(_vel.y * _vel.y + _vel.x * _vel.x);
-    
+
 	// Checks if going faster then the max speed
     if(velocityMag >= MAX_SPEED)
 	{
         // Normalize
         _vel /= (float)velocityMag;
-        
+
 		// Scale to the max speed
         _vel *= (float)MAX_SPEED;
     }
-    
+
 	// Stops the ship from going off the right edge
     if(world.onBound(*this)[0] == RIGHT)
 	{
@@ -245,29 +248,57 @@ void Ship::update(World & world)
         }
     }
 
-    // Laser
-    // Fires if the reload counter is full and the button is pressed
-    if((_laserReloadCounter >= _laserReloadTime && Keyboard::isKeyPressed(Keyboard::Space)) || // Keyboard
-       (_laserReloadCounter >= _laserReloadTime && sf::Joystick::getAxisPosition(0,sf::Joystick::Z) < -98)) // Game controller
-	{
-        world._bullets.push_back(laser());
-    }
 
+    /////////////////weapons and enemies////////////////
+
+    //if the reload counter is full and the button is pressed
+    if(((_laserReloadCounter >= _laserReloadTime) && (Keyboard::isKeyPressed(Keyboard::Space))) ||
+       ((_laserReloadCounter >= _laserReloadTime) && (sf::Joystick::getAxisPosition(0,sf::Joystick::Z) < -98)))
+    {
+        //Fires a bullet from the player ship
+        if(!_hasDoubleLaser)
+        {
+            world._bullets.push_back(laser());
+        }
+        else
+        { //HAS DOUBLE LASER!!!
+            Bullet * bullet1 = laser();
+            Bullet * bullet2 = laser();
+
+            //Get the position of the ship
+            Vector2f shipPos = getPosition();
+
+            float bulletY = shipPos.y;
+
+            float bullet1X = shipPos.x + 12;
+            float bullet2X = shipPos.x + 2*SHIP_RADIUS - 12;
+
+            bullet1->setPosition(bullet1X, bulletY);
+            bullet2->setPosition(bullet2X, bulletY);
+
+            bullet1->setScale(0.7F, 1);
+            bullet2->setScale(0.7F, 1);
+
+            world._bullets.push_back(bullet1);
+            world._bullets.push_back(bullet2);
+        }
+    }
     //Add to the reload counter if it's not full
     if(_laserReloadCounter <= _laserReloadTime){
         _laserReloadCounter += _laserReloadSpeed;
     }
 
-	// Photon
+    // Photon
     // Fires if the reload counter is full and the button is pressed
-    if(_photonReloadCounter >= _photonReloadTime && Keyboard::isKeyPressed(Keyboard::E) || // Keyboard
-       _photonReloadCounter >= _photonReloadTime && sf::Joystick::getAxisPosition(0,sf::Joystick::Z) > 0) // Game controller
-	{
+    if(_photonReloadCounter >= _photonReloadTime && Keyboard::isKeyPressed(Keyboard::E) ||
+       _photonReloadCounter >= _photonReloadTime && sf::Joystick::isButtonPressed(0, X))
+    {
+        //Shoots a photon
         world._photons.push_back(photonCannon());
     }
-
     // Add to the reload counter if it's not full
-     if(_photonReloadCounter <= _photonReloadTime) {
+     if(_photonReloadCounter <= _photonReloadTime)
+    {
         _photonReloadCounter += _photonReloadSpeed;
     }
 
@@ -280,17 +311,17 @@ void Ship::update(World & world)
 	{
         _inInvincibleFrame = false;
     }
-
-    // Check if collided with an enemy
-    for (int enemy = world._enemies.size() - 1; !_inInvincibleFrame && enemy >= 0; --enemy)
-	{
-        // If the player and an enemy intersect
+    //Check  if collied with an enemy
+    // !!!NTF: Maybe add some damage to the enemies as well
+    for (int enemy = (int)world._enemies.size() - 1; !_inInvincibleFrame && enemy >= 0; --enemy)
+    {
+        //If the player and an enemy intersect
         if (checkIntersect(*world._enemies[enemy]))
-		{
-            // Minus a single life per collision
+        {
+            //minus a single life per collision
             _health--;
             world._enemies[enemy]->_hp--;
-            
+
 			// Start invincibility frame
 			if (!_inInvincibleFrame)
 			{
@@ -323,11 +354,53 @@ void Ship::update(World & world)
 
 			// Check if the damage killed the player
             if (_health <= 0)
-			{
                 _playerIsDead=true;
-				//TODO: Add GameOver
-                break;
+        }
+    }
+
+    // Look through all the powerups
+    for(int p = (int)world._powerups.size() - 1; p >= 0; --p)
+    {
+        // If collision with one
+        if (checkIntersect(*world._powerups[p]))
+        {
+            // If life up
+            if(world._powerups[p]->getType() == LIFE_UP)
+            {
+                // Add to health
+                ++_health;
+
+                // Incrase maximum HP if new health is larger
+                if(_health > _maxHP)
+                {
+                    _maxHP = _health;
+                }
             }
+
+            // If reload up
+            if(world._powerups[p]->getType() == RELOAD_UP)
+            {
+                // Decrease reload time until minimum is reached
+                if(_laserReloadTime >= 3)
+                {
+                    _laserReloadTime -= 1;
+                }
+
+                // Also increase the photon fire rate
+                if(_photonReloadTime >= 15)
+                {
+                    _photonReloadTime -= 13;
+                }
+            }
+
+            // At a certain point activate the double laser
+            if(_laserReloadTime < 18)
+            {
+                _hasDoubleLaser = true;
+            }
+
+            delete world._powerups[p];
+            world._powerups.erase(world._powerups.begin() + p);
         }
     }
 
@@ -342,7 +415,7 @@ void Ship::update(World & world)
 			{
 				// Remove a life
                 _health--;
-                
+
 				// Start invincibility frame
 				if (!_inInvincibleFrame)
 				{
@@ -362,7 +435,6 @@ void Ship::update(World & world)
                 if (_health <= 0)
 				{
                     _playerIsDead=true;
-                    break;
                 }
             }
         }
@@ -370,24 +442,39 @@ void Ship::update(World & world)
 
     // Move the players ship
     move(_vel);
+
     if(_vel.x < -SWITCH_THRESHHOLD)
+    {
 		setTextureRect(sf::IntRect(70,0,43,99));
+    }
     else if (_vel.x > SWITCH_THRESHHOLD)
+    {
 		setTextureRect(sf::IntRect(120,0,43,99));
+    }
     else
+    {
 		setTextureRect(sf::IntRect(0,5,57,98));
+    }
 
     // Set the _health bar
     float percentHP = _health / _maxHP;
     _hpBar.setCurrentHealthBar(percentHP);
-    
+
 	// Set the laser reload bar
     float percentLaserReload = (float)_laserReloadCounter / _laserReloadTime;
-    if(percentLaserReload >= 1) percentLaserReload = 1.0F;
+
+    if(percentLaserReload >= 1)
+        percentLaserReload = 1.0F;
+
     _laserReloadBar.setCurrVertical(percentLaserReload);
 
 	// Set the photon reload bar
     float percentPhotonReload = (float)_photonReloadCounter / _photonReloadTime;
-    if(percentPhotonReload >= 1) percentPhotonReload = 1.0F;
+
+    if(percentPhotonReload >= 1)
+        percentPhotonReload = 1.0F;
+
     _photonReloadBar.setCurrVertical(percentPhotonReload);
 }
+
+

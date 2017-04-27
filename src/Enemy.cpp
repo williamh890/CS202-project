@@ -107,18 +107,18 @@ Vector2f Enemy::separate(const vector<Enemy*> & enemies)
     // Look through all the enemies
 	for(int e = 0; e < (int)enemies.size(); ++e) {
         Vector2f pos = enemies[e]->getPosition();
-        // Find the center of the enemy
+        
+		// Find the center of the enemy
         makeCenter(pos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
         float dist = distance(currEnemyPos, pos);
-        // Check if the enemy can see the other enemy
+        
+		// Check if the enemy can see the other enemy
         if(dist < _enemyDetectionRadius) {
             Vector2f desired = currEnemyPos - pos;
             steer += desired - _vel;
-            // Make the force a repulsion force
         }
     }
-
     return steer;
 }
 
@@ -130,21 +130,22 @@ Vector2f Enemy::dodge(const vector<Bullet *> & _bullets, bool &hasForce)
     Vector2f enemyPos = getPosition();
     makeCenter(enemyPos, ENEMY_WIDTH / 2, ENEMY_HEIGHT / 2);
 
-    for(int i = 0; i < (int)_bullets.size(); ++i) 
+    for(int i = 0; i < (int)_bullets.size(); ++i)
 	{
     	// Checks if the bullet is a player bullet
         if(_bullets[i]->_source == PLAYER) {
-            
+
 			// Finds the center of that bullet
             Vector2f bulletPos = _bullets[i]->getPosition();
             makeCenter(bulletPos, BULLET_WIDTH, BULLET_SPEED);
-            
+
 			// Finds the distance between the bullet and the enemy
             float dist = distance(bulletPos, enemyPos);
-            
+
 			// Sees the bullet
-            if(dist < _bulletDetectionRadius) {
-                //Boost left or right based on where the bullet is respectively
+            if(dist < _bulletDetectionRadius)
+			{
+                // Boost left or right based on where the bullet is respectively
                 boostForce = (enemyPos.x > bulletPos.x) ? Vector2f(20, 0) : Vector2f(-20, 0);
                 hasForce = true;
                 break;
@@ -164,7 +165,6 @@ Vector2f Enemy::seekPlayer(const Ship & playerShip)
     Vector2f playerCenter = playerShip.getPosition();
     makeCenter(playerCenter, SHIP_RADIUS / 2, SHIP_RADIUS / 2);
 
-	// 
     Vector2f desired =  playerCenter - enemyCenter;
 	Vector2f seek = desired - _vel;
 	return seek;
@@ -198,21 +198,21 @@ void Enemy::update(World & world)
                                             dir,
                                             EnemyBulletColor));
     }
-    
-	//Randomly assign new target
+
+	// Randomly assign new target
     if(!(randomInt(rng) % _traits._targetSwitchChance))
 	{
         _target = _traits.setTarget(world._playerShip);
     }
 
-    // !!!NTF: Bullet dodge doesnt work right
+    // !!!NTF: Bullet dodge doesn't work right
     // Only if the enemy has dodge
     if(_traits._bulletDodgeForce)
 	{
         // Reset back to the default texture
         if(_dodgeCounter == (_dodgeChargeTime -DODGE_ANIMATION_TIME))
             setTextureRect(sf::IntRect(4, 3, 50, 50));
-            
+
 		if(_dodgeCounter <= 0)
 		{
             // Default texture rect
@@ -226,12 +226,12 @@ void Enemy::update(World & world)
 
                 if(_accel.x > 0) // Moving to the right
                     setTextureRect(sf::IntRect(70,4,49,39));
-                    
+
 				if(_accel.x < 0) // Moving to the left
                     setTextureRect(sf::IntRect(129,5,50,35));
             }
         }
-            
+
 		else
 		{
             _dodgeCounter--;
@@ -250,7 +250,7 @@ void Enemy::update(World & world)
         setMag(targetSteer, _traits._seekTargetForce);
         _accel += targetSteer;
     }
-    
+
 	// Only seek the player if that enemy has it
     if(_traits._seekPlayerForce)
 	{
@@ -261,11 +261,11 @@ void Enemy::update(World & world)
             setMag(playerSteer, _traits._seekPlayerForce);
             _accel += playerSteer;
         }
-        
+
         else
             _vel.y += 0.5F;
     }
-    
+
 	// Add the separation force to the total acceleration
     _accel += enemySeparation;
 
@@ -276,7 +276,7 @@ void Enemy::update(World & world)
     scalarMul(_vel, 0.99F);
 
 	// Checks if going faster then the max speed
-    float velocityMag = sqrt(_vel.y * _vel.y + _vel.x * _vel.x);    
+    float velocityMag = sqrt(_vel.y * _vel.y + _vel.x * _vel.x);
     if(velocityMag >= _traits._maxSpeed)
 	{
         // Normalize
@@ -308,15 +308,15 @@ void Enemy::update(World & world)
             // Remove the bullet
             delete world._bullets[b];
             world._bullets.erase(world._bullets.begin()+b);
-            
+
 			//Check if the enemy is dead
             if(_hp <= 0) return;
-            
+
 			// Erases the enemy outside the function
         }
 
     }
-    
+
 	// !!!NTF: THIS IS BAAAADDD...
     for (int p = world._photons.size() - 1; p >= 0; --p)
 	{
@@ -332,16 +332,14 @@ void Enemy::update(World & world)
 
             // Check if enemy is dead
             if(_hp <= 0) return;
-            
-			// Erases the enemy outside the function
         }
     }
 
-    if(_bleed <= 0) 
+    if(_bleed <= 0)
 	{
         setColor(Color::White);
     }
-    
+
 	else
         --_bleed;
 }
@@ -356,18 +354,17 @@ Enemy * make_seeker()
                         SEEKER_SPEED,              // Enemy speed
                         false);                    // Has a gun
 
-    //Dummy function
+    // Determines target
     std::function<Vector2f(const ShipShape &)> targetSetter = [](const ShipShape &)-> Vector2f{return Vector2f(0,0);};
-
     seekerTraits.setTarget = targetSetter;
 
+	// Position and velocity
     Vector2f initPos{Enemy::rngTargetWidth(Enemy::rng), 0};
     Vector2f initVel{0,0};
 
+	// Loads sprite
     Enemy * seeker = new Enemy(initPos, initVel, 1, 0, seekerTraits, "resources/sprites/homingEnemySheet.png");
-
-    seeker->setScale(0.5, 0.5);
-
+    seeker->setScale(0.48F, 0.48F);
     seeker->setTextureRect(sf::IntRect(0,0,81,87));
 
     return seeker;
@@ -383,18 +380,20 @@ Enemy * make_wanderer()
                           WANDERER_MAXSPEED,        // Enemy speed
                           true);                    // Has a gun
 
+	// Determines target
     std::function<Vector2f (const ShipShape &)> targetSetter = [](const ShipShape & ship)->Vector2f{return Vector2f(Enemy::rngTargetWidth(Enemy::rng),
-                                                                                                                     Enemy::rngTargetHeight(Enemy::rng));};
+                                                                                                                Enemy::rngTargetHeight(Enemy::rng));};
     wandererTraits.setTarget = targetSetter;
 
+	// Position and velocity
     Vector2f initPos{Enemy::rngTargetWidth(Enemy::rng), 0};
     Vector2f initVel{0,0};
-    int hp = 3;
+    
+	// Health
+	int hp = 6;
 
     Enemy * wanderer = new Enemy(initPos, initVel, hp, 1, wandererTraits);
-
-    wanderer->setScale(0.3F, 0.3F);
-
+    wanderer->setScale(0.41F, 0.41F);
     return wanderer;
 }
 
@@ -408,16 +407,20 @@ Enemy * make_follower()
                           FOLLOWER_MAXSPEED,      // Enemy speed
                           true);                  // Has a gun
 
+	// Target
     std::function<Vector2f (const ShipShape &)> targetSetter = [](const ShipShape & ship)->Vector2f{return Vector2f(ship.getPosition().x,
                                                                                                                      Enemy::rngFollowerHeight(Enemy::rng));};
     followerTraits.setTarget = targetSetter;
 
+	// Position and velocity
     Vector2f initPos{Enemy::rngTargetWidth(Enemy::rng), 0};
     Vector2f initVel{0,0};
+
+	// Health
     int hp = 5;
 
+	// Loads texture
     Enemy * follower = new Enemy(initPos, initVel, hp, 1, followerTraits, "resources/sprites/dodgeEnemySheet.png");
-
     follower->setScale(1, 1);
     follower->setTextureRect(sf::IntRect(4, 3, 50, 50));
 

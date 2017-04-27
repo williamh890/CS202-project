@@ -11,8 +11,8 @@
 
 #include <SFML/Graphics.hpp>
 
-// Allows changing objects' shapes
-typedef sf::RectangleShape StarShape;
+/* Easily change shapes later if needed */
+typedef sf::CircleShape StarShape;
 typedef sf::RectangleShape BulletShape;
 typedef sf::Sprite EnemyShape;
 typedef sf::Sprite ShipShape;
@@ -36,9 +36,9 @@ const float SHIP_RADIUS = 20.0F;
 const float SHIP_DRAG = 0.92F;
 const float MAX_SPEED = 8.0F;
 const float STARTING_HP = 25.0F;
-const float SWITCH_THRESHHOLD = 5.0F;
+const float SWITCH_THRESHHOLD = 6.5F;
 
-// Health bar dimensions 
+// Health bar dimensions
 const float HP_BAR_LEN = 160.0F;
 const float HP_BAR_WIDTH = 15.0F;
 const float HP_BAR_SCREEN_BUFFER = 10.0F;
@@ -64,7 +64,7 @@ const float RELOAD_BAR_HEIGHT = 8.0F;
 
 // Background stars
 const int STAR_SPAWN_RATE = 1; //Larger means less stars
-const float STAR_HEIGHT = 2.0F;
+const float STAR_HEIGHT = 1.5F;
 const float STAR_WIDTH = 2.0F;
 
 // Enemy dimensions for collision detection
@@ -82,9 +82,10 @@ const float ENEMY_SEPARATE_FORCE = 0.16F;
 const int DODGE_TIME = 75;
 const int DODGE_ANIMATION_TIME = 20;
 
-// Seekers (flies toward player)
-const float SEEKER_PLAYERSEEKER_FORCE = 0.3F;
-const float SEEKER_SPEED = 10.0F;
+
+const float SEEKER_PLAYERSEEKER_FORCE = 0.5F;
+const float SEEKER_SPEED = 8.0F;
+const float SPLIT_NUMBER = 3;
 
 // Wanderers (dodge shots and randomly move)
 const float WANDERER_TARGET_FORCE = 0.17F;
@@ -100,7 +101,10 @@ const int FOLLOWER_TARGET_SWITCH = 40;
 // Bullet _source values
 enum ID {PLAYER, ENEMY};
 
+enum PowerupTypes {LIFE_UP, RELOAD_UP};
 //For bound checking
 enum bounds {RIGHT, LEFT, UPPER, LOWER,EMPTY};
+
+enum controllerButtons {A, B, X, Y, LB, RB, SELECT, START, LTHUMB, RTHUMB, RT};
 
 #endif // GAME_CONSTANTS_H_INCLUDED

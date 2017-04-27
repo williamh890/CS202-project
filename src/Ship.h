@@ -48,6 +48,7 @@ struct Ship : public ShipShape
     int _photonReloadSpeed;
     int _photonReloadCounter;
     int _playerScore;
+    bool _hasDoubleLaser;
 
     //Health
     float _health;
@@ -62,7 +63,7 @@ struct Ship : public ShipShape
     bool checkIntersect(const sf::Sprite &e);
 
     int _bleed;
-    
+
 	// To id the bullets
     int _sourceID;
 

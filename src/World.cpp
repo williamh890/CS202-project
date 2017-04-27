@@ -6,8 +6,6 @@
 //
 // Definitions and constructor for World class
 
-//Ctor for  world class
-
 #include "constants.h"
 #include "World.h"
 #include "Ship.h"
@@ -34,24 +32,35 @@ using std::floor;
 // Setup for random real number generator for _stars
 std::random_device World::ranDev;
 std::mt19937 World::rng = std::mt19937(ranDev());
+
 std::uniform_real_distribution<float> World::starDist(0.0,(float)WIDTH);
 std::uniform_real_distribution<float> World::enemyStartingVel(-10.,10.);
 std::uniform_real_distribution<float> World::optimalPlayerDist(HEIGHT / 2, HEIGHT - 100);
+
 std::uniform_int_distribution<int> World::randomInt(-1000, 1000);
 std::uniform_int_distribution<int> World::starBrightness(100, 255);
+std::uniform_int_distribution<int> World::randomSplitNumber(3, 5);
+
+std::uniform_real_distribution<float> World::randomWidht(20, WIDTH - 20);
+std::uniform_real_distribution<float> World::randomHeight(20, HEIGHT - 20);
 
 ///////////////////////////STAR FUNCTIONS/////////////////////////////////
 // Creates a new star
 void World::makeStar(int startingHeight)
 {
+	// Star color
+    Color starColor(255,255,255,starBrightness(rng));
+	sf::Uint8 alpha = starColor.a;
+
 	// Sets star size, shape, and color
-	Vector2<float> starSize((float)STAR_HEIGHT, (float)STAR_WIDTH);
-    StarShape* newStar= new StarShape(starSize);
-    newStar->setFillColor(Color(255,255,255,starBrightness(rng)));
-    
-	// Makes a new star with a random position along with of screen
+    StarShape* newStar= new StarShape((float)STAR_HEIGHT * (alpha / 255.0F), 6);
+    newStar->setFillColor(starColor);
+
+    //Makes a new star with a random position along with of screen
     float starX = starDist(rng);
     newStar->setPosition(starX, (float)startingHeight);
+    
+	//Add star into the world
 	_stars.push_back(newStar);
 }
 
@@ -61,9 +70,11 @@ void World::populateInitialStars()
     for(int h = 0; h < HEIGHT; ++h)
 	{
         //This is finicky
-        if(!(h % (STAR_SPAWN_RATE*7)))
+        if(!(h % (STAR_SPAWN_RATE*3)))
+        {
             makeStar(h);
-    }
+        }
+	}
 }
 
 // Move the stars down the screen and deletes them if they fall off
@@ -119,7 +130,7 @@ void World::updatePhotons()
 			delete _photons[photon];
             _photons.erase(_photons.begin() + photon);
         }
-        
+
 		// Moves photons up in wave pattern if not off screen
 		else
 		{
@@ -161,25 +172,32 @@ vector<bounds> World::onBound(const Ship & playerShip)
 //////////////////////////END SHIP FUNCTIONS/////////////////////////
 
 ////////////////////////ENEMY FUNCTIONS/////////////////////////////
-// Creates first wave of enemies
+
+// Creates first wave of _enemies
 void World::makeInitEnemies()
 {
-    static int numSeekers = 3;
-    static int numWanderers = 3;
-    static int numFollowers = 3;
+    static int numSeekers = 0;
+    static int numWanderers = 1;
+    static int numFollowers = 1;
 
 	// Makes a seeker at a random width at the top of the screen
     for(int seeker = 0; seeker < numSeekers; ++seeker)
          _enemies.push_back(make_seeker());
-  
+
 	// Makes a wanderer at a random width at the top of the screen
     for(int wanderer = 0; wanderer < numWanderers; ++wanderer)
         _enemies.push_back(make_wanderer());
 
-	//Makes a seeker at a random width at the top of the screen    
+	//Makes a seeker at a random width at the top of the screen
     for(int follower = 0; follower < numFollowers; ++follower)
         _enemies.push_back(make_follower());
-    
+
+    //Spawn life up powerup
+    _powerups.push_back(new Powerup(Vector2f(randomWidht(rng),randomHeight(rng)), LIFE_UP));
+    //Spawn reload up powerup
+    _powerups.push_back(new Powerup(Vector2f(randomWidht(rng),randomHeight(rng)), RELOAD_UP));
+
+    //Add to the number of enemies spawned next round
     numSeekers++;
     numWanderers++;
     numFollowers++;
@@ -191,23 +209,44 @@ void World::updateEnemies()
     for(int e = _enemies.size() - 1; e >= 0; --e)
 	{
         _enemies[e]->update(*this);
-        
-		// Checks if the enemy is dead
-        if (_enemies[e]->_hp <= 0 || // Destroyed
-			_enemies[e]->getPosition().y > HEIGHT) // Drops off the bottom of the screen
-		{
-            // Increases the player's score for destroyed enemies
-			if (_enemies[e]->_hp <= 0)
+
+        //If dead
+        if (_enemies[e]->_hp <= 0 || //Destroyed
+            _enemies[e]->getPosition().y > HEIGHT) // Off the screen
+        {
+            Vector2f pos = _enemies[e]->getPosition();
+
+            if (_enemies[e]->_hp <= 0)
+            {
+                // Add to the score
                 _playerShip._playerScore+=25;
 
-			// Removes the enemy
+                // Split the wanderers into seekers
+                if(_enemies[e]->_traits._bulletDodgeForce == 0 &&
+                   _enemies[e]->_traits._seekTargetForce)
+                {
+                    // Make a random amount between 3 and 6
+                    int splitNum = randomSplitNumber(rng);
+
+                    // Splits the wander
+                    for(int i = 0; i < splitNum; i++)
+                    {
+                        Enemy * newSeeker = make_seeker();
+                        newSeeker->setPosition(pos);
+                        _enemies.push_back(newSeeker);
+                    }
+
+                }
+            }
+
             delete _enemies[e];
             _enemies.erase(_enemies.begin()+e);
         }
     }
 
 	// Spawns a new wave if all enemies are destroyed
-    if (_enemies.size() <= 0) {
+    if (_enemies.size() <= 0)
+    {
         makeInitEnemies();
     }
 }
@@ -220,18 +259,18 @@ World::World() : Screens(),
     populateInitialStars();
 }
 
-//Cleans up all the memory
+// Cleans up all the memory
 World::~World()
 {
     for(size_t i = 0; i < _bullets.size(); ++i)
         delete _bullets[i];
-    
+
 	for(size_t i = 0; i < _photons.size(); ++i)
         delete _photons[i];
-    
+
 	for(size_t i = 0; i < _stars.size(); ++i)
         delete _stars[i];
-    
+
 	for(size_t i = 0; i < _enemies.size(); ++i)
         delete _enemies[i];
 }
@@ -253,26 +292,31 @@ void World::show(sf::RenderWindow &gameScreen)
     //         instead of having separate loops
 	for (const auto & s : _stars)
 		gameScreen.draw(*s);
-    
+
 	for (const auto & b : _bullets)
        gameScreen.draw(*b);
-    
+
 	for (const auto & p : _photons)
         gameScreen.draw(*p);
-    
+
 	for (const auto & e : _enemies)
         gameScreen.draw(*e);
 
-	// Draws the player if they still live
+    for(const auto & u : _powerups)
+        gameScreen.draw(*u);
+
+
+    gameScreen.draw(_playerShip);
+
     if (!_playerShip._playerIsDead)
 	{
         // Draw ship
 		gameScreen.draw(_playerShip);
-        
+
 		// Draw health bar
         gameScreen.draw(_playerShip._hpBar._currentHealthBar);
         gameScreen.draw(_playerShip._hpBar._maxHealthBar);
-       
+
 		// Draw photon reload bar
         gameScreen.draw(_playerShip._photonReloadBar._currentHealthBar);
         gameScreen.draw(_playerShip._photonReloadBar._maxHealthBar);
@@ -287,8 +331,6 @@ void World::show(sf::RenderWindow &gameScreen)
 int World::Run(sf::RenderWindow &gameScreen)
 {
     sf::Event event;
-    World::makeInitEnemies();
-    World::populateInitialStars();
 
 	// Game loop
     while(true)
@@ -304,6 +346,8 @@ int World::Run(sf::RenderWindow &gameScreen)
             }
              if(_playerShip._playerIsDead==true) return 2;
         }
+        //If start button is pressed go to the pause menu
+        if(sf::Joystick::isButtonPressed(0, START)) return 0;
 
 		// Updates display
         gameScreen.clear();
