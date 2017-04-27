@@ -20,7 +20,8 @@ sf::RectangleShape TextBox;
 
 void initalDraw(sf::RenderWindow & gameMenu, bool drawGameOver){
     TextBox.setFillColor(sf::Color::Red);
-    TextBox.setPosition(WIDTH/2.0,HEIGHT/2.0);
+    TextBox.setSize(sf::Vector2f(400,200));
+    TextBox.setPosition(50,HEIGHT/2.0);
 
     gameMenu.clear();
     gameMenu.draw(TextBox);

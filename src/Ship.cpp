@@ -6,6 +6,7 @@
 #include "Ship.h"
 #include "World.h"
 #include "healthbar.h"
+#include "gameover.h"
 
 #include <SFML/Graphics.hpp>
 using sf::Color;
@@ -244,6 +245,8 @@ void Ship::update(World & world){
 
             if (health <= 0) {
                 playerIsDead=true;
+
+                //TODO: Add GameOver
                 break;
             }
         }
