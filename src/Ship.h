@@ -34,10 +34,12 @@ struct Ship : public ShipShape
 	sf::SoundBuffer _photonSoundBuffer;
     sf::SoundBuffer _healSoundBuffer;
     sf::SoundBuffer _powerupSoundBuffer;
+    sf::SoundBuffer _damageSoundBuffer;
     sf::Sound _photonSound;
     sf::Sound _laserSound;
     sf::Sound _healSound;
     sf::Sound _powerupSound;
+    sf::Sound _damageSound;
 	sf::Clock _clock;
 	sf::Time _time;
 

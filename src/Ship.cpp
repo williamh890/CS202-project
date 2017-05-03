@@ -56,10 +56,16 @@ Ship::Ship() : ShipShape(),
     _laserSound.setPitch(.5);
     load_buffer(_photonSoundBuffer,"resources/sound/photonSound.wav");
     _photonSound.setBuffer(_photonSoundBuffer);
+
     load_buffer(_healSoundBuffer, "resources/sound/healSound.wav");
     _healSound.setBuffer(_healSoundBuffer);
+
     load_buffer(_powerupSoundBuffer,"resources/sound/powerupSound.wav");
     _powerupSound.setBuffer(_powerupSoundBuffer);
+
+    load_buffer(_damageSoundBuffer,"resources/sound/damageSound.wav");
+    _damageSound.setBuffer(_damageSoundBuffer);
+
 
 	// Starting position
     setPosition(WIDTH / 2, HEIGHT - 2.5*SHIP_RADIUS);
@@ -325,6 +331,7 @@ void Ship::update(World & world)
         if (checkIntersect(*world._enemies[enemy]))
         {
             //minus a single life per collision
+            _damageSound.play();
             _health--;
             world._enemies[enemy]->_hp--;
 
@@ -426,6 +433,7 @@ void Ship::update(World & world)
             if(checkIntersect(*world._bullets[b]))
 			{
 				// Remove a life
+				_damageSound.play();
                 _health--;
 
 				// Start invincibility frame

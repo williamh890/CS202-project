@@ -265,7 +265,7 @@ World::World() : Screens(),
     load_buffer(_bgBuffer,"resources/sound/bgMusic.wav");
     _bgSound.setBuffer(_bgBuffer);
     _bgSound.setLoop(true);
-    _bgSound.setPitch(0.7F);
+    _bgSound.setPitch(0.6F);
     _bgSound.play();
 }
 
